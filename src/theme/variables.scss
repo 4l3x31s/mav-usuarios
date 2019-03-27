@@ -74,4 +74,55 @@
   --ion-color-light-contrast-rgb: 0, 0, 0;
   --ion-color-light-shade: #d7d8da;
   --ion-color-light-tint: #f5f6f9;
+
+
+  --ion-color-rosado: #E91E63;
+  --ion-color-rosado-rgb: 233, 30, 99;
+  --ion-color-rosado-contrast: #ffffff;
+  --ion-color-rosado-contrast-rgb: 255, 255, 255;
+  --ion-color-rosado-shade: #c2185b;
+  --ion-color-rosado-tint: #E91E63;
+
+  --ion-color-verdec: #4caf50;
+  --ion-color-verdec-rgb: 76, 175, 80;
+  --ion-color-verdec-contrast: #ffffff;
+  --ion-color-verdec-contrast-rgb: 255, 255, 255;
+  --ion-color-verdec-shade: #388e3c;
+  --ion-color-verdec-tint: #4caf50;
+
 }
+
+.ion-color-rosado {
+  --ion-color-base: #E91E63;
+  --ion-color-base-rgb: 0, 154, 143;
+  --ion-color-contrast: #ffffff;
+  --ion-color-contrast-rgb: 255, 255, 255;
+  --ion-color-shade: #c2185b;
+  --ion-color-tint: #E91E63;
+}
+.ion-color-verdec {
+  --ion-color-base: #4caf50;
+  --ion-color-base-rgb: 233, 30, 99;
+  --ion-color-contrast: #ffffff;
+  --ion-color-contrast-rgb: 255, 255, 255;
+  --ion-color-shade: #388e3c;
+  --ion-color-tint: #4caf50;
+}
+
+.spiner-loading {
+  height: 100% !important;
+  width: 100% !important;
+  margin: auto !important;
+  background-repeat: no-repeat;
+}
+.loading-wrapper {
+  height: 100px;
+  width: 100px;
+  background-image: url("../assets/image/icon.svg") !important; 
+  background-repeat: no-repeat;
+  padding-left: 24px !important;
+  padding-right: 24px !important;
+  padding-top: 24px !important;
+  padding-bottom: 24px !important;
+}
+
