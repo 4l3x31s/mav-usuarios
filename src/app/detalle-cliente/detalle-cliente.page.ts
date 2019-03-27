@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MdlCliente } from '../modelo/mdlCliente';
+import { ClienteService } from '../services/db/cliente.service';
+import { LoadingService } from '../services/util/loading.service';
+import { AlertService } from '../services/util/alert.service';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-detalle-cliente',
@@ -12,11 +16,19 @@ export class DetalleClientePage implements OnInit {
   frmCliente: FormGroup;
   public cliente: MdlCliente;
 
-  constructor(public fb: FormBuilder) { }
+  constructor(
+    public fb: FormBuilder,
+    public clienteService: ClienteService,
+    public loadingServices: LoadingService,
+    public alertService: AlertService,
+    public navController: NavController
+    ) { }
   get f() { return this.frmCliente.controls; }
 
   ngOnInit() {
     this.iniciarValidaciones();
+    this.cliente = this.clienteService.getClienteSesion();
+    
   }
 
   public iniciarValidaciones(){
@@ -60,8 +72,25 @@ export class DetalleClientePage implements OnInit {
         Validators.required,
         Validators.minLength(10),
         Validators.maxLength(30),
+        Validators.email,
       ]],     
     })
   }
 
+  public grabar(){
+    this.loadingServices.present().then(()=>{
+      this.cliente.estado = true;
+      this.clienteService.crearCliente(this.cliente)
+      .then(() => {
+        this.loadingServices.dismiss();
+        this.alertService.present('Info','Datos guardados correctamente.');
+      })
+      .catch( error => {
+        this.loadingServices.dismiss();
+        console.log(error);
+        this.alertService.present('Error','Hubo un error al grabar los datos');
+        this.navController.navigateRoot('/home');
+      })
+    })
+  }
 }

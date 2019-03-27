@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>detalle-cliente</ion-title>
+    <ion-title>Cliente</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -9,11 +9,57 @@
   <ion-list>
     <ion-item>
       <ion-label position="stacked">Nombre</ion-label>
-      <ion-input formControlName="vnombre" name="vnombre"  [(ngModel)]="cliente?.nombre"></ion-input>
+      <ion-input formControlName="vnombre" name="vnombre"  [(ngModel)]="cliente.nombre"></ion-input>
     </ion-item>
     <print-error [control]="f.vnombre"></print-error>
-
     
+    <ion-item>
+      <ion-label position="stacked">Carnet de Identidad</ion-label>
+      <ion-input formControlName="vci" name="vci"  [(ngModel)]="cliente.ci"></ion-input>
+    </ion-item>
+    <print-error [control]="f.vci"></print-error>
+
+    <ion-item>
+      <ion-label position="stacked">Dirección</ion-label>
+      <ion-input formControlName="vdireccion" name="vdireccion"  [(ngModel)]="cliente.direccion"></ion-input>
+    </ion-item>
+    <print-error [control]="f.vdireccion"></print-error>
+
+    <ion-item>
+      <ion-label position="stacked">Usuario</ion-label>
+      <ion-input formControlName="vuser" name="vuser"  [(ngModel)]="cliente.user"></ion-input>
+    </ion-item>
+    <print-error [control]="f.vuser"></print-error>
+
+    <ion-item>
+      <ion-label position="stacked">Contraseña</ion-label>
+      <ion-input type="password" formControlName="vpass" name="vpass"  [(ngModel)]="cliente.pass"></ion-input>
+    </ion-item>
+    <print-error [control]="f.vpass"></print-error>
+
+    <ion-item>
+      <ion-label position="stacked">Telefono</ion-label>
+      <ion-input formControlName="vtel" name="vtel"  [(ngModel)]="cliente.tel"></ion-input>
+    </ion-item>
+    <print-error [control]="f.vtel"></print-error>
+
+    <ion-item>
+      <ion-label position="stacked">Celular</ion-label>
+      <ion-input formControlName="vcel" name="vcel"  [(ngModel)]="cliente.cel"></ion-input>
+    </ion-item>
+    <print-error [control]="f.vcel"></print-error>    
+
+    <ion-item>
+      <ion-label position="stacked">Correo</ion-label>
+      <ion-input formControlName="vemail" name="vemail"  [(ngModel)]="cliente.email"></ion-input>
+    </ion-item>
+    <print-error [control]="f.vemail"></print-error>    
   </ion-list>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button [disabled]="frmCliente.invalid" (click)="grabar()">
+      <ion-icon name="send"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </form>
 </ion-content>
