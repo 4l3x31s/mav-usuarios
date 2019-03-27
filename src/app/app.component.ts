@@ -16,9 +16,14 @@ export class AppComponent {
       icon: 'home'
     },
     {
-      title: 'List',
-      url: '/list',
-      icon: 'list'
+      title: 'login',
+      url: '/login-usuario',
+      icon: 'finger-print'
+    },
+    {
+      title: 'Cliente',
+      url: '/detalle-cliente',
+      icon: 'person-add'
     }
   ];
 

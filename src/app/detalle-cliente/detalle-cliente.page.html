@@ -1,0 +1,19 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>detalle-cliente</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+<form [formGroup]="frmCliente" novalidate>
+  <ion-list>
+    <ion-item>
+      <ion-label position="stacked">Nombre</ion-label>
+      <ion-input formControlName="vnombre" name="vnombre"  [(ngModel)]="cliente?.nombre"></ion-input>
+    </ion-item>
+    <print-error [control]="f.vnombre"></print-error>
+
+    
+  </ion-list>
+</form>
+</ion-content>
