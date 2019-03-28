@@ -78,8 +78,7 @@ export class DetalleClientePage implements OnInit {
   }
 
   public grabar(){
-    this.loadingServices.present().then(()=>{
-      this.cliente.estado = true;
+    this.loadingServices.present().then(()=>{      
       this.clienteService.crearCliente(this.cliente)
       .then(() => {
         this.loadingServices.dismiss();
