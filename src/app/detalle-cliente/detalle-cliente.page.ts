@@ -78,7 +78,7 @@ export class DetalleClientePage implements OnInit {
   }
 
   public grabar(){
-    this.loadingServices.present().then(()=>{      
+    this.loadingServices.present();
       this.clienteService.crearCliente(this.cliente)
       .then(() => {
         this.loadingServices.dismiss();
@@ -90,6 +90,6 @@ export class DetalleClientePage implements OnInit {
         this.alertService.present('Error','Hubo un error al grabar los datos');
         this.navController.navigateRoot('/home');
       })
-    })
+
   }
 }

@@ -1,5 +1,7 @@
 {
   "name": "mav-usuarios",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }
