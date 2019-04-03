@@ -73,6 +73,18 @@ export class DetalleClientePage implements OnInit {
         Validators.minLength(10),
         Validators.maxLength(30),
         Validators.email,
+      ]],
+      vciudad: ['', [
+        Validators.required,
+        Validators.minLength(10),
+        Validators.maxLength(30),
+        Validators.email,
+      ]],
+      vpais: ['', [
+        Validators.required,
+        Validators.minLength(10),
+        Validators.maxLength(30),
+        Validators.email,
       ]],     
     })
   }

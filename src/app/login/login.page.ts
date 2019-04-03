@@ -30,8 +30,8 @@ export class LoginPage implements OnInit {
     this.iniciaValidaciones();
     if(environment.isSesionPrueba){
       //datos prueba
-      this.user='alvarez';
-      this.pass='l1234567';
+      this.user='pmorales';
+      this.pass='123qwerty';
     }
     this.sesionService.getSesion()
       .then((conductora)=>{
@@ -52,4 +52,25 @@ export class LoginPage implements OnInit {
     });
   }
   get f() { return this.formLogin.controls; }
+
+  ingresar() {
+    this.loadingService.present()
+      .then(() => {
+        this.sesionService.login(this.user, this.pass)
+          .subscribe(() => {
+            console.log('login exito');
+            this.navController.navigateRoot('/home');
+            this.loadingService.dismiss();
+          }, error => {
+            console.log('error-login', error);
+            if (error.message) {
+              this.alertService.present('Error', error.message);
+            } else {
+              this.alertService.present('Error', 'Hubo un error al ingresar.');
+            }
+            this.loadingService.dismiss();
+          });
+      })
+
+  }
 }

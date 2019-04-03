@@ -14,12 +14,7 @@ export class AppComponent {
       title: 'Home',
       url: '/home',
       icon: 'home'
-    },
-    {
-      title: 'login',
-      url: '/login-usuario',
-      icon: 'finger-print'
-    },
+    },   
     {
       title: 'Cliente',
       url: '/detalle-cliente',

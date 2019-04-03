@@ -8,7 +8,7 @@
 <form [formGroup]="frmCliente" novalidate>
   <ion-list>
     <ion-item>
-      <ion-label position="stacked">Nombre</ion-label>
+      <ion-label position="stacked">Nombre Completo</ion-label>
       <ion-input formControlName="vnombre" name="vnombre"  [(ngModel)]="cliente.nombre"></ion-input>
     </ion-item>
     <print-error [control]="f.vnombre"></print-error>
@@ -54,6 +54,18 @@
       <ion-input formControlName="vemail" name="vemail"  [(ngModel)]="cliente.email"></ion-input>
     </ion-item>
     <print-error [control]="f.vemail"></print-error>    
+
+    <ion-item>
+      <ion-label position="stacked">Ciudad</ion-label>
+      <ion-input formControlName="vciudad" name="vciudad"  [(ngModel)]="cliente.ciudad"></ion-input>
+    </ion-item>
+    <print-error [control]="f.vciudad"></print-error>    
+
+    <ion-item>
+      <ion-label position="stacked">País</ion-label>
+      <ion-input formControlName="vpais" name="vpais"  [(ngModel)]="cliente.pais"></ion-input>
+    </ion-item>
+    <print-error [control]="f.vpais"></print-error>    
   </ion-list>
 
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">

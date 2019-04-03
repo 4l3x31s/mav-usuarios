@@ -30,7 +30,7 @@ export class SqliteService {
     }
   }
 
-  setclienteSesion(cliente: MdlCliente): Promise<any> {
+  setclienteSesion(cliente: MdlCliente): Promise<any> { 
     return this.getDB()
       .then((db: SQLiteObject) => {
         try{
@@ -65,6 +65,8 @@ export class SqliteService {
               cliente=new MdlCliente(
                 data.rows.item(0).id,
                 data.rows.item(0).nombre,                
+                null,
+                null,
                 null,
                 null,
                 null,

@@ -30,10 +30,28 @@ export class ClienteService {
       null,
       null,
       null,
+      null,
+      null,
       null);
   }
 
   getCliente(id: number) : Observable<MdlCliente>{
     return this.afDB.object<MdlCliente>('cliente/'+id).valueChanges();
+  }
+
+  getClientePorUserPass(user: string, pass: string) : Observable<MdlCliente[]> {
+    return new Observable<MdlCliente[]>(observer => {
+      this.afDB.list<MdlCliente>('cliente/',
+        ref => ref.orderByChild('user').equalTo(user)).valueChanges()
+        .subscribe(cliente=>{
+          console.log('service',cliente);
+          if(cliente.length > 0 && pass == cliente[0].pass){
+            observer.next(cliente);
+          } else {
+            observer.next();
+          }
+          observer.complete();
+        });
+    });
   }
 }

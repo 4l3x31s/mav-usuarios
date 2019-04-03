@@ -5,5 +5,24 @@
 </ion-header>
 
 <ion-content padding>
+  <form [formGroup]="formLogin" novalidate>
+    <ion-list>
+      <ion-item>
+        <ion-label position="stacked">Usuario</ion-label>
+        <ion-input formControlName="vuser" [(ngModel)]="user"></ion-input>
+      </ion-item>
+      <print-error [control]="f.vuser"></print-error>
 
+      <ion-item>
+        <ion-label position="stacked">Contraseña</ion-label>
+        <ion-input formControlName="vpass" [(ngModel)]="pass" type="password"></ion-input>
+      </ion-item>
+      <print-error [control]="f.vpass"></print-error>
+
+    </ion-list>
+
+    <ion-button expand="block" shape="round" (click)="ingresar()" [disabled]="formLogin.invalid">
+      Ingresar
+    </ion-button>
+  </form>
 </ion-content>
