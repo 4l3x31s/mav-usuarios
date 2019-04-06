@@ -14,11 +14,16 @@ export class AppComponent {
       title: 'Home',
       url: '/home',
       icon: 'home'
-    },   
+    },
     {
       title: 'Cliente',
       url: '/detalle-cliente',
       icon: 'person-add'
+    },
+    {
+      title: 'Carrera',
+      url: '/detalle-carrera',
+      icon: 'car'
     }
   ];
 

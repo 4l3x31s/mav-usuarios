@@ -1,0 +1,14 @@
+<ion-header>
+  <ion-toolbar color="rosado">
+    <ion-title>mapa</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div #map id="map"></div>
+  <ion-fab (click)="guardarLatLong()"  vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button>
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

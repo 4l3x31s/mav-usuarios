@@ -1,4 +1,4 @@
-export class Carrera {
+export class MdlCarrera {
     constructor (
         public id: number,
         public idUsuario: number,
@@ -21,7 +21,7 @@ export class Carrera {
         public horaFin: string,
         public tipoPago: string, // El tipo pago, (empresa, efectivo, total, deposito)
         public cobro: string,
-        public estado: number
+        public estado: boolean
     ) {
 
     }

@@ -23,12 +23,12 @@ export class DetalleClientePage implements OnInit {
     public alertService: AlertService,
     public navController: NavController
     ) { }
+
   get f() { return this.frmCliente.controls; }
 
   ngOnInit() {
     this.iniciarValidaciones();
     this.cliente = this.clienteService.getClienteSesion();
-    
   }
 
   public iniciarValidaciones(){
@@ -67,7 +67,7 @@ export class DetalleClientePage implements OnInit {
         Validators.required,
         Validators.minLength(8),
         Validators.maxLength(15),
-      ]],     
+      ]],
       vemail: ['', [
         Validators.required,
         Validators.minLength(10),
@@ -78,14 +78,12 @@ export class DetalleClientePage implements OnInit {
         Validators.required,
         Validators.minLength(10),
         Validators.maxLength(30),
-        Validators.email,
       ]],
       vpais: ['', [
         Validators.required,
         Validators.minLength(10),
         Validators.maxLength(30),
-        Validators.email,
-      ]],     
+      ]],
     })
   }
 
@@ -102,6 +100,5 @@ export class DetalleClientePage implements OnInit {
         this.alertService.present('Error','Hubo un error al grabar los datos');
         this.navController.navigateRoot('/home');
       })
-
   }
 }

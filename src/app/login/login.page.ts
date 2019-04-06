@@ -40,7 +40,7 @@ export class LoginPage implements OnInit {
         }
       });
   }
-  
+
   iniciaValidaciones() {
     this.formLogin = this.fb.group({
       vuser: ['', [
@@ -58,7 +58,8 @@ export class LoginPage implements OnInit {
       .then(() => {
         this.sesionService.login(this.user, this.pass)
           .subscribe(() => {
-            console.log('login exito');
+            console.log('login exito : ' + this.sesionService.clienteSesionPrueba.nombre);
+            
             this.navController.navigateRoot('/home');
             this.loadingService.dismiss();
           }, error => {

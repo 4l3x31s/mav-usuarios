@@ -35,7 +35,7 @@ export class ClienteService {
       null);
   }
 
-  getCliente(id: number) : Observable<MdlCliente>{
+  getCliente(id: number): Observable<MdlCliente>{
     return this.afDB.object<MdlCliente>('cliente/'+id).valueChanges();
   }
 

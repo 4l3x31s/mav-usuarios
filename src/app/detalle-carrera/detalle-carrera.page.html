@@ -1,0 +1,147 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>detalle-carrera</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <form [formGroup]="frmCarrera" novalidate>
+    <ion-list> 
+      <ion-item>
+          <ion-label position="stacked">Cliente</ion-label>
+          <ion-input readonly>{{cliente?.nombre}}</ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Latitud inicial</ion-label>
+        <ion-input formControlName="vlatInicio" [(ngModel)]="carrera.latInicio" ></ion-input>
+      </ion-item>
+      <print-error [control]="f.vlatInicio"></print-error>
+      
+      <ion-item>
+        <ion-label position="stacked">Longitud inicial</ion-label>
+        <ion-input formControlName="vlongInicio" [(ngModel)]="carrera.longInicio" ></ion-input>
+      </ion-item>
+      <print-error [control]="f.vlongInicio"></print-error>
+
+      <ion-item>
+        <ion-label position="stacked">Latitud final</ion-label>
+        <ion-input formControlName="vlatFin" [(ngModel)]="carrera.latFin" ></ion-input>
+      </ion-item>
+      <print-error [control]="f.vlatFin"></print-error>
+      
+      <ion-item>
+        <ion-label position="stacked">Longitud final</ion-label>
+        <ion-input formControlName="vlongFin" [(ngModel)]="carrera.longFin" ></ion-input>
+      </ion-item>
+      <print-error [control]="f.vlongFin"></print-error>
+
+      <ion-item>
+        <ion-label position="stacked">Costo</ion-label>
+        <ion-input formControlName="vcosto" [(ngModel)]="carrera.costo"></ion-input>
+      </ion-item>
+      <print-error [control]="f.vcosto"></print-error>
+
+      <ion-item>
+        <ion-label position="stacked">Moneda</ion-label>
+        <ion-select placeholder="Seleccione el tipo de Moneda" formControlName="vmoneda" [(ngModel)]="carrera.moneda">
+            <ion-select-option value="Bolivianos">Bolivianos</ion-select-option>
+            <ion-select-option value="Dolares">Dolares</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <print-error [control]="f.vmoneda"></print-error>
+
+      <ion-item>
+        <ion-label position="stacked">Calificación Cliente</ion-label>
+        <ion-select placeholder="Califique al cliente" formControlName="vcalifCliente" [(ngModel)]="carrera.califCliente">
+            <ion-select-option value="1">Malo</ion-select-option>
+            <ion-select-option value="2">Regular</ion-select-option>
+            <ion-select-option value="3">Bueno</ion-select-option>
+            <ion-select-option value="4">Exelente</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <print-error [control]="f.vcalifCliente"></print-error>
+    
+      <ion-item>
+        <ion-label position="stacked">Calificación Conductora</ion-label>
+        <ion-select placeholder="Califique a la conductora" formControlName="vcalifConductora" [(ngModel)]="carrera.califConductora">
+            <ion-select-option value="1">Malo</ion-select-option>
+            <ion-select-option value="2">Regular</ion-select-option>
+            <ion-select-option value="3">Bueno</ion-select-option>
+            <ion-select-option value="4">Exelente</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <print-error [control]="f.vcalifConductora"></print-error>
+
+      <ion-item>
+        <ion-label position="stacked">Observación del Cliente</ion-label>
+        <ion-textarea  formControlName="vobsCliente" [(ngModel)]="carrera.obsCliente">
+        </ion-textarea>
+      </ion-item>
+      <print-error [control]="f.vobsCliente"></print-error>
+
+      <ion-item>
+        <ion-label position="stacked">Observación de la conductora</ion-label>
+        <ion-textarea  formControlName="vobsConductora" [(ngModel)]="carrera.obsConductora">
+        </ion-textarea>
+      </ion-item>
+      <print-error [control]="f.vobsConductora"></print-error>
+
+      <ion-item>
+        <ion-label position="stacked">Observación de la carrera</ion-label>
+        <ion-textarea  formControlName="vobsCarrera" [(ngModel)]="carrera.obsCarrera">
+        </ion-textarea>
+      </ion-item>
+      <print-error [control]="f.vobsCarrera"></print-error>
+
+      <ion-item>
+        <ion-label position="stacked">Descripción del lugar</ion-label>
+        <ion-textarea  formControlName="vdescLugar" [(ngModel)]="carrera.descLugar">
+        </ion-textarea>
+      </ion-item>
+      <print-error [control]="f.vdescLugar"></print-error>
+
+      <ion-item>
+        <ion-label position="stacked">Fecha</ion-label>
+        <ion-datetime formControlName="vfecha" [(ngModel)]="carrera.fecha"
+                      display-format="DD/MM/YYYY"></ion-datetime>
+      </ion-item>
+      <print-error [control]="f.vfecha"></print-error>
+
+      <ion-item>
+        <ion-label position="stacked">Hora inicio</ion-label>
+        <ion-datetime formControlName="vhoraInicio" [(ngModel)]="carrera.horaInicio" display-format="HH:mm"></ion-datetime>
+      </ion-item>
+      <print-error [control]="f.vhoraInicio"></print-error>
+
+      <ion-item>
+        <ion-label position="stacked">Hora fin</ion-label>
+        <ion-datetime formControlName="vhoraFin" [(ngModel)]="carrera.horaFin" display-format="HH:mm"></ion-datetime>
+      </ion-item>
+      <print-error [control]="f.vhoraFin"></print-error>
+
+      <ion-item>
+        <ion-label position="stacked">Tipo</ion-label>
+        <ion-select placeholder="Seleccione el tipo de pago" formControlName="vtipoPago" [(ngModel)]="carrera.tipoPago">
+          <ion-select-option value="Empresa">Empresa</ion-select-option>
+          <ion-select-option value="Efectivo">Efectivo</ion-select-option>
+          <ion-select-option value="Total">Total</ion-select-option>
+          <ion-select-option value="Deposito">Deposito</ion-select-option>
+      </ion-select>
+      </ion-item>
+      <print-error [control]="f.vtipoPago"></print-error>
+      
+      <ion-item>
+        <ion-label position="stacked">Cobro</ion-label>
+        <ion-input formControlName="vcobro" [(ngModel)]="carrera.cobro"></ion-input>
+      </ion-item>
+      <print-error [control]="f.vcobro"></print-error>
+    </ion-list>
+  </form>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button  (click)="grabar()" >
+        <ion-icon name="send"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

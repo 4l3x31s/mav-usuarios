@@ -16,7 +16,10 @@ const routes: Routes = [
     loadChildren: './list/list.module#ListPageModule'
   },
   { path: 'detalle-cliente', loadChildren: './detalle-cliente/detalle-cliente.module#DetalleClientePageModule' },
-  { path: 'login', loadChildren: './login/login.module#LoginPageModule' }
+  { path: 'login', loadChildren: './login/login.module#LoginPageModule' },  { path: 'detalle-carrera', loadChildren: './detalle-carrera/detalle-carrera.module#DetalleCarreraPageModule' },
+  { path: 'mapa', loadChildren: './comun/mapa/mapa.module#MapaPageModule' },
+  { path: 'mapa', loadChildren: './comun/mapa/mapa.module#MapaPageModule' }
+
 
 
 ];
