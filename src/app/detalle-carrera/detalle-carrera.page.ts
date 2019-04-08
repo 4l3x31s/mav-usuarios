@@ -9,6 +9,7 @@ import { MdlCliente } from '../modelo/mdlCliente';
 import { MapaPage } from '../comun/mapa/mapa.page';
 import { SesionService } from '../services/sesion.service';
 import { CarreraService } from '../services/db/carrera.service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-detalle-carrera',
@@ -26,7 +27,7 @@ export class DetalleCarreraPage implements OnInit {
     null, null, null, null, null,
     null, null, null, null, null,
     null, null, null, null, null,
-    null, null);
+    null);
 
   constructor(
     public fb: FormBuilder,
@@ -36,7 +37,11 @@ export class DetalleCarreraPage implements OnInit {
     public navController: NavController,
     public modalController: ModalController,
     public sesionService: SesionService,
-    ) { }
+    ) {
+      let now = moment().format('DD/MM/YYYY');
+      this.carrera.fecha =now;
+      console.log(now)
+     }
 
   get f() { return this.frmCarrera.controls; }
 
@@ -50,7 +55,7 @@ export class DetalleCarreraPage implements OnInit {
             this.cliente = cliente;
             console.log("cliente: " +this.cliente.nombre)
           } else {
-            //this.navController.navigateRoot('/login');
+            this.navController.navigateRoot('/login');
           }
         });
     });
@@ -122,10 +127,8 @@ export class DetalleCarreraPage implements OnInit {
   public grabar(){
     this.loadingServices.present();
     var identificadorPrueba = Date.now();
-    this.carrera.idUsuario = this.cliente.id;
-    this.carrera.idCarrera = identificadorPrueba;
-    this.carrera.idContrato = identificadorPrueba;
-    this.carrera.estado = true;
+    this.carrera.idUsuario = this.cliente.id;        
+    this.carrera.estado = 1;
 
     console.log('idcarrera: ' + identificadorPrueba);
 

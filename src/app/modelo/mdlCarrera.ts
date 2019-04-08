@@ -2,7 +2,6 @@ export class MdlCarrera {
     constructor (
         public id: number,
         public idUsuario: number,
-        public idCarrera: number,
         public idContrato: number,
         public latInicio: string,
         public longInicio: string,
@@ -21,7 +20,7 @@ export class MdlCarrera {
         public horaFin: string,
         public tipoPago: string, // El tipo pago, (empresa, efectivo, total, deposito)
         public cobro: string,
-        public estado: boolean
+        public estado: number //1 en programado, 2 en proceso, 3 finalizado
     ) {
 
     }
