@@ -1,0 +1,27 @@
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { Routes, RouterModule } from '@angular/router';
+import { FullCalendarModule } from '@fullcalendar/angular'; // for FullCalendar!
+import { IonicModule } from '@ionic/angular';
+
+import { CalendarioPage } from './calendario.page';
+
+const routes: Routes = [
+  {
+    path: '',
+    component: CalendarioPage
+  }
+];
+
+@NgModule({
+  imports: [
+    CommonModule,
+    FormsModule,
+    IonicModule,
+    FullCalendarModule, // for FullCalendar!
+    RouterModule.forChild(routes)
+  ],
+  declarations: [CalendarioPage]
+})
+export class CalendarioPageModule {}
