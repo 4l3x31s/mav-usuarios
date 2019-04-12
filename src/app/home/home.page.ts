@@ -84,7 +84,8 @@ export class HomePage implements OnInit {
       position: myLatlng,
       map: map,
       draggable: true,
-      title: 'Mueveme'
+      title: 'Mueveme',
+      icon: 'assets/image/inicio.png'
     });
     marker.addListener('dragend', () => {
       console.log(JSON.stringify(marker.getPosition()));
