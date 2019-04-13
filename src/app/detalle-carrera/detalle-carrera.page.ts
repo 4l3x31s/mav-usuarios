@@ -27,7 +27,7 @@ export class DetalleCarreraPage implements OnInit {
     null, null, null, null, null,
     null, null, null, null, null,
     null, null, null, null, null,
-    null);
+    null, null);
 
   constructor(
     public fb: FormBuilder,

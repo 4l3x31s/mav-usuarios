@@ -64,9 +64,7 @@ export class SqliteService {
             if (data.rows.length > 0) {
               cliente=new MdlCliente(
                 data.rows.item(0).id,
-                data.rows.item(0).nombre,                
-                null,
-                null,
+                data.rows.item(0).nombre,
                 null,
                 null,
                 null,

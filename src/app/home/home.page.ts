@@ -7,6 +7,7 @@ import { MdlCliente } from '../modelo/mdlCliente';
 import { SesionService } from '../services/sesion.service';
 import { ToastService } from '../services/util/toast.service';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
+import { Observable } from 'rxjs';
 
 declare var google;
 
@@ -22,6 +23,9 @@ export class HomePage implements OnInit {
   latitud: string;
   longitud: string;
   paginaRetorno: string;
+  
+  searchBox: any;
+
   constructor(
     public sesionService: SesionService,
     public navParam: NavParamService,
@@ -58,6 +62,54 @@ export class HomePage implements OnInit {
        this.cargarMapa(myLatlng);
      });
   }
+  buscarTexto(map,markers): Observable<any> {
+    return Observable.create((observer) => {
+      this.searchBox.addListener('places_changed', () =>{
+        //marker.setMap(null);
+        let places = this.searchBox.getPlaces();
+        if (places.length === 0) {
+          return;
+        }
+        markers.forEach(function(marker) {
+          marker.setMap(null);
+        });
+        markers = [];
+        var bounds = new google.maps.LatLngBounds();
+        places.forEach(function(place) {
+          if (!place.geometry) {
+            console.log("El lugar buscado no existe");
+            return;
+          }
+          markers.push(new google.maps.Marker({
+            map: map,
+            draggable: true,
+            title: 'Mueveme',
+            position: place.geometry.location
+          }));
+          
+          if (place.geometry.viewport) {
+            bounds.union(place.geometry.viewport);
+          } else {
+            bounds.extend(place.geometry.location);
+          }
+        });
+        map.fitBounds(bounds);
+        observer.next(markers);
+        observer.complete();
+      });
+  });
+  }
+  markerEvent(markers): Observable<any> {
+    return Observable.create((observer) => {
+      markers[0].addListener('dragend', () => {
+        console.log(JSON.stringify(markers[0].getPosition()));
+        const objStr: string = JSON.stringify(markers[0].getPosition());
+        const obj = JSON.parse(objStr);
+        observer.next(obj);
+        observer.complete();
+      });
+  });
+  }
   cargarMapa(myLatlng) {
     // const myLatlng = { lat: -16.4978888, lng: -68.1314424};
     const mapOptions = {
@@ -72,11 +124,11 @@ export class HomePage implements OnInit {
     this.longitud = myLatlng.lng.toString();
     var map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
     let input = document.getElementById('pac-input');
-    let searchBox = new google.maps.places.SearchBox(input);
+    this.searchBox = new google.maps.places.SearchBox(input);
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
 
     map.addListener('bounds_changed', () =>{
-      searchBox.setBounds(map.getBounds());
+      this.searchBox.setBounds(map.getBounds());
     });
     let markers = [];
     let marker = new google.maps.Marker
@@ -95,43 +147,18 @@ export class HomePage implements OnInit {
       this.latitud = obj.lat;
       this.longitud = obj.lng;
     });
+    let respuesta = this.buscarTexto(map, markers);
+    respuesta.subscribe( markers2 => {
+      console.log("ingreso")
+      let respuesta = this.markerEvent(markers2);
+          respuesta.subscribe(obj => {
+            this.latitud = obj.lat;
+            this.longitud = obj.lng;
+            console.log(this.latitud);
+            
+          })
+    })
     // {"lat":-16.498217987944532,"lng":-68.13232216455685}
-    searchBox.addListener('places_changed', () =>{
-      //marker.setMap(null);
-      let places = searchBox.getPlaces();
-      if (places.length === 0) {
-        return;
-      }
-      markers.forEach(function(marker) {
-        marker.setMap(null);
-      });
-      markers = [];
-      var bounds = new google.maps.LatLngBounds();
-      places.forEach(function(place) {
-        if (!place.geometry) {
-          console.log("El lugar buscado no existe");
-          return;
-        }
-        markers.push(new google.maps.Marker({
-          map: map,
-          draggable: true,
-          title: 'Mueveme',
-          position: place.geometry.location
-        }));
-        markers[0].addListener('dragend', () => {
-          console.log(JSON.stringify(markers[0].getPosition()));
-          const objStr: string = JSON.stringify(markers[0].getPosition());
-          const obj = JSON.parse(objStr);
-          this.latitud = obj.lat;
-          this.longitud = obj.lng;
-        });
-        if (place.geometry.viewport) {
-          bounds.union(place.geometry.viewport);
-        } else {
-          bounds.extend(place.geometry.location);
-        }
-      });
-      map.fitBounds(bounds);
-    });
+    
   }
 }
