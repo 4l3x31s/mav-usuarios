@@ -17,6 +17,8 @@ export class MdlConductora {
         public pass: string,
         public lat: string,
         public long: string,
+        public pais: string,
+        public ciudad: string,
         public foto,
         public estado: boolean
     ) {
