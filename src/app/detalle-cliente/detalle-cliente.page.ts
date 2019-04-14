@@ -5,6 +5,7 @@ import { ClienteService } from '../services/db/cliente.service';
 import { LoadingService } from '../services/util/loading.service';
 import { AlertService } from '../services/util/alert.service';
 import { NavController } from '@ionic/angular';
+import { SesionService } from '../services/sesion.service';
 
 @Component({
   selector: 'app-detalle-cliente',
@@ -21,7 +22,9 @@ export class DetalleClientePage implements OnInit {
     public clienteService: ClienteService,
     public loadingServices: LoadingService,
     public alertService: AlertService,
-    public navController: NavController
+    public navController: NavController,
+    public sesionService: SesionService,
+    public loadingService: LoadingService
     ) { }
 
   get f() { return this.frmCliente.controls; }
@@ -76,12 +79,12 @@ export class DetalleClientePage implements OnInit {
       ]],
       vciudad: ['', [
         Validators.required,
-        Validators.minLength(10),
+        Validators.minLength(5),
         Validators.maxLength(30),
       ]],
       vpais: ['', [
         Validators.required,
-        Validators.minLength(10),
+        Validators.minLength(7),
         Validators.maxLength(30),
       ]],
     })
@@ -93,6 +96,7 @@ export class DetalleClientePage implements OnInit {
       .then(() => {
         this.loadingServices.dismiss();
         this.alertService.present('Info','Datos guardados correctamente.');
+        this.ingresar();
       })
       .catch( error => {
         this.loadingServices.dismiss();
@@ -101,4 +105,26 @@ export class DetalleClientePage implements OnInit {
         this.navController.navigateRoot('/home');
       })
   }
+
+  public ingresar() {
+    this.loadingService.present()
+      .then(() => {
+        this.sesionService.login(this.cliente.user, this.cliente.pass)
+          .subscribe(() => {
+            console.log('login exito : ' + this.sesionService.clienteSesionPrueba.nombre);
+            this.navController.navigateRoot('/home');
+            this.loadingService.dismiss();
+          }, error => {
+            console.log('error-login', error);
+            if (error.message) {
+              this.alertService.present('Error', error.message);
+            } else {
+              this.alertService.present('Error', 'Hubo un error al ingresar.');
+            }
+            this.loadingService.dismiss();
+          });
+      })
+  }
+
+  
 }

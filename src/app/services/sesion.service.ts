@@ -42,8 +42,8 @@ export class SesionService {
           if(cliente){
             if(environment.isSesionPrueba){
               this.clienteSesionPrueba = cliente[0];
-              this.clienteSesionPrueba.nombre += '(PRUEBA)';
-              console.log('bienvenido: ' + this.clienteSesionPrueba.nombre);
+              //this.clienteSesionPrueba.nombre += '(PRUEBA)';
+              //console.log('bienvenido: ' + this.clienteSesionPrueba.nombre);
             } else {
               this.sqlite.setclienteSesion(cliente[0]);
             }

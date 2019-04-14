@@ -59,7 +59,6 @@ export class LoginPage implements OnInit {
         this.sesionService.login(this.user, this.pass)
           .subscribe(() => {
             console.log('login exito : ' + this.sesionService.clienteSesionPrueba.nombre);
-            
             this.navController.navigateRoot('/home');
             this.loadingService.dismiss();
           }, error => {
@@ -72,6 +71,10 @@ export class LoginPage implements OnInit {
             this.loadingService.dismiss();
           });
       })
+  }
 
+
+  public irRegistrarCliente(){
+    this.navController.navigateRoot('/detalle-cliente');
   }
 }

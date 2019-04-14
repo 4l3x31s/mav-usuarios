@@ -13,13 +13,19 @@
       </ion-item>
 
       <ion-item>
-        <ion-label position="stacked" >Latitud y longitud inicial</ion-label>
-        <ion-input > {{carrera.latInicio}} , {{carrera.longInicio}} </ion-input>
+        <ion-label>
+          <h2>Origen</h2>
+          <p >Lat: {{ carrera.latInicio }}</p>
+          <p >Long: {{ carrera.longInicio }}</p>
+        </ion-label>
       </ion-item>
       
       <ion-item>
-        <ion-label position="stacked">Latitud y longitud final</ion-label>
-        <ion-input > {{carrera.latFin}} , {{carrera.longFin}}</ion-input>
+        <ion-label>
+          <h2>Dstino</h2>
+          <p >Lat: {{ carrera.latFin }}</p>
+          <p >Long: {{ carrera.longFin }}</p>
+        </ion-label>
       </ion-item>
       
       <ion-item>

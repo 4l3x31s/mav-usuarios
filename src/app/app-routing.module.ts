@@ -19,7 +19,8 @@ const routes: Routes = [
   { path: 'login', loadChildren: './login/login.module#LoginPageModule' },  { path: 'detalle-carrera', loadChildren: './detalle-carrera/detalle-carrera.module#DetalleCarreraPageModule' },
   { path: 'mapa', loadChildren: './comun/mapa/mapa.module#MapaPageModule' },
   { path: 'mapa', loadChildren: './comun/mapa/mapa.module#MapaPageModule' },
-  { path: 'calendario', loadChildren: './comun/calendario/calendario.module#CalendarioPageModule' }
+  { path: 'calendario', loadChildren: './comun/calendario/calendario.module#CalendarioPageModule' },
+  { path: 'detalle-contrato', loadChildren: './detalle-contrato/detalle-contrato.module#DetalleContratoPageModule' }
 
 
 
