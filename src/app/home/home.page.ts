@@ -33,7 +33,7 @@ export class HomePage implements OnInit {
     public toastCtrl: ToastService,
     public modalController: ModalController,
     public alertController: AlertService,
-    public geolocation: Geolocation
+    public geolocation: Geolocation,
   ) { }
 
   ngOnInit() {
@@ -62,7 +62,7 @@ export class HomePage implements OnInit {
        this.cargarMapa(myLatlng);
      });
   }
-  buscarTexto(map,markers): Observable<any> {
+  buscarTexto(map,markers, alertController): Observable<any> {
     return Observable.create((observer) => {
       this.searchBox.addListener('places_changed', () =>{
         //marker.setMap(null);
@@ -75,27 +75,41 @@ export class HomePage implements OnInit {
         });
         markers = [];
         var bounds = new google.maps.LatLngBounds();
+        let contador = 0;
         places.forEach(function(place) {
           if (!place.geometry) {
             console.log("El lugar buscado no existe");
             return;
           }
-          markers.push(new google.maps.Marker({
-            map: map,
-            draggable: true,
-            title: 'Mueveme',
-            position: place.geometry.location
-          }));
-          
-          if (place.geometry.viewport) {
-            bounds.union(place.geometry.viewport);
-          } else {
-            bounds.extend(place.geometry.location);
+          if (contador < 1) {
+            markers.push(new google.maps.Marker({
+              map: map,
+              draggable: true,
+              title: 'Mueveme',
+              position: place.geometry.location
+            }));
+            console.log(markers.length);
+            if (place.geometry.viewport) {
+              bounds.union(place.geometry.viewport);
+            } else {
+              bounds.extend(place.geometry.location);
+            }
           }
+          contador++;
+          
         });
-        map.fitBounds(bounds);
-        observer.next(markers);
-        observer.complete();
+        console.log(markers.length);
+        if(contador === 1) {
+          map.fitBounds(bounds);
+          observer.next(markers);
+          observer.complete();
+        } else {
+          markers.forEach(function(marker) {
+            marker.setMap(null);
+          });
+          alertController.present('Alerta', 'debes escojer una opcion de la lista');
+          return;
+        }
       });
   });
   }
@@ -147,7 +161,7 @@ export class HomePage implements OnInit {
       this.latitud = obj.lat;
       this.longitud = obj.lng;
     });
-    let respuesta = this.buscarTexto(map, markers);
+    let respuesta = this.buscarTexto(map, markers, this.alertController);
     respuesta.subscribe( markers2 => {
       console.log("ingreso")
       let respuesta = this.markerEvent(markers2);
