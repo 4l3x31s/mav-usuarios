@@ -10,6 +10,7 @@ import { MapaPage } from '../comun/mapa/mapa.page';
 import { SesionService } from '../services/sesion.service';
 import { CarreraService } from '../services/db/carrera.service';
 import * as moment from 'moment';
+import { NavParamService } from '../services/nav-param.service';
 
 @Component({
   selector: 'app-detalle-carrera',
@@ -37,10 +38,17 @@ export class DetalleCarreraPage implements OnInit {
     public navController: NavController,
     public modalController: ModalController,
     public sesionService: SesionService,
+    public navParams: NavParamService
     ) {
-      let now = moment().format('DD/MM/YYYY');
-      this.carrera.fecha =now;
-      console.log(now)
+      this.carrera.fecha = moment().format();
+      //this.carrera.horaInicio = moment().format('HH:mm');
+      this.carrera.latInicio = this.navParams.get().latitudIni;
+      this.carrera.longInicio = this.navParams.get().longitudIni;
+      this.carrera.latFin = this.navParams.get().latitudFin;
+      this.carrera.longFin = this.navParams.get().longitudFin;
+      this.carrera.moneda = 'Bolivianos';
+      //let montoFinal: number = (ciudadParametro[0].base + ((element.duration.value / 60) * ciudadParametro[0].tiempo) + ((element.distance.value / 1000) * ciudadParametro[0].distancia));
+      this.carrera.costo = 35;
      }
 
   get f() { return this.frmCarrera.controls; }
@@ -59,7 +67,6 @@ export class DetalleCarreraPage implements OnInit {
           }
         });
     });
-    
 
   }
 
@@ -67,43 +74,10 @@ export class DetalleCarreraPage implements OnInit {
 
   public iniciarValidaciones(){
     this.frmCarrera = this.fb.group({
-      /*vNombreCliente: ['', [
-        Validators.required,
-      ]],*/
-      vlatInicio: ['', [
-        Validators.required,
-      ]],
-      vlongInicio: ['', [
-        Validators.required,
-      ]],
-      vlatFin: ['', [
-        Validators.required,
-      ]],
-      vlongFin: ['', [
-        Validators.required,
-      ]],
-      vcosto: ['', [
+      vdescLugar: ['', [
         Validators.required,
       ]],
       vmoneda: ['', [
-        Validators.required,
-      ]],
-      vcalifCliente: ['', [
-        Validators.required,
-      ]],
-      vcalifConductora: ['', [
-        Validators.required,
-      ]],
-      vobsCliente: ['', [
-        Validators.required,
-      ]],
-      vobsConductora: ['', [
-        Validators.required,
-      ]],
-      vobsCarrera: ['', [
-        Validators.required,
-      ]],
-      vdescLugar: ['', [
         Validators.required,
       ]],
       vfecha: ['', [
@@ -112,13 +86,7 @@ export class DetalleCarreraPage implements OnInit {
       vhoraInicio: ['', [
         Validators.required,
       ]],
-      vhoraFin: ['', [
-        Validators.required,
-      ]],
       vtipoPago: ['', [
-        Validators.required,
-      ]],
-      vcobro: ['', [
         Validators.required,
       ]],
     })

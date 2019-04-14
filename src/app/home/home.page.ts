@@ -20,8 +20,10 @@ export class HomePage implements OnInit {
   cliente: MdlCliente;
   @ViewChild('map') mapElement: ElementRef;
   map: any;
-  latitud: string;
-  longitud: string;
+  latitudIni: string;
+  longitudIni: string;
+  latitudFin: string;
+  longitudFin: string;
   paginaRetorno: string;
   
   searchBox: any;
@@ -34,6 +36,8 @@ export class HomePage implements OnInit {
     public modalController: ModalController,
     public alertController: AlertService,
     public geolocation: Geolocation,
+    public navController: NavController,
+    public navParams: NavParamService
   ) { }
 
   ngOnInit() {
@@ -134,8 +138,8 @@ export class HomePage implements OnInit {
       fullScreenControl: false,
       center: myLatlng
     };
-    this.latitud = myLatlng.lat.toString();
-    this.longitud = myLatlng.lng.toString();
+    this.latitudIni = myLatlng.lat.toString();
+    this.longitudIni = myLatlng.lng.toString();
     var map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
     let input = document.getElementById('pac-input');
     this.searchBox = new google.maps.places.SearchBox(input);
@@ -158,21 +162,30 @@ export class HomePage implements OnInit {
       const objStr: string = JSON.stringify(marker.getPosition());
       const obj = JSON.parse(objStr);
       // window.alert(JSON.stringify(marker.getPosition()));
-      this.latitud = obj.lat;
-      this.longitud = obj.lng;
+      this.latitudIni = obj.lat;
+      this.longitudIni = obj.lng;
     });
     let respuesta = this.buscarTexto(map, markers, this.alertController);
     respuesta.subscribe( markers2 => {
       console.log("ingreso")
       let respuesta = this.markerEvent(markers2);
           respuesta.subscribe(obj => {
-            this.latitud = obj.lat;
-            this.longitud = obj.lng;
-            console.log(this.latitud);
-            
+            this.latitudFin = obj.lat;
+            this.longitudFin = obj.lng;
+            console.log(this.latitudFin);
           })
     })
-    // {"lat":-16.498217987944532,"lng":-68.13232216455685}
-    
+  }
+
+  public irDetalleCarrera() {
+    console.log('ini:  ' + this.latitudIni + ', ' + this.longitudIni);
+    console.log('fin:  ' + this.latitudFin + ', ' + this.longitudFin);
+    this.navParams.set({
+      latitudIni: this.latitudIni,
+      longitudIni: this.longitudIni,
+      latitudFin: this.latitudFin,
+      longitudFin: this.longitudFin
+    });
+    this.navController.navigateForward('/detalle-carrera');
   }
 }
