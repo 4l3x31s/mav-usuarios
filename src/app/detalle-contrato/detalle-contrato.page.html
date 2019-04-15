@@ -1,4 +1,5 @@
 
+<cabecera titulo="Contrato"></cabecera>
 
 <ion-content padding>
     <form [formGroup]="frmContrato" novalidate>
@@ -57,21 +58,19 @@
               <p >Long: {{ contrato.longDestino }}</p>
             </ion-label>
             <ion-icon name="locate" slot="end"></ion-icon>
+          </ion-item>                
+          
+          <ion-item>
+              <ion-label position="stacked">Monto Total</ion-label>
+              <ion-input> {{ contrato.montoTotal }} </ion-input>
           </ion-item>
+          <print-error [control]="f.vMontoTotal"></print-error>
 
-          
-          
           <ion-item>
             <ion-label position="stacked">Cantidad de Pasajeros</ion-label>
             <ion-input formControlName="vCantidadPasajeros" [(ngModel)]="contrato.cantidadPasajeros" type="number"></ion-input>
           </ion-item>
           <print-error [control]="f.vCantidadPasajeros"></print-error>
-          
-          <ion-item (click)="determinarDistanciaTiempo()">
-              <ion-label position="stacked">Monto Total</ion-label>
-              <ion-input formControlName="vMontoTotal" [(ngModel)]="contrato.montoTotal" type="number"></ion-input>
-          </ion-item>
-          <print-error [control]="f.vMontoTotal"></print-error>
             
           <ion-item>
               <ion-label position="stacked">Dias</ion-label>

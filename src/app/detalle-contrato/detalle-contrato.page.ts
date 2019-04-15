@@ -178,6 +178,9 @@ export class DetalleContratoPage implements OnInit {
                 console.log(resultado.data);
                 this.contrato.latOrigen = resultado.data.lat;
                 this.contrato.longOrigen = resultado.data.lng;
+                if(this.contrato.latDestino != null){
+                    this.determinarDistanciaTiempo();
+                }
             });
         });
     }
@@ -191,6 +194,10 @@ export class DetalleContratoPage implements OnInit {
                 console.log(resultado.data);
                 this.contrato.latDestino = resultado.data.lat;
                 this.contrato.longDestino = resultado.data.lng;
+                //calcular costo
+                if(this.contrato.latOrigen != null){
+                    this.determinarDistanciaTiempo();
+                }
             });
         });
     }
