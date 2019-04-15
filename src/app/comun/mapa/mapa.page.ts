@@ -139,13 +139,18 @@ export class MapaPage implements OnInit {
   }
   markerEvent(markers): Observable<any> {
     return Observable.create((observer) => {
-      markers[0].addListener('dragend', () => {
+      console.log(JSON.stringify(markers[0].getPosition()));
+      const objStr: string = JSON.stringify(markers[0].getPosition());
+      const obj = JSON.parse(objStr);
+        markers[0].addListener('dragend', () => {
         console.log(JSON.stringify(markers[0].getPosition()));
         const objStr: string = JSON.stringify(markers[0].getPosition());
         const obj = JSON.parse(objStr);
         observer.next(obj);
         observer.complete();
       });
+      observer.next(obj);
+      observer.complete();
   });
   }
   guardarLatLong() {
