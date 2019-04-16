@@ -25,13 +25,28 @@ export class DetalleClientePage implements OnInit {
     public navController: NavController,
     public sesionService: SesionService,
     public loadingService: LoadingService
-    ) { }
+    ) { console.log('constructor');
+    this.sesionService.crearSesionBase()
+        .then(() => {
+        this.sesionService.getSesion()
+            .then((cliente) => {
+            if (cliente) {
+                this.cliente = cliente;
+                console.log("cliente: " +this.cliente.nombre)
+            } else {
+              this.cliente = this.clienteService.getClienteSesion();
+            }
+            });
+        });
+  }
 
   get f() { return this.frmCliente.controls; }
 
   ngOnInit() {
+    console.log('ngOnInit')
     this.iniciarValidaciones();
-    this.cliente = this.clienteService.getClienteSesion();
+    //this.cliente = this.clienteService.getClienteSesion();
+    
   }
 
   public iniciarValidaciones(){
@@ -61,10 +76,13 @@ export class DetalleClientePage implements OnInit {
         Validators.minLength(4),
         Validators.maxLength(30),
       ]],
+      vconfirmPass: ['',
+       Validators.required],
       vtel: ['', [
         Validators.required,
         Validators.minLength(7),
         Validators.maxLength(7),
+        Validators.pattern(/^[0-9]/),
       ]],
       vcel: ['', [
         Validators.required,
@@ -87,8 +105,29 @@ export class DetalleClientePage implements OnInit {
         Validators.minLength(7),
         Validators.maxLength(30),
       ]],
+    }, {
+      validator: this.mustMatch('vpass', 'vconfirmPass')
     })
   }
+
+  mustMatch(controlName: string, matchingControlName: string) {
+    return (formGroup: FormGroup) => {
+        const control = formGroup.controls[controlName];
+        const matchingControl = formGroup.controls[matchingControlName];
+
+        if (matchingControl.errors && !matchingControl.errors.mustMatch) {
+            // return if another validator has already found an error on the matchingControl
+            return;
+        }
+
+        // set error on matchingControl if validation fails
+        if (control.value !== matchingControl.value) {
+            matchingControl.setErrors({ mustMatch: 'Las contraseñas no coinciden' });
+        } else {
+            matchingControl.setErrors(null);
+        }
+    }
+}
 
   public grabar(){
     this.loadingServices.present();

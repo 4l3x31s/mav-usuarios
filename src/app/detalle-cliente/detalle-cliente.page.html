@@ -38,6 +38,12 @@
     <print-error [control]="f.vpass"></print-error>
 
     <ion-item>
+      <ion-label position="stacked">Confirmar Contraseña</ion-label>
+      <ion-input type="password" formControlName="vconfirmPass" name="vconfirmPass" ></ion-input>
+    </ion-item>
+    <print-error [control]="f.vconfirmPass"></print-error>
+
+    <ion-item>
       <ion-label position="stacked">Telefono</ion-label>
       <ion-input formControlName="vtel" name="vtel"  [(ngModel)]="cliente.tel"></ion-input>
     </ion-item>
