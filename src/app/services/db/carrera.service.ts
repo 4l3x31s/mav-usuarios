@@ -17,4 +17,14 @@ export class CarreraService {
     }
    return this.afDB.database.ref('carrera/' + mdlCarrera.id).set(mdlCarrera);
  }
+
+ getCarreraSesion(): MdlCarrera {
+  return new MdlCarrera(
+    null, null, null, null, null,
+    null, null, null, null, null,
+    null, null, null, null, null,
+    null, null, null, null, null,
+    null);
+  }
+
 }

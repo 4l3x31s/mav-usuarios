@@ -16,9 +16,8 @@ export class MdlCarrera {
         public obsConductora: string,
         public obsCarrera: string,
         public descLugar: string,
-        public fecha: string,
-        public horaInicio: string,
-        public horaFin: string,
+        public fechaInicio: string,
+        public fechaFin: string,
         public tipoPago: string, // El tipo pago, (empresa, efectivo, total, deposito)
         public cobro: string,
         public estado: number

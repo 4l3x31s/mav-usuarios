@@ -3,7 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ClienteService } from '../services/db/cliente.service';
 import { LoadingService } from '../services/util/loading.service';
 import { AlertService } from '../services/util/alert.service';
-import { NavController, ModalController } from '@ionic/angular';
+import { NavController, ModalController, AlertController } from '@ionic/angular';
 import { MdlCarrera } from '../modelo/mdlCarrera';
 import { MdlCliente } from '../modelo/mdlCliente';
 import { MapaPage } from '../comun/mapa/mapa.page';
@@ -23,12 +23,7 @@ export class DetalleCarreraPage implements OnInit {
 
   public cliente: MdlCliente;
 
-  public carrera: MdlCarrera = new MdlCarrera(
-    null, null, null, null, null,
-    null, null, null, null, null,
-    null, null, null, null, null,
-    null, null, null, null, null,
-    null, null);
+  public carrera: MdlCarrera;
 
   constructor(
     public fb: FormBuilder,
@@ -38,9 +33,11 @@ export class DetalleCarreraPage implements OnInit {
     public navController: NavController,
     public modalController: ModalController,
     public sesionService: SesionService,
-    public navParams: NavParamService
+    public navParams: NavParamService,
+    public alertController: AlertController
     ) {
-      this.carrera.fecha = moment().format();
+      this.carrera = this.carreraService.getCarreraSesion();
+      this.carrera.fechaInicio = moment().format();
       //this.carrera.horaInicio = moment().format('HH:mm');
       this.carrera.latInicio = this.navParams.get().latitudIni;
       this.carrera.longInicio = this.navParams.get().longitudIni;
@@ -54,6 +51,7 @@ export class DetalleCarreraPage implements OnInit {
   get f() { return this.frmCarrera.controls; }
 
   ngOnInit() {
+   
     this.iniciarValidaciones();
     this.sesionService.crearSesionBase()
     .then(() => {
@@ -80,18 +78,44 @@ export class DetalleCarreraPage implements OnInit {
       vmoneda: ['', [
         Validators.required,
       ]],
-      vfecha: ['', [
+      vfechaInicio: ['', [
         Validators.required,
       ]],
-      vhoraInicio: ['', [
-        Validators.required,
-      ]],
+      
       vtipoPago: ['', [
         Validators.required,
       ]],
     })
   }
+ 
+  async confirmarFecha() {
+    let fechaCarrera =  moment(this.carrera.fechaInicio).toObject();
+    console.log(fechaCarrera);
+    console.log(fechaCarrera.years);
+    const alert = await this.alertController.create({
+      header: 'Confirmar',
+      message: 'Desea crear la carrera en: ' + 
+               'Fecha:  <strong>' + fechaCarrera.date  + '/' + (fechaCarrera.months + 1) + '/'+ fechaCarrera.years +'</strong> <br> '+ 
+               'Hora :  <strong>' + fechaCarrera.hours + ':' + fechaCarrera.minutes + ' ? </strong>',
+      buttons: [
+        {
+          text: 'cancelar',
+          role: 'cancelar',
+          cssClass: 'secondary',
+          handler: (blah) => {
+            //this.grabar();
+          }
+        }, {
+          text: 'Confirmar',
+          handler: () => {
+            this.grabar();
+          }
+        }
+      ]
+    });
 
+    await alert.present();
+  }
   public grabar(){
     this.loadingServices.present();
     var identificadorPrueba = Date.now();
@@ -104,13 +128,15 @@ export class DetalleCarreraPage implements OnInit {
       .then(() => {
         this.loadingServices.dismiss();
         this.alertService.present('Info','Datos guardados correctamente.');
+        this.carrera = this.carreraService.getCarreraSesion();        
       })
       .catch( error => {
         this.loadingServices.dismiss();
         console.log(error);
-        this.alertService.present('Error','Hubo un error al grabar los datos');
-        this.navController.navigateRoot('/home');
+        this.alertService.present('Error','Hubo un error al grabar los datos');        
       })
+
+      this.navController.navigateRoot('/home');
 
   }
 

@@ -8,6 +8,7 @@
             <ion-label position="stacked" >Cliente</ion-label>
             <ion-input >{{cliente?.nombre}}</ion-input>
           </ion-item>
+
           <ion-item>
               <ion-label position="stacked">Pais</ion-label>
               <ion-select interface="popover" formControlName="vPais" placeholder="Seleccione el Pais"
@@ -18,6 +19,7 @@
               </ion-select>
           </ion-item>
           <print-error [control]="f.vPais"></print-error>
+          
           <ion-item>
               <ion-label position="stacked">Ciudad</ion-label>
               <ion-select interface='popover' formControlName="vCiudad" placeholder="Seleccione la Ciudad"

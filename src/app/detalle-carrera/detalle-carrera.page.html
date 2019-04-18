@@ -50,18 +50,11 @@
       </ion-item>
       
       <ion-item>
-        <ion-label position="stacked">Fecha</ion-label>
-        <ion-datetime formControlName="vfecha" [(ngModel)]="carrera.fecha"
-                      display-format="DD/MM/YYYY"></ion-datetime>
+        <ion-label position="stacked">Fecha y hora</ion-label>
+        <ion-datetime formControlName="vfechaInicio" [(ngModel)]="carrera.fechaInicio"
+                      display-format="DD/MM/YYYY HH:mm"></ion-datetime>
       </ion-item>
-      <print-error [control]="f.vfecha"></print-error>
-
-      <ion-item>
-        <ion-label position="stacked">Hora</ion-label>
-        <ion-datetime formControlName="vhoraInicio" [(ngModel)]="carrera.horaInicio" 
-                      display-format="HH:mm"></ion-datetime>
-      </ion-item>
-      <print-error [control]="f.vhoraInicio"></print-error>
+      <print-error [control]="f.vfechaInicio"></print-error>      
 
       <ion-item>
         <ion-label position="stacked">Tipo</ion-label>
@@ -78,7 +71,7 @@
   </form>
 
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button  (click)="grabar()" [disabled]="frmCarrera.invalid">
+    <ion-fab-button  (click)="confirmarFecha()" [disabled]="frmCarrera.invalid">
         <ion-icon name="send"></ion-icon>
     </ion-fab-button>
   </ion-fab>

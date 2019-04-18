@@ -31,7 +31,7 @@ export class LoginPage implements OnInit {
     if(environment.isSesionPrueba){
       //datos prueba
       this.user='pmorales';
-      this.pass='123qwerty';
+      this.pass='123456';
     }
     this.sesionService.getSesion()
       .then((conductora)=>{

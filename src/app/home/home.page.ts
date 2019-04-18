@@ -41,6 +41,7 @@ export class HomePage implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.latitudFin = null;    
     this.sesionService.crearSesionBase()
       .then(() => {
         this.sesionService.getSesion()
@@ -184,15 +185,26 @@ export class HomePage implements OnInit {
     })
   }
 
+  
+    
+    
+
+    
+  
+  
   public irDetalleCarrera() {
     console.log('ini:  ' + this.latitudIni + ', ' + this.longitudIni);
     console.log('fin:  ' + this.latitudFin + ', ' + this.longitudFin);
-    this.navParams.set({
-      latitudIni: this.latitudIni,
-      longitudIni: this.longitudIni,
-      latitudFin: this.latitudFin,
-      longitudFin: this.longitudFin
-    });
-    this.navController.navigateForward('/detalle-carrera');
+    if(this.latitudFin === null){
+      this.alertController.present('Error','Debe buscar zona de destino');  
+    }else{    
+      this.navParams.set({
+        latitudIni: this.latitudIni,
+        longitudIni: this.longitudIni,
+        latitudFin: this.latitudFin,
+        longitudFin: this.longitudFin
+      });
+      this.navController.navigateForward('/detalle-carrera');
+    }
   }
 }

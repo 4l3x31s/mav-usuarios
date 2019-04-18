@@ -88,6 +88,7 @@ export class DetalleClientePage implements OnInit {
         Validators.required,
         Validators.minLength(8),
         Validators.maxLength(15),
+        Validators.pattern(/^[0-9]/),
       ]],
       vemail: ['', [
         Validators.required,
