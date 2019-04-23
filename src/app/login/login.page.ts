@@ -3,7 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { SesionService } from '../services/sesion.service';
 import { environment } from 'src/environments/environment';
 import { LoadingService } from '../services/util/loading.service';
-import { NavController } from '@ionic/angular';
+import { NavController, Events } from '@ionic/angular';
 import { AlertService } from '../services/util/alert.service';
 
 @Component({
@@ -22,7 +22,8 @@ export class LoginPage implements OnInit {
     public sesionService: SesionService,
     public loadingService: LoadingService,
     public navController: NavController,
-    public alertService: AlertService
+    public alertService: AlertService,
+    public events: Events
 
   ) { }
 
@@ -59,6 +60,7 @@ export class LoginPage implements OnInit {
         this.sesionService.login(this.user, this.pass)
           .subscribe(() => {
             console.log('login exito : ' + this.sesionService.clienteSesionPrueba.nombre);
+            this.events.publish('user:login');
             this.navController.navigateRoot('/home');
             this.loadingService.dismiss();
           }, error => {

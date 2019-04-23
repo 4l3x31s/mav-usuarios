@@ -16,6 +16,7 @@ export class DetalleClientePage implements OnInit {
 
   frmCliente: FormGroup;
   public cliente: MdlCliente;
+  public titulo: string;
 
   constructor(
     public fb: FormBuilder,
@@ -32,9 +33,11 @@ export class DetalleClientePage implements OnInit {
             .then((cliente) => {
             if (cliente) {
                 this.cliente = cliente;
+                this.titulo = 'Editar Perfil'
                 console.log("cliente: " +this.cliente.nombre)
             } else {
               this.cliente = this.clienteService.getClienteSesion();
+              this.titulo = 'Crear nueva cuenta'
             }
             });
         });

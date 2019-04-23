@@ -2,12 +2,13 @@ import { AlertService } from './../services/util/alert.service';
 import { NavParamService } from './../services/nav-param.service';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 
-import { NavController, ModalController } from '@ionic/angular';
+import { NavController, ModalController, Events, AlertController } from '@ionic/angular';
 import { MdlCliente } from '../modelo/mdlCliente';
 import { SesionService } from '../services/sesion.service';
 import { ToastService } from '../services/util/toast.service';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { Observable } from 'rxjs';
+import { LoadingService } from '../services/util/loading.service';
 
 declare var google;
 
@@ -34,9 +35,12 @@ export class HomePage implements OnInit {
     public navCtrl: NavController,
     public toastCtrl: ToastService,
     public modalController: ModalController,
-    public alertController: AlertService,
+    public alertService: AlertService,
+    public alertController: AlertController,
     public geolocation: Geolocation,
     public navController: NavController,
+    public loadingService: LoadingService,
+    public events: Events,
     public navParams: NavParamService
   ) { }
 
@@ -67,7 +71,7 @@ export class HomePage implements OnInit {
        this.cargarMapa(myLatlng);
      });
   }
-  buscarTexto(map,markers, alertController): Observable<any> {
+  buscarTexto(map,markers, alertService): Observable<any> {
     return Observable.create((observer) => {
       this.searchBox.addListener('places_changed', () =>{
         //marker.setMap(null);
@@ -112,7 +116,7 @@ export class HomePage implements OnInit {
           markers.forEach(function(marker) {
             marker.setMap(null);
           });
-          alertController.present('Alerta', 'debes escojer una opcion de la lista');
+          alertService.present('Alerta', 'debes escojer una opcion de la lista');
           return;
         }
       });
@@ -173,7 +177,7 @@ export class HomePage implements OnInit {
       this.latitudIni = obj.lat;
       this.longitudIni = obj.lng;
     });
-    let respuesta = this.buscarTexto(map, markers, this.alertController);
+    let respuesta = this.buscarTexto(map, markers, this.alertService);
     respuesta.subscribe( markers2 => {
       console.log("ingreso")
       let respuesta = this.markerEvent(markers2);
@@ -185,18 +189,11 @@ export class HomePage implements OnInit {
     })
   }
 
-  
-    
-    
-
-    
-  
-  
   public irDetalleCarrera() {
     console.log('ini:  ' + this.latitudIni + ', ' + this.longitudIni);
     console.log('fin:  ' + this.latitudFin + ', ' + this.longitudFin);
     if(this.latitudFin === null){
-      this.alertController.present('Error','Debe buscar zona de destino');  
+      this.alertService.present('Error','Debe buscar zona de destino');  
     }else{    
       this.navParams.set({
         latitudIni: this.latitudIni,
@@ -206,5 +203,43 @@ export class HomePage implements OnInit {
       });
       this.navController.navigateForward('/detalle-carrera');
     }
+  }
+
+  async irCerrarSesion(){
+    const alert = await this.alertController.create({
+      header: 'Confirmar',
+      message: '¿Esta segur@ de cerrar su sesión?',
+      buttons: [
+        {
+          text: 'No',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+            //console.log('Confirm Cancel: blah');
+          }
+        }, {
+          text: 'Si',
+          cssClass: 'primary',
+          handler: () => {
+            this.loadingService.present()
+              .then(() => {
+                this.sesionService.cerrarSesion()
+                  .then(()=>{
+                    this.events.publish('user:logout');
+                    this.loadingService.dismiss();
+                    this.navController.navigateRoot('/login');
+                  })
+                  .catch(e=>{
+                    console.log(e);
+                    this.alertService.present('Error','Error al cerrar la sesion');
+                    this.loadingService.dismiss();
+                  })
+              });
+          }
+        }
+      ]
+    });
+
+    await alert.present();
   }
 }

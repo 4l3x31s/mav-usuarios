@@ -4,6 +4,9 @@ import { MdlCliente } from '../modelo/mdlCliente';
 import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
 import { ClienteService } from './db/cliente.service';
+import { AlertController, NavController, Events } from '@ionic/angular';
+import { LoadingService } from './util/loading.service';
+import { AlertService } from './util/alert.service';
 
 
 @Injectable({
@@ -15,25 +18,15 @@ export class SesionService {
   
 
   constructor(
+    public sesionService: SesionService,
     public sqlite: SqliteService,
-    public clienteService: ClienteService
+    public alertController: AlertController,
+    public loadingService: LoadingService,
+    public alertService: AlertService,
+    public clienteService: ClienteService,
+    public navController: NavController,
+    public events: Events
   ) { }
-
-  getSesion(): Promise<MdlCliente> {
-    if(environment.isSesionPrueba){
-      return Promise.resolve(this.clienteSesionPrueba);
-    } else {
-      return this.sqlite.getclienteSesion();
-    }
-  }
-
-  crearSesionBase(): Promise<any> {
-    if(environment.isSesionPrueba){
-      return Promise.resolve()
-    } else {
-      return this.sqlite.crearBD();
-    }
-  }
 
   public login(user: string, pass: string) : Observable<any> {
     return new Observable<boolean>(observer => {
@@ -54,5 +47,68 @@ export class SesionService {
           observer.complete();
         });
     });
+  }
+
+  getSesion(): Promise<MdlCliente> {
+    if(environment.isSesionPrueba){
+      return Promise.resolve(this.clienteSesionPrueba);
+    } else {
+      return this.sqlite.getclienteSesion();
+    }
+  }
+
+  crearSesionBase(): Promise<any> {
+    if(environment.isSesionPrueba){
+      return Promise.resolve()
+    } else {
+      return this.sqlite.crearBD();
+    }
+  }
+
+  cerrarSesion(): Promise<any>{
+    if(environment.isSesionPrueba){
+      this.clienteSesionPrueba=undefined;
+      return Promise.resolve()
+    } else {
+      return this.sqlite.removeClienteSesion();
+    }
+  }
+
+  async irCerrarSesion(){
+    const alert = await this.alertController.create({
+      header: 'Confirmar',
+      message: '¿Esta segur@ de cerrar su sesión?',
+      buttons: [
+        {
+          text: 'No',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+            //console.log('Confirm Cancel: blah');
+          }
+        }, {
+          text: 'Si',
+          cssClass: 'primary',
+          handler: () => {
+            this.loadingService.present()
+              .then(() => {
+                this.sesionService.cerrarSesion()
+                  .then(()=>{
+                    this.events.publish('user:logout');
+                    this.loadingService.dismiss();
+                    this.navController.navigateRoot('/login');
+                  })
+                  .catch(e=>{
+                    console.log(e);
+                    this.alertService.present('Error','Error al cerrar la sesion');
+                    this.loadingService.dismiss();
+                  })
+              });
+          }
+        }
+      ]
+    });
+
+    await alert.present();
   }
 }
