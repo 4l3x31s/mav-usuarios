@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { MdlCarrera } from 'src/app/modelo/mdlCarrera';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -25,6 +26,12 @@ export class CarreraService {
     null, null, null, null, null,
     null, null, null, null, null,
     null);
+  }
+
+  getCarrerasPorCliente(idConductora: number): Observable<MdlCarrera[]> {
+    /*return this.afDB.list<MdlCarrera>('carrera', 
+      ref => ref.orderByChild('idConductora').equalTo(idConductora)).valueChanges();*/
+    return this.afDB.list<MdlCarrera>('carrera').valueChanges();
   }
 
 }

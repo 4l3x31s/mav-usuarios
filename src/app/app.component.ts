@@ -28,10 +28,15 @@ export class AppComponent {
       icon: 'car'
     },
     {
+      title: 'Calendario Carreras',
+      url: '/calendario-carrera',
+      icon: 'md-calendar'
+    },
+    {
       title: 'Contrato',
       url: '/detalle-contrato',
       icon: 'clipboard'
-    },
+    },    
     {
       title: 'Salir',
       url: '/login',

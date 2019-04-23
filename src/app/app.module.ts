@@ -15,6 +15,7 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
 import { SQLite } from '@ionic-native/sqlite/ngx';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { MapaPageModule } from './comun/mapa/mapa.module';
+import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 
 export const firebaseConfig = {
   apiKey: 'AIzaSyCC22o8Imks6DbAf4DXrxgtW_wPE6XYLHs',
@@ -42,6 +43,7 @@ export const firebaseConfig = {
     SQLite,
     AngularFireDatabase,
     Geolocation,
+    InAppBrowser,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

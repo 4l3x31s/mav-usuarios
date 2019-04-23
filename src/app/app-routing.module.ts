@@ -20,7 +20,9 @@ const routes: Routes = [
   { path: 'detalle-carrera', loadChildren: './detalle-carrera/detalle-carrera.module#DetalleCarreraPageModule' },
   { path: 'mapa', loadChildren: './comun/mapa/mapa.module#MapaPageModule' },
   { path: 'calendario', loadChildren: './comun/calendario/calendario.module#CalendarioPageModule' },
-  { path: 'detalle-contrato', loadChildren: './detalle-contrato/detalle-contrato.module#DetalleContratoPageModule' }
+  { path: 'detalle-contrato', loadChildren: './detalle-contrato/detalle-contrato.module#DetalleContratoPageModule' },  { path: 'calendario-carrera', loadChildren: './calendario-carrera/calendario-carrera.module#CalendarioCarreraPageModule' },
+  { path: 'detalle-carrera', loadChildren: './comun/detalle-carrera/detalle-carrera.module#DetalleCarreraPageModule' }
+
 
 
 

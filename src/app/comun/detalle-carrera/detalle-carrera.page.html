@@ -1,0 +1,41 @@
+<ion-header>
+  <ion-toolbar color="rosado">
+    <ion-title>Detalle Carrera</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="cerrar()"><ion-icon name="close"></ion-icon></ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div #map id="map"></div>
+  <ion-list *ngIf="cliente">
+
+    <ion-item>
+      <ion-label position="stacked">Cliente</ion-label>
+      <ion-input value="{{ cliente.nombre }}" readonly></ion-input>
+      <ion-icon *ngIf="cliente.cel" (click)="irWhatsApp()" slot="end" name="logo-whatsapp" style="color: #00E676"></ion-icon>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Costo</ion-label>
+      <ion-input value="{{ carrera.costo }} {{ carrera.moneda }}" readonly></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Descripción Lugar</ion-label>
+      <ion-textarea value="{{ carrera.descLugar }}" readonly></ion-textarea>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Fecha/Hora</ion-label>
+      <ion-datetime value="{{ carrera.fechaInicio }}" readonly displayFormat="DD/MM/YYYY HH:mm"></ion-datetime>
+    </ion-item>
+
+  </ion-list>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="showOpcionesCarrera()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>
