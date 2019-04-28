@@ -60,13 +60,12 @@
               <p >Long: {{ contrato.longDestino }}</p>
             </ion-label>
             <ion-icon name="locate" slot="end"></ion-icon>
-          </ion-item>                
-          
+          </ion-item>
+
           <ion-item>
               <ion-label position="stacked">Monto Total</ion-label>
               <ion-input> {{ contrato.montoTotal }} </ion-input>
           </ion-item>
-          <print-error [control]="f.vMontoTotal"></print-error>
 
           <ion-item>
             <ion-label position="stacked">Cantidad de Pasajeros</ion-label>
@@ -95,7 +94,8 @@
                   <ion-select-option value="Efectivo en Caja">Efectivo en Caja</ion-select-option>
                   <ion-select-option value="Promocion">Promocion</ion-select-option>
               </ion-select>
-          </ion-item>            
+          </ion-item> 
+          <print-error [control]="f.vTipoPago"></print-error>           
         </ion-list>
 
 

@@ -86,7 +86,7 @@ export class DetalleContratoPage implements OnInit {
 
     grabar() {
         if (this.lstConductoras) {
-            // TODO: Validaciones de guardado acá.
+            // TODO: Validaciones de guardado acá.                        
         } else {
             this.alertService.present('Alerta',
                 'No existe una conductora seleccionada o no existen conductoras disponibles para la radicatoria.');
@@ -135,22 +135,16 @@ export class DetalleContratoPage implements OnInit {
             vFechaFin: ['', [
                 Validators.required,
             ]],
-            vLatOrigen: ['', [
-                Validators.required,
-            ]],
-            vLongOrigen: ['', [
-                Validators.required,
-            ]],
-            vCantidadPasajeros: ['', [
+            /*vLatOrigen: ['', [
                 Validators.required,
             ]],
             vLatDestino: ['', [
                 Validators.required,
             ]],
-            vLongDestino: ['', [
-                Validators.required,
-            ]],
             vMontoTotal: ['', [
+                Validators.required,
+            ]],*/
+            vCantidadPasajeros: ['', [
                 Validators.required,
             ]],
             vDias: ['', [
@@ -195,6 +189,7 @@ export class DetalleContratoPage implements OnInit {
                 this.contrato.latDestino = resultado.data.lat;
                 this.contrato.longDestino = resultado.data.lng;
                 //calcular costo
+                this.contrato.montoTotal = 150;
                 if(this.contrato.latOrigen != null){
                     this.determinarDistanciaTiempo();
                 }

@@ -51,7 +51,6 @@ export class DetalleCarreraPage implements OnInit {
   get f() { return this.frmCarrera.controls; }
 
   ngOnInit() {
-   
     this.iniciarValidaciones();
     this.sesionService.crearSesionBase()
     .then(() => {
@@ -81,7 +80,6 @@ export class DetalleCarreraPage implements OnInit {
       vfechaInicio: ['', [
         Validators.required,
       ]],
-      
       vtipoPago: ['', [
         Validators.required,
       ]],
@@ -94,7 +92,7 @@ export class DetalleCarreraPage implements OnInit {
     console.log(fechaCarrera.years);
     const alert = await this.alertController.create({
       header: 'Confirmar',
-      message: 'Desea crear la carrera en: ' + 
+      message: 'Desea crear la carrera en:  <br>' + 
                'Fecha:  <strong>' + fechaCarrera.date  + '/' + (fechaCarrera.months + 1) + '/'+ fechaCarrera.years +'</strong> <br> '+ 
                'Hora :  <strong>' + fechaCarrera.hours + ':' + fechaCarrera.minutes + ' ? </strong>',
       buttons: [
@@ -118,25 +116,25 @@ export class DetalleCarreraPage implements OnInit {
   }
   public grabar(){
     this.loadingServices.present();
-    var identificadorPrueba = Date.now();
-    this.carrera.idUsuario = this.cliente.id;        
+    //var identificadorPrueba = Date.now();
+    this.carrera.idUsuario = this.cliente.id;
     this.carrera.estado = 1;
 
-    console.log('idcarrera: ' + identificadorPrueba);
+    //console.log('idcarrera: ' + identificadorPrueba);
 
       this.carreraService.crearCarrera(this.carrera)
       .then(() => {
         this.loadingServices.dismiss();
-        this.alertService.present('Info','Datos guardados correctamente.');
-        this.carrera = this.carreraService.getCarreraSesion();        
+        this.alertService.present('Información','Datos guardados correctamente.');
+        this.carrera = this.carreraService.getCarreraSesion();
       })
       .catch( error => {
         this.loadingServices.dismiss();
         console.log(error);
-        this.alertService.present('Error','Hubo un error al grabar los datos');        
+        this.alertService.present('Error','Hubo un error al grabar los datos');
       })
 
-      this.navController.navigateRoot('/home');
+      this.navController.navigateRoot('/calendario-carrera');
 
   }
 
