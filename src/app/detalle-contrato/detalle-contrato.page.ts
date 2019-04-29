@@ -90,6 +90,7 @@ export class DetalleContratoPage implements OnInit {
     grabar() {
         if (this.lstConductoras) {
             this.loadingServices.present();
+            this.contrato.idUsuario = this.cliente.id;
             // TODO: Validaciones de guardado acá.
             this.contratoService.insertarContrato(this.contrato)
             .then(() => {

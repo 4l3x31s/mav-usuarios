@@ -41,11 +41,6 @@ export class AppComponent {
       title: 'Lista de Contratos Solicitados',
       url: '/lista-contratos-solicitados',
       icon: 'clipboard'
-    },
-    {
-      title: 'Salir',
-      url: '/login',
-      icon: 'exit'
     }
   ];
 

@@ -2,6 +2,7 @@ import { MdlContrato } from './../../modelo/mdlContrato';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { Injectable } from '@angular/core';
 import { UtilService } from '../util/util.service';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,7 @@ export class ContratoService {
   }
   insertarContrato(contrato: MdlContrato): Promise<any> {
     if (!contrato.id) {
-      contrato.id = Date.now();
+      contrato.id = Date.now();      
       contrato.estado = 0;
     }
     return this.afDB.database.ref('contrato/' + contrato.id).set(this.utilService.serializar(contrato));
@@ -27,9 +28,21 @@ export class ContratoService {
       ref.orderByChild('idUsuario').equalTo(idUsuario)).valueChanges();
   }
 
-  listaContratosSolicitados(idUsuario: number) {
-    return this.afDB.list('contrato', ref =>
-      ref.orderByChild('idUsuario').equalTo(idUsuario)).valueChanges();
+  listaContratosSolicitados(idUsuario: number, estadoContrato: number) {
+    console.log('idUsuario:::::::::: ' + idUsuario);
+    return new Observable<MdlContrato[]>(observer => {
+      this.afDB.list<MdlContrato>('contrato/',
+        ref => ref.orderByChild('idUsuario').equalTo(idUsuario)).valueChanges()
+        .subscribe(contrato => {
+          console.log('service', contrato);
+          if (contrato.length > 0 && estadoContrato === contrato[0].estado) {
+            observer.next(contrato);
+          } else {
+            observer.next();
+          }
+          observer.complete();
+        });
+    });
   }
 
   listaContratos() {

@@ -16,6 +16,7 @@ import { SQLite } from '@ionic-native/sqlite/ngx';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { MapaPageModule } from './comun/mapa/mapa.module';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
+import { DetalleCarreraPageModule } from './comun/detalle-carrera/detalle-carrera.module';
 
 export const firebaseConfig = {
   apiKey: 'AIzaSyCC22o8Imks6DbAf4DXrxgtW_wPE6XYLHs',
@@ -35,7 +36,8 @@ export const firebaseConfig = {
     AngularFireModule.initializeApp(firebaseConfig),
     AngularFireDatabaseModule,
     AngularFireAuthModule,
-    MapaPageModule
+    MapaPageModule,
+    DetalleCarreraPageModule
   ],
   providers: [
     StatusBar,
