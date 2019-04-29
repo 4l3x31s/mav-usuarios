@@ -17,6 +17,7 @@ import {LoadingService} from 'src/app/services/util/loading.service';
 import {MdlParametrosCarrera} from 'src/app/modelo/mdlParametrosCarrera';
 import {Observable} from 'rxjs';
 import { SesionService } from '../services/sesion.service';
+import { ContratoService } from '../services/db/contrato.service';
 
 declare var google: any;
 
@@ -54,7 +55,9 @@ export class DetalleContratoPage implements OnInit {
                 public navParams: NavParamService,
                 public alertService: AlertService,
                 public alertController: AlertController,
-                public sesionService: SesionService) {
+                public sesionService: SesionService,
+                public contratoService: ContratoService,
+                public loadingServices: LoadingService,) {
        // this.cliente = this.navParams.get().cliente;
         this.distance = new google.maps.DistanceMatrixService();
     }
@@ -86,8 +89,19 @@ export class DetalleContratoPage implements OnInit {
 
     grabar() {
         if (this.lstConductoras) {
-            // TODO: Validaciones de guardado acá.                        
-        } else {
+            this.loadingServices.present();
+            // TODO: Validaciones de guardado acá.
+            this.contratoService.insertarContrato(this.contrato)
+            .then(() => {
+                this.loadingServices.dismiss();
+                this.alertService.present('Información','Datos guardados correctamente.');
+                this.navController.navigateRoot('/lista-contratos-solicitados');
+            })
+            .catch( error => {
+                this.loadingServices.dismiss();
+                console.log(error);
+                this.alertService.present('Error','Hubo un error al grabar los datos');                
+            })
             this.alertService.present('Alerta',
                 'No existe una conductora seleccionada o no existen conductoras disponibles para la radicatoria.');
         }

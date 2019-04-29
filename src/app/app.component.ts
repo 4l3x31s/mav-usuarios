@@ -36,7 +36,12 @@ export class AppComponent {
       title: 'Contrato',
       url: '/detalle-contrato',
       icon: 'clipboard'
-    },    
+    },
+    {
+      title: 'Lista de Contratos Solicitados',
+      url: '/lista-contratos-solicitados',
+      icon: 'clipboard'
+    },
     {
       title: 'Salir',
       url: '/login',
