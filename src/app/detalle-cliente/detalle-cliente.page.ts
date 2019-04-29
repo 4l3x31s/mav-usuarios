@@ -138,7 +138,7 @@ export class DetalleClientePage implements OnInit {
       this.clienteService.crearCliente(this.cliente)
       .then(() => {
         this.loadingServices.dismiss();
-        this.alertService.present('Info','Datos guardados correctamente.');
+        this.alertService.present('Información','Datos guardados correctamente.');
         this.ingresar();
       })
       .catch( error => {
@@ -169,5 +169,5 @@ export class DetalleClientePage implements OnInit {
       })
   }
 
-  
+
 }

@@ -21,7 +21,8 @@ const routes: Routes = [
   { path: 'mapa', loadChildren: './comun/mapa/mapa.module#MapaPageModule' },
   { path: 'calendario', loadChildren: './comun/calendario/calendario.module#CalendarioPageModule' },
   { path: 'detalle-contrato', loadChildren: './detalle-contrato/detalle-contrato.module#DetalleContratoPageModule' },  { path: 'calendario-carrera', loadChildren: './calendario-carrera/calendario-carrera.module#CalendarioCarreraPageModule' },
-  { path: 'detalle-carrera', loadChildren: './comun/detalle-carrera/detalle-carrera.module#DetalleCarreraPageModule' }
+  { path: 'detalle-carrera', loadChildren: './comun/detalle-carrera/detalle-carrera.module#DetalleCarreraPageModule' },
+  { path: 'lista-contratos-solicitados', loadChildren: './lista-contratos-solicitados/lista-contratos-solicitados.module#ListaContratosSolicitadosPageModule' }
 
 
 

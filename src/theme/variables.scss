@@ -83,6 +83,13 @@
   --ion-color-rosado-shade: #c2185b;
   --ion-color-rosado-tint: #E91E63;
 
+  --ion-color-rosadoClaro: #f7a8c2;
+  --ion-color-rosadoClaro-rgb: 249, 113, 159;
+  --ion-color-rosadoClaro-contrast: #ffffff;
+  --ion-color-rosadoClaro-contrast-rgb: 255, 255, 255;
+  --ion-color-rosadoClaro-shade: #ff9dbe;
+  --ion-color-rosadoClaro-tint: #f891b3;
+  
   --ion-color-verdec: #4caf50;
   --ion-color-verdec-rgb: 76, 175, 80;
   --ion-color-verdec-contrast: #ffffff;
@@ -124,5 +131,15 @@
   padding-right: 24px !important;
   padding-top: 24px !important;
   padding-bottom: 24px !important;
+}
+
+.cabecera-tabla{
+  text-align: center;
+  font-weight: bold;
+  background-color: var(--ion-color-rosadoClaro) !important;
+  color: var(--ion-color-rosado-contrast) !important;
+  padding: 10px 10px;
+  font-size: 15px;
+  border-radius: 10px;
 }
 
