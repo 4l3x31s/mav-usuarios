@@ -33,11 +33,10 @@ export class DetalleClientePage implements OnInit {
             .then((cliente) => {
             if (cliente) {
                 this.cliente = cliente;
-                this.titulo = 'Editar Perfil'
-                console.log("cliente: " +this.cliente.nombre)
+                this.titulo = 'Editar Perfil';
             } else {
               this.cliente = this.clienteService.getClienteSesion();
-              this.titulo = 'Crear nueva cuenta'
+              this.titulo = 'Crear nueva cuenta';
             }
             });
         });
@@ -157,6 +156,7 @@ export class DetalleClientePage implements OnInit {
             console.log('login exito : ' + this.sesionService.clienteSesionPrueba.nombre);
             this.navController.navigateRoot('/home');
             this.loadingService.dismiss();
+            console.log('cliente::::: '+this.cliente.user);
           }, error => {
             console.log('error-login', error);
             if (error.message) {

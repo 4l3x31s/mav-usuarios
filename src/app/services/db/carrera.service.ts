@@ -28,10 +28,9 @@ export class CarreraService {
     null);
   }
 
-  getCarrerasPorCliente(idConductora: number): Observable<MdlCarrera[]> {
-    /*return this.afDB.list<MdlCarrera>('carrera', 
-      ref => ref.orderByChild('idConductora').equalTo(idConductora)).valueChanges();*/
-    return this.afDB.list<MdlCarrera>('carrera').valueChanges();
+  getCarrerasPorCliente(idUsuario: number): Observable<MdlCarrera[]> {
+    return this.afDB.list<MdlCarrera>('carrera',
+      ref => ref.orderByChild('idUsuario').equalTo(idUsuario)).valueChanges();
   }
 
 }
