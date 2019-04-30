@@ -1,79 +1,91 @@
 <cabecera titulo="{{titulo}}"></cabecera>
 
 <ion-content padding>
-<form [formGroup]="frmCliente" novalidate>
-  <ion-list>
-    <ion-item>
-      <ion-label position="stacked">Nombre Completo</ion-label>
-      <ion-input formControlName="vnombre" name="vnombre"  [(ngModel)]="cliente.nombre"></ion-input>
-    </ion-item>
-    <print-error [control]="f.vnombre"></print-error>
-    
-    <ion-item>
-      <ion-label position="stacked">Carnet de Identidad</ion-label>
-      <ion-input formControlName="vci" name="vci"  [(ngModel)]="cliente.ci" ></ion-input>
-    </ion-item>
-    <print-error [control]="f.vci"></print-error>
+  <form [formGroup]="frmCliente" novalidate>
+    <ion-list>
+      <ion-item>
+        <ion-label position="stacked">Nombre Completo</ion-label>
+        <ion-input formControlName="vnombre" name="vnombre"  [(ngModel)]="cliente.nombre"></ion-input>
+      </ion-item>
+      <print-error [control]="f.vnombre"></print-error>
+      
+      <ion-item>
+        <ion-label position="stacked">Carnet de Identidad</ion-label>
+        <ion-input formControlName="vci" name="vci"  [(ngModel)]="cliente.ci" ></ion-input>
+      </ion-item>
+      <print-error [control]="f.vci"></print-error>
 
-    <ion-item>
-      <ion-label position="stacked">Dirección</ion-label>
-      <ion-input formControlName="vdireccion" name="vdireccion"  [(ngModel)]="cliente.direccion"></ion-input>
-    </ion-item>
-    <print-error [control]="f.vdireccion"></print-error>
+      <ion-item>
+        <ion-label position="stacked">Pais</ion-label>
+        <ion-select interface="popover" formControlName="vpais" placeholder="Seleccione el Pais"
+          (ngModelChange)="filtrarCiudades($event)" [(ngModel)]="cliente.pais">
+          <ion-select-option *ngFor="let parametros of lstPaisesFiltrados" value="{{parametros.pais}}">
+            {{parametros.pais}}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+      <print-error [control]="f.vpais"></print-error> 
 
-    <ion-item>
-      <ion-label position="stacked">Usuario</ion-label>
-      <ion-input formControlName="vuser" name="vuser"  [(ngModel)]="cliente.user"></ion-input>
-    </ion-item>
-    <print-error [control]="f.vuser"></print-error>
+      <ion-item>
+        <ion-label position="stacked">Ciudad</ion-label>
+        <ion-select interface='popover' formControlName="vciudad" placeholder="Seleccione la Ciudad"
+          [(ngModel)]="cliente.ciudad">
+          <ion-select-option *ngFor="let parametros of lstCiudadesFiltrado" value="{{parametros.ciudad}}">
+            {{parametros.ciudad}}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+      <print-error [control]="f.vciudad"></print-error>
 
-    <ion-item>
-      <ion-label position="stacked">Contraseña</ion-label>
-      <ion-input type="password" formControlName="vpass" name="vpass"  [(ngModel)]="cliente.pass"></ion-input>
-    </ion-item>
-    <print-error [control]="f.vpass"></print-error>
+      <ion-item>
+        <ion-label position="stacked">Dirección</ion-label>
+        <ion-input formControlName="vdireccion" name="vdireccion"  [(ngModel)]="cliente.direccion"></ion-input>
+      </ion-item>
+      <print-error [control]="f.vdireccion"></print-error>
 
-    <ion-item>
-      <ion-label position="stacked">Confirmar Contraseña</ion-label>
-      <ion-input type="password" formControlName="vconfirmPass" name="vconfirmPass" ></ion-input>
-    </ion-item>
-    <print-error [control]="f.vconfirmPass"></print-error>
+      <ion-item>
+        <ion-label position="stacked">Correo</ion-label>
+        <ion-input formControlName="vemail" name="vemail"  [(ngModel)]="cliente.email" (ionChange)="generarUsuario()"></ion-input>
+      </ion-item>
+      <print-error [control]="f.vemail"></print-error>  
 
-    <ion-item>
-      <ion-label position="stacked">Telefono</ion-label>
-      <ion-input formControlName="vtel" name="vtel"  [(ngModel)]="cliente.tel"></ion-input>
-    </ion-item>
-    <print-error [control]="f.vtel"></print-error>
+      <ion-item>
+        <ion-label position="stacked">Usuario</ion-label>
+        <ion-input formControlName="vuser" name="vuser"  [(ngModel)]="cliente.user" disabled></ion-input>
+      </ion-item>
+      <print-error [control]="f.vuser"></print-error>
 
-    <ion-item>
-      <ion-label position="stacked">Celular</ion-label>
-      <ion-input formControlName="vcel" name="vcel"  [(ngModel)]="cliente.cel"></ion-input>
-    </ion-item>
-    <print-error [control]="f.vcel"></print-error>    
+      <ion-item>
+        <ion-label position="stacked">Contraseña</ion-label>
+        <ion-input type="password" formControlName="vpass" name="vpass"  [(ngModel)]="cliente.pass"></ion-input>
+      </ion-item>
+      <print-error [control]="f.vpass"></print-error>
 
-    <ion-item>
-      <ion-label position="stacked">Correo</ion-label>
-      <ion-input formControlName="vemail" name="vemail"  [(ngModel)]="cliente.email"></ion-input>
-    </ion-item>
-    <print-error [control]="f.vemail"></print-error>    
+      <ion-item>
+        <ion-label position="stacked">Confirmar Contraseña</ion-label>
+        <ion-input type="password" formControlName="vconfirmPass" name="vconfirmPass" ></ion-input>
+      </ion-item>
+      <print-error [control]="f.vconfirmPass"></print-error>
 
-    <ion-item>
-      <ion-label position="stacked">Ciudad</ion-label>
-      <ion-input formControlName="vciudad" name="vciudad"  [(ngModel)]="cliente.ciudad"></ion-input>
-    </ion-item>
-    <print-error [control]="f.vciudad"></print-error>    
+      <ion-item>
+        <ion-label position="stacked">Telefono</ion-label>
+        <ion-input formControlName="vtel" name="vtel"  [(ngModel)]="cliente.tel"></ion-input>
+      </ion-item>
+      <print-error [control]="f.vtel"></print-error>
 
-    <ion-item>
-      <ion-label position="stacked">País</ion-label>
-      <ion-input formControlName="vpais" name="vpais"  [(ngModel)]="cliente.pais"></ion-input>
-    </ion-item>
-    <print-error [control]="f.vpais"></print-error>    
-  </ion-list>
+      <ion-item>
+        <ion-label position="stacked">Celular</ion-label>
+        <ion-input formControlName="vcel" name="vcel"  [(ngModel)]="cliente.cel"></ion-input>
+      </ion-item>
+      <print-error [control]="f.vcel"></print-error>    
+        
+    </ion-list>
+  </form>
 
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button [disabled]="frmCliente.invalid" (click)="grabar()">
       <ion-icon name="send"></ion-icon>
     </ion-fab-button>
   </ion-fab>
-</form>
+  
 </ion-content>

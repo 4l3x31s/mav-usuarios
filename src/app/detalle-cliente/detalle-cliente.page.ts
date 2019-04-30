@@ -6,6 +6,8 @@ import { LoadingService } from '../services/util/loading.service';
 import { AlertService } from '../services/util/alert.service';
 import { NavController } from '@ionic/angular';
 import { SesionService } from '../services/sesion.service';
+import { MdlParametrosCarrera } from '../modelo/mdlParametrosCarrera';
+import { ParametrosCarreraService } from '../services/db/parametros-carrera.service';
 
 @Component({
   selector: 'app-detalle-cliente',
@@ -15,8 +17,11 @@ import { SesionService } from '../services/sesion.service';
 export class DetalleClientePage implements OnInit {
 
   frmCliente: FormGroup;
-  public cliente: MdlCliente;
   public titulo: string;
+  public cliente: MdlCliente;
+    public lstPaisesFiltrados = [];
+  public lstCiudadesFiltrado: MdlParametrosCarrera [] = [];
+  public lstParametros: MdlParametrosCarrera [] = [];
 
   constructor(
     public fb: FormBuilder,
@@ -25,7 +30,8 @@ export class DetalleClientePage implements OnInit {
     public alertService: AlertService,
     public navController: NavController,
     public sesionService: SesionService,
-    public loadingService: LoadingService
+    public loadingService: LoadingService,
+    public parametrosService: ParametrosCarreraService
     ) { console.log('constructor');
     this.sesionService.crearSesionBase()
         .then(() => {
@@ -48,7 +54,7 @@ export class DetalleClientePage implements OnInit {
     console.log('ngOnInit')
     this.iniciarValidaciones();
     //this.cliente = this.clienteService.getClienteSesion();
-    
+    this.obtenerParametros();
   }
 
   public iniciarValidaciones(){
@@ -169,5 +175,37 @@ export class DetalleClientePage implements OnInit {
       })
   }
 
+
+  obtenerParametros() {
+    this.loadingService.present()
+      .then(() => {
+        this.parametrosService.listarParametros().subscribe(data => {
+          this.loadingService.dismiss();
+          this.lstParametros = Object.assign(data);
+          this.lstPaisesFiltrados = Array.from(new Set(this.lstParametros.map(s => s.pais)))
+          .map(id => {
+            return {
+              id: id,
+              pais: this.lstParametros.find( s => s.pais === id).pais,
+            };
+          });
+          this.filtrarCiudades(this.lstParametros[0].pais);
+        }, error => {
+          console.log(error);
+        });
+      });
+    
+  }
+
+  filtrarCiudades(event) {
+    this.lstCiudadesFiltrado = this.lstParametros.filter(
+      parametros => parametros.pais.indexOf(event) > -1
+    );
+  }
+
+  public generarUsuario(){
+    console.log('this.cliente.email: '+this.cliente.email);
+    this.cliente.user = this.cliente.email;
+  }
 
 }

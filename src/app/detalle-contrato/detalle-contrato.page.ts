@@ -31,7 +31,6 @@ export class DetalleContratoPage implements OnInit {
     public contrato: MdlContrato = new MdlContrato(
         null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null
     );
-    public lstConductoras: MdlConductora[] = [];
     public lstClientes: MdlCliente[] = [];
     public lstFeriados: MdlFeriado[] = [];
     public lstParametros: MdlParametrosCarrera [] = [];
@@ -88,24 +87,20 @@ export class DetalleContratoPage implements OnInit {
     }
 
     grabar() {
-        if (this.lstConductoras) {
-            this.loadingServices.present();
-            this.contrato.idUsuario = this.cliente.id;
-            // TODO: Validaciones de guardado acá.
-            this.contratoService.insertarContrato(this.contrato)
-            .then(() => {
-                this.loadingServices.dismiss();
-                this.alertService.present('Información','Datos guardados correctamente.');
-                this.navController.navigateRoot('/lista-contratos-solicitados');
-            })
-            .catch( error => {
-                this.loadingServices.dismiss();
-                console.log(error);
-                this.alertService.present('Error','Hubo un error al grabar los datos');                
-            })
-            this.alertService.present('Alerta',
-                'No existe una conductora seleccionada o no existen conductoras disponibles para la radicatoria.');
-        }
+        this.loadingServices.present();
+        this.contrato.idUsuario = this.cliente.id;
+        // TODO: Validaciones de guardado acá.
+        this.contratoService.insertarContrato(this.contrato)
+        .then(() => {
+            this.loadingServices.dismiss();
+            this.alertService.present('Información','Datos guardados correctamente.');
+            this.navController.navigateRoot('/lista-contratos-solicitados');
+        })
+        .catch( error => {
+            this.loadingServices.dismiss();
+            console.log(error);
+            this.alertService.present('Error','Hubo un error al grabar los datos');                
+        })
     }
 
     async obtenerParametros() {
