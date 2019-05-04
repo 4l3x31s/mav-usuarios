@@ -33,13 +33,11 @@ export class HomePage implements OnInit {
     public sesionService: SesionService,
     public navParam: NavParamService,
     public navCtrl: NavController,
-    public toastCtrl: ToastService,
     public modalController: ModalController,
     public alertService: AlertService,
     public alertController: AlertController,
     public geolocation: Geolocation,
     public navController: NavController,
-    public loadingService: LoadingService,
     public events: Events,
     public navParams: NavParamService
   ) { }
@@ -205,41 +203,4 @@ export class HomePage implements OnInit {
     }
   }
 
-  async irCerrarSesion(){
-    const alert = await this.alertController.create({
-      header: 'Confirmar',
-      message: '¿Esta segur@ de cerrar su sesión?',
-      buttons: [
-        {
-          text: 'No',
-          role: 'cancel',
-          cssClass: 'secondary',
-          handler: () => {
-            //console.log('Confirm Cancel: blah');
-          }
-        }, {
-          text: 'Si',
-          cssClass: 'primary',
-          handler: () => {
-            this.loadingService.present()
-              .then(() => {
-                this.sesionService.cerrarSesion()
-                  .then(()=>{
-                    this.events.publish('user:logout');
-                    this.loadingService.dismiss();
-                    this.navController.navigateRoot('/login');
-                  })
-                  .catch(e=>{
-                    console.log(e);
-                    this.alertService.present('Error','Error al cerrar la sesion');
-                    this.loadingService.dismiss();
-                  })
-              });
-          }
-        }
-      ]
-    });
-
-    await alert.present();
-  }
 }

@@ -1,12 +1,14 @@
 import { Component } from '@angular/core';
 
-import { Platform, Events, NavController } from '@ionic/angular';
+import { Platform, Events, NavController, AlertController } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { SesionService } from './services/sesion.service';
 import { ClienteService } from './services/db/cliente.service';
 import { MdlCliente } from './modelo/mdlCliente';
 import { NavParamService } from './services/nav-param.service';
+import { AlertService } from './services/util/alert.service';
+import { LoadingService } from './services/util/loading.service';
 
 @Component({
   selector: 'app-root',
@@ -17,11 +19,6 @@ export class AppComponent {
   cliente: MdlCliente;
 
   public appPages = [
-    {
-      title: 'Perfil',
-      url: '/detalle-cliente',
-      icon: 'person'
-    },
     {
       title: 'Carrera',
       url: '/home',
@@ -52,7 +49,10 @@ export class AppComponent {
     public sesionService: SesionService,
     public navController: NavController,
     public navParam: NavParamService,
-    public clienteService: ClienteService
+    public clienteService: ClienteService,
+    public alertService: AlertService,
+    public alertController: AlertController,
+    public loadingService: LoadingService
   ) {
     this.initializeApp();
     events.subscribe('user:login', () => {
@@ -98,5 +98,48 @@ export class AppComponent {
   irPagina(pagina:any){
     this.navParam.set({cliente:this.cliente})
     this.navController.navigateRoot(pagina.url);
+  }
+
+  async irCerrarSesion(){
+    const alert = await this.alertController.create({
+      header: 'Confirmar',
+      message: '¿Esta segur@ de cerrar su sesión?',
+      buttons: [
+        {
+          text: 'No',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+            //console.log('Confirm Cancel: blah');
+          }
+        }, {
+          text: 'Si',
+          cssClass: 'primary',
+          handler: () => {
+            this.loadingService.present()
+              .then(() => {
+                this.sesionService.cerrarSesion()
+                  .then(()=>{
+                    this.events.publish('user:logout');
+                    this.loadingService.dismiss();
+                    this.navController.navigateRoot('/login');
+                  })
+                  .catch(e=>{
+                    console.log(e);
+                    this.alertService.present('Error','Error al cerrar la sesion');
+                    this.loadingService.dismiss();
+                  })
+              });
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+  irDetalleCliente(){
+    this.navParam.set({cliente:this.cliente})
+    this.navController.navigateRoot('/detalle-cliente');
   }
 }

@@ -76,12 +76,12 @@
   --ion-color-light-tint: #f5f6f9;
 
 
-  --ion-color-rosado: #E91E63;
-  --ion-color-rosado-rgb: 233, 30, 99;
+  --ion-color-rosado: #cc367d;
+  --ion-color-rosado-rgb: 249, 113, 159;
   --ion-color-rosado-contrast: #ffffff;
   --ion-color-rosado-contrast-rgb: 255, 255, 255;
-  --ion-color-rosado-shade: #c2185b;
-  --ion-color-rosado-tint: #E91E63;
+  --ion-color-rosado-shade: #be0a5f;
+  --ion-color-rosado-tint: #cc367d;
 
   --ion-color-rosadoClaro: #f7a8c2;
   --ion-color-rosadoClaro-rgb: 249, 113, 159;
@@ -141,5 +141,17 @@
   padding: 10px 10px;
   font-size: 15px;
   border-radius: 10px;
+}
+
+.banner-menu{
+  width: 100%;
+  display: block;
+  background: url('../assets/image/banner-menu.jpg') no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  color: var(--ion-color-light);
+  padding: 1rem;
 }
 
