@@ -4,7 +4,7 @@ import { MdlCliente } from '../modelo/mdlCliente';
 import { ClienteService } from '../services/db/cliente.service';
 import { LoadingService } from '../services/util/loading.service';
 import { AlertService } from '../services/util/alert.service';
-import { NavController } from '@ionic/angular';
+import { NavController, Events } from '@ionic/angular';
 import { SesionService } from '../services/sesion.service';
 import { MdlParametrosCarrera } from '../modelo/mdlParametrosCarrera';
 import { ParametrosCarreraService } from '../services/db/parametros-carrera.service';
@@ -31,7 +31,8 @@ export class DetalleClientePage implements OnInit {
     public navController: NavController,
     public sesionService: SesionService,
     public loadingService: LoadingService,
-    public parametrosService: ParametrosCarreraService
+    public parametrosService: ParametrosCarreraService,
+    public events: Events
     ) { console.log('constructor');
     this.sesionService.crearSesionBase()
         .then(() => {
@@ -160,6 +161,7 @@ export class DetalleClientePage implements OnInit {
         this.sesionService.login(this.cliente.user, this.cliente.pass)
           .subscribe(() => {
             console.log('login exito : ' + this.sesionService.clienteSesionPrueba.nombre);
+            this.events.publish('user:login');
             this.navController.navigateRoot('/home');
             this.loadingService.dismiss();
             console.log('cliente::::: '+this.cliente.user);
@@ -204,7 +206,6 @@ export class DetalleClientePage implements OnInit {
   }
 
   public generarUsuario(){
-    console.log('this.cliente.email: '+this.cliente.email);
     this.cliente.user = this.cliente.email;
   }
 

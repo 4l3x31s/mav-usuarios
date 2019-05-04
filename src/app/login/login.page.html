@@ -8,7 +8,7 @@
           <form [formGroup]="formLogin" novalidate>
             <ion-list>
               <ion-item>
-                <ion-label position="stacked">Usuario</ion-label>
+                <ion-label position="stacked">Usuario (correo)</ion-label>
                 <ion-input formControlName="vuser" [(ngModel)]="user"></ion-input>
               </ion-item>
               <print-error [control]="f.vuser"></print-error>
