@@ -7,11 +7,11 @@ import { MdlCliente } from '../modelo/mdlCliente';
 import { SesionService } from '../services/sesion.service';
 
 @Component({
-  selector: 'app-lista-contratos-solicitados',
-  templateUrl: './lista-contratos-solicitados.page.html',
-  styleUrls: ['./lista-contratos-solicitados.page.scss'],
+  selector: 'app-lista-contratos-vigentes',
+  templateUrl: './lista-contratos-vigentes.page.html',
+  styleUrls: ['./lista-contratos-vigentes.page.scss'],
 })
-export class ListaContratosSolicitadosPage implements OnInit {
+export class ListaContratosVigentesPage implements OnInit {
   public lstContratos: MdlContrato[] = [];
   public lstContratosFiltrado: MdlContrato[] = [];
   public cliente: MdlCliente;
@@ -33,7 +33,7 @@ export class ListaContratosSolicitadosPage implements OnInit {
             this.cliente = cliente;
             console.log("cliente: " +this.cliente.nombre);
             console.log("id: " +this.cliente.id);
-            this.listaContratosPorEstado(this.cliente.id, 0);
+            this.listaContratosPorEstado(this.cliente.id, 1);
           } else {
             this.navController.navigateRoot('/login');
           }
@@ -71,3 +71,4 @@ export class ListaContratosSolicitadosPage implements OnInit {
     this.navController.navigateRoot('/detalle-contrato');
   }
 }
+

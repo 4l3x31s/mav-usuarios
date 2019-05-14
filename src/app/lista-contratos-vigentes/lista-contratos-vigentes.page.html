@@ -1,0 +1,28 @@
+<cabecera titulo="Contratos Vigentes"></cabecera>
+
+<ion-content>
+    <ion-card-header>
+      <ion-card-title>Lista de Contratos Solicitados</ion-card-title>
+    </ion-card-header>
+
+    <ion-grid>
+      <ion-row class="cabecera-tabla">
+        <ion-col size="3">Fechas</ion-col>
+        <ion-col size="3">Origen</ion-col>
+        <ion-col size="3">Destino</ion-col>
+        <ion-col size="2">Dias</ion-col>
+        <ion-col size="1">Hora</ion-col>
+      </ion-row>
+      <ion-row *ngFor="let contrato of lstContratosFiltrado" (click)="seleccionarContrato(contrato)" nowrap >
+        <ion-col size="3">Inicio: {{contrato.fechaInicio}} <br>
+                          Final : {{contrato.fechaInicio}} 
+        </ion-col>
+        
+        <ion-col size="3">{{contrato.latOrigen}}, <br>{{contrato.longOrigen}}  </ion-col>
+
+        <ion-col size="3">{{contrato.latDestino}},<br>{{contrato.longDestino}} </ion-col>
+        <ion-col size="2">{{contrato.dias}}</ion-col>
+        <ion-col size="1">{{contrato.hora}}</ion-col>
+      </ion-row>
+    </ion-grid>
+</ion-content>
