@@ -2,7 +2,7 @@ import { AlertService } from './../services/util/alert.service';
 import { NavParamService } from './../services/nav-param.service';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 
-import { NavController, ModalController, Events, AlertController } from '@ionic/angular';
+import { NavController, ModalController, Events, AlertController, Platform } from '@ionic/angular';
 import { MdlCliente } from '../modelo/mdlCliente';
 import { SesionService } from '../services/sesion.service';
 import { ToastService } from '../services/util/toast.service';
@@ -26,7 +26,7 @@ export class HomePage implements OnInit {
   latitudFin: string;
   longitudFin: string;
   paginaRetorno: string;
-  
+
   searchBox: any;
 
   constructor(
@@ -39,11 +39,12 @@ export class HomePage implements OnInit {
     public geolocation: Geolocation,
     public navController: NavController,
     public events: Events,
-    public navParams: NavParamService
+    public navParams: NavParamService,
+    public platform: Platform
   ) { }
 
   ngOnInit() {
-    this.latitudFin = null;    
+    this.latitudFin = null;
     this.sesionService.crearSesionBase()
       .then(() => {
         this.sesionService.getSesion()
@@ -69,7 +70,7 @@ export class HomePage implements OnInit {
        this.cargarMapa(myLatlng);
      });
   }
-  buscarTexto(map,markers, alertService): Observable<any> {
+  buscarTexto(map, markers, alertService): Observable<any> {
     return Observable.create((observer) => {
       this.searchBox.addListener('places_changed', () =>{
         //marker.setMap(null);
@@ -103,7 +104,6 @@ export class HomePage implements OnInit {
             }
           }
           contador++;
-          
         });
         console.log(markers.length);
         if(contador === 1) {
@@ -134,8 +134,6 @@ export class HomePage implements OnInit {
         observer.next(obj);
         observer.complete();
       });
-       
-
   });
   }
   cargarMapa(myLatlng) {
@@ -183,16 +181,16 @@ export class HomePage implements OnInit {
             this.latitudFin = obj.lat;
             this.longitudFin = obj.lng;
             console.log(this.latitudFin);
-          })
+          });
     })
   }
 
   public irDetalleCarrera() {
     console.log('ini:  ' + this.latitudIni + ', ' + this.longitudIni);
     console.log('fin:  ' + this.latitudFin + ', ' + this.longitudFin);
-    if(this.latitudFin === null){
-      this.alertService.present('Error','Debe buscar zona de destino');  
-    }else{    
+    if (this.latitudFin === null) {
+      this.alertService.present('Error', 'Debe buscar zona de destino');
+    } else {
       this.navParams.set({
         latitudIni: this.latitudIni,
         longitudIni: this.longitudIni,

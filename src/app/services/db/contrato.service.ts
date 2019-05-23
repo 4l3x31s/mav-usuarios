@@ -28,19 +28,23 @@ export class ContratoService {
       ref.orderByChild('idUsuario').equalTo(idUsuario)).valueChanges();
   }
 
-  listaContratosSolicitados(idUsuario: number, estadoContrato: number) {
-    console.log('idUsuario:::::::::: ' + idUsuario);
+  listaContratosPorEstado(idUsuario: number, estadoContrato: number) {
+    console.log('idUsuario: ' + idUsuario);
     return new Observable<MdlContrato[]>(observer => {
       this.afDB.list<MdlContrato>('contrato/',
         ref => ref.orderByChild('idUsuario').equalTo(idUsuario)).valueChanges()
         .subscribe(contrato => {
-          console.log('service', contrato);
-          if (contrato.length > 0 && estadoContrato === contrato[0].estado) {
-            observer.next(contrato);
-          } else {
-            observer.next();
+          console.log('contratos del usuario ' + contrato);     
+          if(contrato[0].estado === undefined){
+            console.log('estado de contrao: undefined (no tiene estado)');  
+          }else{
+            if (contrato.length > 0 && estadoContrato === contrato[0].estado) {
+              observer.next(contrato);
+            } else {
+              observer.next();
+            }
+            observer.complete();
           }
-          observer.complete();
         });
     });
   }

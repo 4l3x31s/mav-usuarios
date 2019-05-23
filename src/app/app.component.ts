@@ -38,6 +38,11 @@ export class AppComponent {
       title: 'Lista de Contratos Solicitados',
       url: '/lista-contratos-solicitados',
       icon: 'clipboard'
+    },
+    {
+      title: 'Lista de Contratos Vigentes',
+      url: '/lista-contratos-vigentes',
+      icon: 'clipboard'
     }
   ];
 
