@@ -11,6 +11,7 @@ import { SesionService } from '../services/sesion.service';
 import { CarreraService } from '../services/db/carrera.service';
 import * as moment from 'moment';
 import { NavParamService } from '../services/nav-param.service';
+import { MapParamService } from '../services/map-param.service';
 
 @Component({
   selector: 'app-detalle-carrera',
@@ -22,8 +23,8 @@ export class DetalleCarreraPage implements OnInit {
   frmCarrera: FormGroup;
 
   public cliente: MdlCliente;
-
   public carrera: MdlCarrera;
+  public fechaMin: string;
 
   constructor(
     public fb: FormBuilder,
@@ -34,11 +35,15 @@ export class DetalleCarreraPage implements OnInit {
     public modalController: ModalController,
     public sesionService: SesionService,
     public navParams: NavParamService,
-    public alertController: AlertController
+    public alertController: AlertController,
+    public mapParamService: MapParamService
     ) {
-      this.carrera = this.carreraService.getCarreraSesion();
+      this.carrera = this.carreraService.getCarreraSesion();      
       this.carrera.fechaInicio = moment().format();
+      this.fechaMin = moment().format('YYYY-MM-DD');
+      console.log('this.fechaMin: ' + this.fechaMin );
       //this.carrera.horaInicio = moment().format('HH:mm');
+      console.log('obtiene datos de la carrera')
       this.carrera.latInicio = this.navParams.get().latitudIni;
       this.carrera.longInicio = this.navParams.get().longitudIni;
       this.carrera.latFin = this.navParams.get().latitudFin;
@@ -88,13 +93,20 @@ export class DetalleCarreraPage implements OnInit {
  
   async confirmarFecha() {
     let fechaCarrera =  moment(this.carrera.fechaInicio).toObject();
-    console.log(fechaCarrera);
-    console.log(fechaCarrera.years);
+    let fechaCarreraMoment = moment(fechaCarrera);  
+    let fechaActual = moment().format();
+    let mensaje = null;    
+    
+    if(fechaCarreraMoment.diff(fechaActual, 'seconds') < 0 ) {
+      mensaje = 'No puede registrar una fecha menor a la actual.'
+    }else{
+      mensaje = 'Desea crear la carrera en:  <br>' + 
+                'Fecha:  <strong>' + fechaCarrera.date  + '/' + (fechaCarrera.months + 1) + '/'+ fechaCarrera.years +'</strong> <br> '+ 
+                'Hora :  <strong>' + fechaCarrera.hours + ':' + fechaCarrera.minutes + ' ? </strong>'
+    }
     const alert = await this.alertController.create({
       header: 'Confirmar',
-      message: 'Desea crear la carrera en:  <br>' + 
-               'Fecha:  <strong>' + fechaCarrera.date  + '/' + (fechaCarrera.months + 1) + '/'+ fechaCarrera.years +'</strong> <br> '+ 
-               'Hora :  <strong>' + fechaCarrera.hours + ':' + fechaCarrera.minutes + ' ? </strong>',
+      message: mensaje,
       buttons: [
         {
           text: 'cancelar',
@@ -139,15 +151,49 @@ export class DetalleCarreraPage implements OnInit {
   }
 
   async irMapaOrigen() {
+    let ubicacion: any = { lat: this.carrera.latInicio, lng: this.carrera.longInicio};    
+    this.mapParamService.set(ubicacion);
     const modal = await this.modalController.create({
       component: MapaPage
     }).then( dato => {
       dato.present();
       dato.onDidDismiss().then(resultado => {
-        console.log(resultado.data);
+        console.log('irMapaOrigen(): ' + resultado.data);
         this.carrera.latInicio = resultado.data.lat;
         this.carrera.longInicio = resultado.data.lng;
+        //calcular costo
+        //this.determinarDistanciaTiempo();
       });
     });
+  }
+
+  async irMapaDestino() {
+    let ubicacion: any = { lat: this.carrera.latFin, lng: this.carrera.longFin};    
+    this.mapParamService.set(ubicacion);
+    const modal = await this.modalController.create({
+        component: MapaPage
+    }).then(dato => {
+        dato.present();
+        dato.onDidDismiss().then(resultado => {
+          console.log('irMapaDestino(): ' + resultado.data);
+          this.carrera.latFin = resultado.data.lat;
+          this.carrera.longFin = resultado.data.lng;
+          //calcular costo
+          //this.determinarDistanciaTiempo();
+        });
+    });
+  }
+  
+
+  cargarMapa(myLatlng) {
+    // const myLatlng = { lat: -16.4978888, lng: -68.1314424};
+    const mapOptions = {
+      zoom: 16,
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+      mapTypeControl: false,
+      streetViewControl: true,
+      fullScreenControl: false,
+      center: myLatlng
+    };    
   }
 }

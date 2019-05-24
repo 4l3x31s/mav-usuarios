@@ -23,7 +23,8 @@ const routes: Routes = [
   { path: 'detalle-contrato', loadChildren: './detalle-contrato/detalle-contrato.module#DetalleContratoPageModule' },  { path: 'calendario-carrera', loadChildren: './calendario-carrera/calendario-carrera.module#CalendarioCarreraPageModule' },
   { path: 'detalle-carrera', loadChildren: './comun/detalle-carrera/detalle-carrera.module#DetalleCarreraPageModule' },
   { path: 'lista-contratos-solicitados', loadChildren: './lista-contratos-solicitados/lista-contratos-solicitados.module#ListaContratosSolicitadosPageModule' },
-  { path: 'lista-contratos-vigentes', loadChildren: './lista-contratos-vigentes/lista-contratos-vigentes.module#ListaContratosVigentesPageModule' }
+  { path: 'lista-contratos-vigentes', loadChildren: './lista-contratos-vigentes/lista-contratos-vigentes.module#ListaContratosVigentesPageModule' },
+  { path: 'map-carrera', loadChildren: './map-carrera/map-carrera.module#MapCarreraPageModule' }
 
 
 

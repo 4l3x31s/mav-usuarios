@@ -21,7 +21,7 @@ export class AppComponent {
   public appPages = [
     {
       title: 'Carrera',
-      url: '/home',
+      url: '/map-carrera',
       icon: 'car'
     },
     {

@@ -4,6 +4,7 @@ import { NavController, ModalController } from '@ionic/angular';
 import { NavParamService } from './../../services/nav-param.service';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Observable } from 'rxjs';
+import { MapParamService } from 'src/app/services/map-param.service';
 
 declare var google;
 
@@ -25,7 +26,8 @@ export class MapaPage implements OnInit {
     public navCtrl: NavController,
     public toastCtrl: ToastService,
     public modalController: ModalController,
-    public alertController: AlertService
+    public alertController: AlertService,
+    public mapParamService: MapParamService
     ) { }
 
   ngOnInit() {
@@ -37,7 +39,8 @@ export class MapaPage implements OnInit {
     this.initAutocomplete();
   }
   initAutocomplete() {
-    const myLatlng = { lat: -16.4978888, lng: -68.1314424};
+    let ubicacion = this.mapParamService.get();
+    const myLatlng = { lat: parseFloat(ubicacion.lat), lng: parseFloat(ubicacion.lng)};    
     const mapOptions = {
       zoom: 16,
       mapTypeId: google.maps.MapTypeId.ROADMAP,

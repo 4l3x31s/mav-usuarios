@@ -8,24 +8,27 @@
           <ion-input >{{cliente?.nombre}}</ion-input>
       </ion-item>
 
-      <ion-item>
+      <ion-item (click)="irMapaOrigen()">
         <ion-label>
-          <h2>Origen</h2>
-          <p >Lat: {{ carrera.latInicio }}</p>
+          <h2>Dirección Origen</h2>
+          <p >Lat:  {{ carrera.latInicio }}</p>
           <p >Long: {{ carrera.longInicio }}</p>
         </ion-label>
+        <ion-icon name="locate" slot="end"></ion-icon>
       </ion-item>
-      
-      <ion-item>
+
+      <ion-item (click)="irMapaDestino()">
         <ion-label>
-          <h2>Destino</h2>
-          <p >Lat: {{ carrera.latFin }}</p>
+          <h2>Dirección Destino</h2>
+          <p >Lat:  {{ carrera.latFin }}</p>
           <p >Long: {{ carrera.longFin }}</p>
         </ion-label>
+        <ion-icon name="locate" slot="end"></ion-icon>
       </ion-item>
       
+     
       <ion-item>
-        <ion-label position="stacked">Descripción del lugar</ion-label>
+        <ion-label position="stacked">Descripción del lugar (Origen)</ion-label>
         <ion-textarea  formControlName="vdescLugar" [(ngModel)]="carrera.descLugar">
         </ion-textarea>
       </ion-item>
@@ -48,13 +51,14 @@
       <ion-item>
         <ion-label position="stacked">Fecha y hora</ion-label>
         <ion-datetime formControlName="vfechaInicio" [(ngModel)]="carrera.fechaInicio"
-                      display-format="DD/MM/YYYY HH:mm"></ion-datetime>
+                      display-format="DD/MM/YYYY HH:mm" cancelText="Cancelar" doneText="Aceptar" min="{{ fechaMin }}"></ion-datetime>
       </ion-item>
       <print-error [control]="f.vfechaInicio"></print-error>      
 
       <ion-item>
         <ion-label position="stacked">Tipo</ion-label>
-        <ion-select placeholder="Seleccione el tipo de pago" formControlName="vtipoPago" [(ngModel)]="carrera.tipoPago">
+        <ion-select placeholder="Seleccione el tipo de pago" formControlName="vtipoPago" [(ngModel)]="carrera.tipoPago"
+                    cancelText="Cancelar" okText="Aceptar">
           <ion-select-option value="Empresa">Empresa</ion-select-option>
           <ion-select-option value="Efectivo">Efectivo</ion-select-option>
           <ion-select-option value="Total">Total</ion-select-option>

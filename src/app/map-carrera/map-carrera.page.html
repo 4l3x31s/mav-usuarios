@@ -4,14 +4,16 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>
-      Inicio
+      Buscar Destino 
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>  
+<ion-content>
+  <input id="pac-input" class="controls" type="text" placeholder="Busca la zona de tu destino">
+  <div #map id="map"></div>
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button color="rosado" (click)="irMapCarrera()" >
+    <ion-fab-button color="rosado" (click)="irDetalleCarrera()" >
       <ion-icon name="logo-model-s"></ion-icon>
     </ion-fab-button>
   </ion-fab>
