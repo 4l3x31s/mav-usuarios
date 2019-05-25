@@ -93,7 +93,9 @@ export class MapCarreraPage implements OnInit {
               map: map,
               draggable: true,
               title: 'Mueveme',
-              position: place.geometry.location
+              position: place.geometry.location,
+              animation: google.maps.Animation.DROP,
+              icon: 'assets/image/car-pin.png'
             }));
             console.log(markers.length);
             if (place.geometry.viewport) {
@@ -156,13 +158,15 @@ export class MapCarreraPage implements OnInit {
       this.searchBox.setBounds(map.getBounds());
     });
     let markers = [];
+    
     let marker = new google.maps.Marker
     ({
       position: myLatlng,
       map: map,
       draggable: true,
       title: 'Mueveme',
-      icon: 'assets/image/inicio.png'
+      animation: google.maps.Animation.DROP,
+      icon: 'assets/image/person-pin-2.png'
     });
     marker.addListener('dragend', () => {
       console.log(JSON.stringify(marker.getPosition()));
