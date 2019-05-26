@@ -4,7 +4,6 @@ import { NavController, ModalController } from '@ionic/angular';
 import { NavParamService } from './../../services/nav-param.service';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Observable } from 'rxjs';
-import { MapParamService } from 'src/app/services/map-param.service';
 
 declare var google;
 
@@ -20,14 +19,15 @@ export class MapaPage implements OnInit {
   longitud: string;
   paginaRetorno: string;
   searchBox: any;
-
+  ciudad: any;
+  pais: any;
+  
   constructor(
     public navParam: NavParamService,
     public navCtrl: NavController,
     public toastCtrl: ToastService,
     public modalController: ModalController,
-    public alertController: AlertService,
-    public mapParamService: MapParamService
+    public alertController: AlertService
     ) { }
 
   ngOnInit() {
@@ -39,10 +39,9 @@ export class MapaPage implements OnInit {
     this.initAutocomplete();
   }
   initAutocomplete() {
-    let ubicacion = this.mapParamService.get();
-    const myLatlng = { lat: parseFloat(ubicacion.lat), lng: parseFloat(ubicacion.lng)};    
+    const myLatlng = { lat: -16.4978888, lng: -68.1314424};
     const mapOptions = {
-      zoom: 16,
+      zoom: 15,
       mapTypeId: google.maps.MapTypeId.ROADMAP,
       mapTypeControl: false,
       streetViewControl: true,
@@ -61,35 +60,35 @@ export class MapaPage implements OnInit {
     map.addListener('bounds_changed', () =>{
       this.searchBox.setBounds(map.getBounds());
     });
+
     let markers = [];
-    markers.push(new google.maps.Marker
-      ({
+    markers.push(new google.maps.Marker({
         position: myLatlng,
         map: map,
         draggable: true,
         title: 'Mueveme'
-      }));
+    }));
+    
     markers[0].addListener('dragend', () => {
       console.log(JSON.stringify(markers[0].getPosition()));
       const objStr: string = JSON.stringify(markers[0].getPosition());
       const obj = JSON.parse(objStr);
-      // window.alert(JSON.stringify(marker.getPosition()));
       this.latitud = obj.lat;
       this.longitud = obj.lng;
     });
-    // {"lat":-16.498217987944532,"lng":-68.13232216455685}
+    
     let respuesta = this.buscarTexto(map, markers, this.alertController);
     respuesta.subscribe( markers2 => {
       console.log("ingreso")
       let respuesta = this.markerEvent(markers2);
-          respuesta.subscribe(obj => {
-            this.latitud = obj.lat;
-            this.longitud = obj.lng;
-            console.log(this.latitud);
-          })
+      respuesta.subscribe(obj => {
+        this.latitud = obj.lat;
+        this.longitud = obj.lng;
+        console.log(this.latitud);
+      })
     })
   }
-
+  
   buscarTexto(map,markers, alertController): Observable<any> {
     return Observable.create((observer) => {
       this.searchBox.addListener('places_changed', () =>{
@@ -101,6 +100,30 @@ export class MapaPage implements OnInit {
           marker.setMap(null);
         });
         markers = [];
+
+        let geoResults = [];
+        let geoResults1 = [];
+        var geocoder = new google.maps.Geocoder();
+        var address = document.getElementById('pac-input');
+        geocoder.geocode({'address': address}, function(results, status){
+          if (status === 'OK') {
+            geoResults  = results[0];
+            geoResults1 = geoResults['address_components'];
+            for(var i=0; i < geoResults1.length; i++){
+              if(geoResults1[i].types[0]=='locality'){
+                this.ciudad=geoResults1[i].short_name;
+              }
+              if(geoResults1[i].types[0]=='country'){
+                this.pais=geoResults1[i].long_name;
+              }
+            }
+            console.log(this.ciudad);
+            console.log(this.pais);
+            geoResults = [];
+            geoResults1 = [];
+          }
+        })
+        
         var bounds = new google.maps.LatLngBounds();
         let contador = 0;
         places.forEach(function(place) {
@@ -123,7 +146,6 @@ export class MapaPage implements OnInit {
             }
           }
           contador++;
-          
         });
         console.log(markers.length);
         if(contador === 1) {
@@ -142,16 +164,14 @@ export class MapaPage implements OnInit {
   }
   markerEvent(markers): Observable<any> {
     return Observable.create((observer) => {
-      console.log(JSON.stringify(markers[0].getPosition()));
-        markers[0].addListener('dragend', () => {
+      markers[0].addListener('dragend', () => {
         console.log(JSON.stringify(markers[0].getPosition()));
         const objStr: string = JSON.stringify(markers[0].getPosition());
         const obj = JSON.parse(objStr);
         observer.next(obj);
         observer.complete();
       });
-      
-  });
+    });
   }
   guardarLatLong() {
     if(this.latitud && this.longitud){
