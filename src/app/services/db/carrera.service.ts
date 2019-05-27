@@ -2,12 +2,22 @@ import { Injectable } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { MdlCarrera } from 'src/app/modelo/mdlCarrera';
 import { Observable } from 'rxjs';
+import * as _ from 'lodash';  
 
 @Injectable({
   providedIn: 'root'
 })
 export class CarreraService {
+  
   rootRef: firebase.database.Reference;
+  estado: number;
+
+  filters = {}
+
+  public carreras: MdlCarrera[] = [];
+  public carrerasAceptadas: MdlCarrera[] = [];
+
+
   constructor(public afDB: AngularFireDatabase) {
     this.rootRef = this.afDB.database.ref();
    }
@@ -32,5 +42,4 @@ export class CarreraService {
     return this.afDB.list<MdlCarrera>('carrera',
       ref => ref.orderByChild('idUsuario').equalTo(idUsuario)).valueChanges();
   }
-
 }

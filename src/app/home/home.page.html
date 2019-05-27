@@ -9,7 +9,22 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>  
+<ion-content>
+  <ion-list>
+    <ion-list-header color="medium">
+      <ion-label>Carreras Aceptadas</ion-label>
+    </ion-list-header>
+    <ion-item *ngFor="let carrera of carrerasAceptadas">
+      <ion-label text-wrap (click)="irDetalleCarrera(carrera)">
+        <ion-text color="primary">
+          <h3>{{ carrera.descLugar }}</h3>
+        </ion-text>
+        <p><i>{{carrera.fechaInicio | date: 'dd/MM/yyyy HH:mm:ss'}}</i></p>
+      </ion-label>      
+    </ion-item>
+  </ion-list>
+
+  <div class="fondo-home"></div>
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button color="rosado" (click)="irMapCarrera()" >
       <ion-icon name="logo-model-s"></ion-icon>

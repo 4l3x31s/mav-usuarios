@@ -20,7 +20,12 @@ export class AppComponent {
 
   public appPages = [
     {
-      title: 'Carrera',
+      title: 'Carreras Aceptadas',
+      url: '/home',
+      icon: 'car'
+    },
+    {
+      title: 'Solicitar Carrera',
       url: '/map-carrera',
       icon: 'car'
     },
@@ -30,7 +35,7 @@ export class AppComponent {
       icon: 'md-calendar'
     },
     {
-      title: 'Contrato',
+      title: 'Crear Contrato',
       url: '/detalle-contrato',
       icon: 'clipboard'
     },

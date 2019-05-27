@@ -151,6 +151,7 @@ export class DetalleCarreraPage implements OnInit {
   }
 
   async irMapaOrigen() {
+    
     let ubicacion: any = { lat: this.carrera.latInicio, lng: this.carrera.longInicio};    
     this.mapParamService.set(ubicacion);
     const modal = await this.modalController.create({
@@ -183,17 +184,5 @@ export class DetalleCarreraPage implements OnInit {
         });
     });
   }
-  
 
-  cargarMapa(myLatlng) {
-    // const myLatlng = { lat: -16.4978888, lng: -68.1314424};
-    const mapOptions = {
-      zoom: 16,
-      mapTypeId: google.maps.MapTypeId.ROADMAP,
-      mapTypeControl: false,
-      streetViewControl: true,
-      fullScreenControl: false,
-      center: myLatlng
-    };    
-  }
 }

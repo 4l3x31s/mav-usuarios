@@ -5,6 +5,7 @@ import { ContratoService } from '../services/db/contrato.service';
 import { NavController } from '@ionic/angular';
 import { MdlCliente } from '../modelo/mdlCliente';
 import { SesionService } from '../services/sesion.service';
+import * as _ from 'lodash'; 
 
 @Component({
   selector: 'app-lista-contratos-solicitados',
@@ -15,6 +16,7 @@ export class ListaContratosSolicitadosPage implements OnInit {
   public lstContratos: MdlContrato[] = [];
   public lstContratosFiltrado: MdlContrato[] = [];
   public cliente: MdlCliente;
+  filtros = {}
   constructor(
     public contratoService: ContratoService,
     public loading: LoadingService,
@@ -33,7 +35,8 @@ export class ListaContratosSolicitadosPage implements OnInit {
             this.cliente = cliente;
             console.log("cliente: " +this.cliente.nombre);
             console.log("id: " +this.cliente.id);
-            this.listaContratosPorEstado(this.cliente.id, 0);
+            //this.listaContratosPorEstado(this.cliente.id, 0);
+            this.listaContratosPorUsuario(this.cliente.id);
           } else {
             this.navController.navigateRoot('/login');
           }
@@ -43,15 +46,20 @@ export class ListaContratosSolicitadosPage implements OnInit {
     
   }
 
-  async listarContratos() {
+  async listaContratosPorUsuario(idUsuario: number) {
     this.loading.present();
-    await this.contratoService.listaContratos().subscribe( data => {
+    await this.contratoService.listaContratosPorUsuario(idUsuario).subscribe( data => {
       this.loading.dismiss();
       this.lstContratos = Object.assign(data);
-      this.lstContratosFiltrado = this.lstContratos;
+      this.filtrarContrato('estado',0);
     },  error => {
       this.loading.dismiss();
     });
+  }
+
+  public filtrarContrato(atributo: string, valor: any) {
+    this.filtros[atributo] = val => val == valor;
+    this.lstContratosFiltrado = _.filter(this.lstContratos, _.conforms(this.filtros) )
   }
 
   async listaContratosPorEstado(idUsuario: number, estadoContrato: number) {
