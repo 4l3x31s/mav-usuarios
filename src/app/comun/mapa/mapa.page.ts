@@ -67,7 +67,8 @@ export class MapaPage implements OnInit {
         position: myLatlng,
         map: map,
         draggable: true,
-        title: 'Mueveme'
+        title: 'Mueveme',
+        animation: google.maps.Animation.DROP
       }));
     markers[0].addListener('dragend', () => {
       console.log(JSON.stringify(markers[0].getPosition()));
@@ -113,6 +114,7 @@ export class MapaPage implements OnInit {
               map: map,
               draggable: true,
               title: 'Mueveme',
+              animation: google.maps.Animation.DROP,
               position: place.geometry.location
             }));
             console.log(markers.length);

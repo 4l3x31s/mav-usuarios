@@ -8,7 +8,7 @@
           <form [formGroup]="formLogin" novalidate>
             <ion-list>
               <ion-item>
-                <ion-label position="stacked">Usuario (correo)</ion-label>
+                <ion-label position="stacked">Usuario/Correo Electrónico</ion-label>
                 <ion-input formControlName="vuser" [(ngModel)]="user"></ion-input>
               </ion-item>
               <print-error [control]="f.vuser"></print-error>
@@ -21,11 +21,11 @@
 
             </ion-list>
 
-            <ion-button expand="block" color="verdec" shape="round" (click)="ingresar()" [disabled]="formLogin.invalid">
+            <ion-button expand="block" color="verdec" (click)="ingresar()" [disabled]="formLogin.invalid">
               Ingresar
             </ion-button>
             
-            <ion-button expand="block" color="verdec" shape="round" (click)="irRegistrarCliente()" >
+            <ion-button expand="block" color="verdec" (click)="irRegistrarCliente()" >
               Crear Cuenta
             </ion-button>
           </form>
