@@ -18,7 +18,7 @@ declare var google;
 })
 export class MapCarreraPage implements OnInit {
   cliente: MdlCliente;
-  @ViewChild('map') mapElement: ElementRef;
+  @ViewChild('maps') mapElement: ElementRef;
   map: any;
   latitudIni: string;
   longitudIni: string;
@@ -150,7 +150,7 @@ export class MapCarreraPage implements OnInit {
     this.latitudIni = myLatlng.lat.toString();
     this.longitudIni = myLatlng.lng.toString();
     var map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
-    let input = document.getElementById('pac-input');
+    let input = document.getElementById('pac-input-carrera');
     this.searchBox = new google.maps.places.SearchBox(input);
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
 

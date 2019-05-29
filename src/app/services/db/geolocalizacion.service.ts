@@ -24,6 +24,6 @@ export class GeolocalizacionService {
   return this.afDB.list('geolocations').valueChanges();
  }
  listarCambios() {
-  return this.afDB.list('geolocations').snapshotChanges();
+  return this.afDB.list('geolocations').valueChanges();
  }
 }

@@ -5,10 +5,16 @@ import { IonicModule } from '@ionic/angular';
 import { CabeceraComponent } from './cabecera/cabecera.component';
 
 @NgModule({
-  declarations: [PrintErrorComponent, CabeceraComponent],
+  declarations: [
+    PrintErrorComponent,
+    CabeceraComponent
+  ],
   imports: [
     CommonModule, IonicModule
   ],
-  exports: [PrintErrorComponent, CabeceraComponent]
+  exports: [
+    PrintErrorComponent,
+    CabeceraComponent
+  ]
 })
 export class ComponentesComunesModule { }

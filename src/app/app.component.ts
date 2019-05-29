@@ -20,8 +20,13 @@ export class AppComponent {
 
   public appPages = [
     {
-      title: 'Carreras Aceptadas',
+      title: 'Inicio',
       url: '/home',
+      icon: 'car'
+    },
+    {
+      title: 'Carreras Aceptadas',
+      url: '/carreras-aceptadas',
       icon: 'car'
     },
     {

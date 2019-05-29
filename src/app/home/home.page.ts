@@ -1,13 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { NavController, ModalController } from '@ionic/angular';
-import { SesionService } from '../services/sesion.service';
-import { CarreraService } from '../services/db/carrera.service';
-import { MdlCarrera } from '../modelo/mdlCarrera';
-import { MdlCliente } from '../modelo/mdlCliente';
-import { LoadingService } from '../services/util/loading.service';
-import * as _ from 'lodash'; 
-import { DetalleCarreraPage } from '../comun/detalle-carrera/detalle-carrera.page';
+import { NavController, ModalController, Platform } from '@ionic/angular';
+import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
+import { MdlGeoLocalizacion } from '../modelo/mdlGeoLocalizacion';
+import { GeolocalizacionService } from '../services/db/geolocalizacion.service';
+import { Geolocation } from '@ionic-native/geolocation/ngx';
 
+declare var google;
 
 @Component({
   selector: 'app-home',
@@ -15,63 +12,131 @@ import { DetalleCarreraPage } from '../comun/detalle-carrera/detalle-carrera.pag
   styleUrls: ['home.page.scss'],
 })
 export class HomePage implements OnInit {
-  public carreras: MdlCarrera[] = [];
-  public carrerasAceptadas: MdlCarrera[] = [];
-  public cliente: MdlCliente;
-  filtros = {}
-
+  @ViewChild('mapge') mapElement: ElementRef;
+  map: any;
+  markers = [];
+  watchID: any;
+  listaGeoPosicionamiento: MdlGeoLocalizacion[] = [];
   constructor(
-    public navController: NavController,
-    public sesionService: SesionService,
-    public carreraService: CarreraService,
-    public loading: LoadingService,
-    public modalController: ModalController,
-  ) {
-    
-   }
+    public navCtrl: NavController,
+    public geolocation: Geolocation,
+    public geolocalizacionService: GeolocalizacionService) {}
   ngOnInit() {
-    console.log('cargar carreras')
-    this.sesionService.crearSesionBase()
-    .then(() => {
-      this.sesionService.getSesion()
-        .then((cliente) => {
-          if (cliente) {
-            this.cliente = cliente;
-            this.listaCarerasAceptadas(this.cliente.id, 2);
-          } else {
-            this.navController.navigateRoot('/login');
-          }
-        });
-    });
-  }
-
-  async listaCarerasAceptadas(idUsuario: number, estado: number) {
-    this.loading.present();
-     await this.carreraService.getCarrerasPorCliente(idUsuario).subscribe( data => {
-      this.loading.dismiss();
-      this.carreras = Object.assign(data);
-      this.filtrarCarrera('estado', estado);    
-    },  error => {
-      this.loading.dismiss();
-    });
-  }
-  public irMapCarrera() {
-    this.navController.navigateForward('/map-carrera');  
-  }
-
-
-  public filtrarCarrera(atributo: string, valor: any) {
-    this.filtros[atributo] = val => val == valor;
-    this.carrerasAceptadas = _.filter(this.carreras, _.conforms(this.filtros) )
-  }
-
-  async irDetalleCarrera(carrera) {
-    const modal = await this.modalController.create({
-      component: DetalleCarreraPage,
-      componentProps: { 
-        carrera: carrera
+    this.initMap();
+    this.geolocalizacionService.listarCambios().subscribe( data => {
+      console.log(data);
+      this.listaGeoPosicionamiento = Object.assign(data);
+      for (let geoObj of this.listaGeoPosicionamiento) {
+        let image = 'assets/image/blue-bike.png';
+          let updatelocation = new google.maps.LatLng(geoObj.lat, geoObj.long);
+          this.addMarker(updatelocation,image);
+          this.setMapOnAll(this.map);
       }
     });
-    return await modal.present();
+  }
+
+  initMap() {
+      navigator.geolocation.getCurrentPosition((resp) => {
+        let mylocation = new google.maps.LatLng(resp.coords.latitude, resp.coords.longitude);
+        this.map = new google.maps.Map(this.mapElement.nativeElement, {
+          zoom: 15,
+          center: mylocation,
+          mapTypeControl: false,
+          streetViewControl: false,
+          fullScreenControl: false,
+          zoomControl: false,
+          scaleControl: false,
+          rotateControl: false,
+          fullscreenControl: false
+        });
+        let geoResults = [];
+        let geoResults1 = [];
+        var geocoder = new google.maps.Geocoder();
+        geocoder.geocode({'location': mylocation}, function(results, status){
+          if (status === 'OK') {
+            geoResults  = results[0];
+            geoResults1 = geoResults['address_components'];
+            for(var i=0; i < geoResults1.length; i++){
+              if(geoResults1[i].types[0]=='locality'){
+                this.ciudad=geoResults1[i].short_name;
+              }
+              if(geoResults1[i].types[0]=='country'){
+                this.pais=geoResults1[i].long_name;
+              }
+            }
+            console.log(this.ciudad);
+            console.log(this.pais);
+            geoResults = [];
+            geoResults1 = [];
+          }
+        })
+
+      }, (error) => {
+        console.log("error current position")
+        console.log(error);
+      }, { enableHighAccuracy: true });
+
+      //navigator.geolocation.clearWatch(watchID);
+      /*this.geolocation.getCurrentPosition({ enableHighAccuracy: true }).then((resp) => {
+        let mylocation = new google.maps.LatLng(resp.coords.latitude, resp.coords.longitude);
+        this.map = new google.maps.Map(this.mapElement.nativeElement, {
+          zoom: 15,
+          center: mylocation,
+          mapTypeControl: false,
+          streetViewControl: false,
+          fullScreenControl: false,
+          zoomControl: false,
+          scaleControl: false,
+          rotateControl: false,
+          fullscreenControl: false
+        });
+      }, err => {
+        console.log(err);
+      });*/
+
+        this.watchID = navigator.geolocation.watchPosition((data) => {
+        this.deleteMarkers();
+        let updatelocation = new google.maps.LatLng(data.coords.latitude,data.coords.longitude);
+        let image = 'assets/image/blue-bike.png';
+        this.addMarker(updatelocation,image);
+        this.setMapOnAll(this.map);
+      }, error => {
+        console.log(error);
+      });
+      /*let watch = this.geolocation.watchPosition();
+      watch.subscribe((data) => {
+        this.deleteMarkers();
+        let updatelocation = new google.maps.LatLng(data.coords.latitude,data.coords.longitude);
+        let image = 'assets/image/blue-bike.png';
+        this.addMarker(updatelocation,image);
+        this.setMapOnAll(this.map);
+      }, err => {
+        console.log(err);
+      });*/
+  }
+  addMarker(location, image) {
+    let marker = new google.maps.Marker({
+      position: location,
+      map: this.map,
+      icon: image
+    });
+    this.markers.push(marker);
+  }
+  setMapOnAll(map) {
+    for (let i = 0; i < this.markers.length; i++) {
+      this.markers[i].setMap(map);
+    }
+  }
+  clearMarkers() {
+    this.setMapOnAll(null);
+  }
+  deleteMarkers() {
+    this.clearMarkers();
+  }
+  updateGeolocation(geoposicionamineto: MdlGeoLocalizacion) {
+    this.geolocalizacionService.crearGeolocalizacion(geoposicionamineto);
+  }
+  ngOnDestroy(): void {
+    navigator.geolocation.clearWatch(this.watchID);
   }
 }

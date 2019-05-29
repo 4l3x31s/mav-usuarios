@@ -2,7 +2,7 @@
     max-height: 35vh;
     overflow: hidden;
   }
-  #map {
+  #maps {
     height: 100%;
   }
   #inputSearch {
@@ -28,7 +28,7 @@
           display: none;
         }
   
-        #map #infowindow-content {
+        #maps #infowindow-content {
           display: inline;
         }
   
@@ -59,7 +59,7 @@
           font-weight: 300;
         }
   
-        #pac-input {
+        #pac-input-carrera {
           background-color: #fff;
           font-family: Roboto;
           font-size: 15px;
@@ -73,7 +73,7 @@
           box-shadow: 3px 6px 5px #7f7f7f;
         }
   
-        #pac-input:focus {
+        #pac-input-carrera:focus {
           border-color: #f7a8c2 !important;
         }
   
