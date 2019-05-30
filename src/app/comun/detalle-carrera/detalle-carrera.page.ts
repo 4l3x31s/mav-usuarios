@@ -68,13 +68,13 @@ export class DetalleCarreraPage implements OnInit {
       ({
         position: myLatlngFin,
         map: map,
-        label: 'B'
+        icon: 'assets/image/pin-end.png' //label: 'B'
       }));
     markers.push(new google.maps.Marker
       ({
         position: myLatlngIni,
         map: map,
-        label: 'A'
+        icon: 'assets/image/pin-user.png' //label: 'A'
       }));
     
   }
@@ -97,12 +97,13 @@ export class DetalleCarreraPage implements OnInit {
         
       }
     });
-    if(this.carrera.estado != 3){
+    if(this.carrera.estado == 1){
       opciones.push({
-        text: 'Terminar Carrera',
-        icon: 'skip-forward',
+        text: 'Editar Carrera',
+        icon: 'create',
         handler: () => {
-          
+          console.log('editar');
+          this.navController.navigateForward('/detalle-carrera');
         }
       });
     }
