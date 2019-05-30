@@ -1,0 +1,143 @@
+<cabecera-back titulo="Detalle Conductora"></cabecera-back>
+
+<ion-content *ngIf="conductora">
+  <form [formGroup]="form" novalidate>
+    <ion-list>
+      <ion-list-header color="medium">
+        <ion-label>DATOS GENERALES</ion-label>
+      </ion-list-header>
+
+      <ion-grid>          
+        <ion-row>
+          <ion-col size="5">
+            <subir-imagen soloLectura="si"
+              [url-imagen]="'mav/conductora/'+conductora.id+'-foto'">
+            </subir-imagen>
+          </ion-col>
+          
+          <ion-col size="7">
+            <ion-item>
+              <ion-label position="floating">Nombre</ion-label>
+              <ion-input value="{{conductora.nombre}}" readonly></ion-input>
+            </ion-item>
+            
+      
+            <ion-item>
+              <ion-label position="floating">Apellido Paterno</ion-label>
+              <ion-input value="{{conductora.paterno}}" readonly></ion-input>
+            </ion-item>
+           
+      
+            <ion-item>
+              <ion-label position="floating">Apellido Materno</ion-label>
+              <ion-input value="{{conductora.materno}}" readonly></ion-input>
+            </ion-item>
+           
+          </ion-col>    
+          
+        </ion-row>
+      </ion-grid>
+
+      <ion-grid>          
+        <ion-row>
+          <ion-col size="5">
+            <ion-item>
+              <ion-label position="floating">Celular</ion-label>
+              <ion-input type="number" value="{{conductora.celular}}" readonly></ion-input>
+            </ion-item>
+           
+          </ion-col>
+          <ion-col size="7">
+            <ion-item>
+              <ion-label position="floating">Teléfono Fijo</ion-label>
+              <ion-input type="number" value="{{conductora.telefono}}" readonly></ion-input>
+            </ion-item>
+            
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+      <ion-list-header color="medium">
+        <ion-label>RADICATORIA</ion-label>
+      </ion-list-header>
+
+      <ion-grid>          
+        <ion-row>
+          <ion-col size="6">
+            <ion-item>
+              <ion-label position="stacked">Pais</ion-label>
+              <ion-select interface="popover" formControlName="vPais" placeholder="Seleccione el Pais"
+                (ngModelChange)="filtrarCiudades($event)" [(ngModel)]="conductora.pais" readonly>
+                <ion-select-option *ngFor="let parametros of lstPaisesFiltrados" value="{{parametros.pais}}">
+                  {{parametros.pais}}
+                </ion-select-option>
+              </ion-select>
+            </ion-item>
+           
+          </ion-col>
+
+          <ion-col size="6">
+            <ion-item>
+              <ion-label position="stacked">Ciudad</ion-label>
+              <ion-select interface='popover' formControlName="vCiudad" placeholder="Seleccione la Ciudad"
+                [(ngModel)]="conductora.ciudad" readonly>
+                <ion-select-option *ngFor="let parametros of lstCiudadesFiltrado" value="{{parametros.ciudad}}">
+                  {{parametros.ciudad}}
+                </ion-select-option>
+              </ion-select>
+            </ion-item>
+           
+          </ion-col>
+        </ion-row>
+
+        <ion-item>
+          <ion-label position="floating">Dirección</ion-label>
+          <ion-input value="{{conductora.direccion}}" readonly></ion-input>
+        </ion-item>
+       
+
+      </ion-grid>
+    </ion-list>
+
+    
+
+
+  </form>
+
+  <form *ngIf="vehiculo && vehiculo.id">
+  <ion-list-header color="medium">
+      <ion-label>VEHICULO</ion-label>
+    </ion-list-header>
+
+    <ion-grid>          
+        <ion-row>
+          <ion-col size="5">
+            <subir-imagen id="imgVehiculo"
+            [url-imagen]="'mav/vehiculo/'+vehiculo.id+'-vehiculo'">
+            </subir-imagen>      
+          </ion-col>
+          <ion-col size="7">
+            <ion-item>
+              <ion-label position="floating">Marca</ion-label>
+              <ion-input value="{{vehiculo.marca}}" readonly></ion-input>
+            </ion-item>
+            
+      
+            <ion-item>
+              <ion-label position="floating">Modelo</ion-label>
+              <ion-input value="{{vehiculo.modelo}}" type="number" readonly></ion-input>
+            </ion-item>
+      
+            <ion-item>
+              <ion-label position="floating">Capacidad</ion-label>
+              <ion-input value="{{vehiculo.capacidad}}" type="number" readonly></ion-input>
+            </ion-item>            
+          </ion-col>
+        </ion-row>
+    </ion-grid>
+
+  </form>
+
+
+  
+</ion-content>

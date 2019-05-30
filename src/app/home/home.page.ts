@@ -27,7 +27,7 @@ export class HomePage implements OnInit {
       console.log(data);
       this.listaGeoPosicionamiento = Object.assign(data);
       for (let geoObj of this.listaGeoPosicionamiento) {
-        let image = 'assets/image/blue-bike.png';
+        let image = 'assets/image/pin-mav.png';
           let updatelocation = new google.maps.LatLng(geoObj.lat, geoObj.long);
           this.addMarker(updatelocation,image);
           this.setMapOnAll(this.map);
@@ -97,7 +97,7 @@ export class HomePage implements OnInit {
         this.watchID = navigator.geolocation.watchPosition((data) => {
         this.deleteMarkers();
         let updatelocation = new google.maps.LatLng(data.coords.latitude,data.coords.longitude);
-        let image = 'assets/image/blue-bike.png';
+        let image = 'assets/image/pin-mav.png';
         this.addMarker(updatelocation,image);
         this.setMapOnAll(this.map);
       }, error => {

@@ -14,12 +14,14 @@ export class MdlConductora {
         public celular: number,
         public nroResidencia: number,
         public user: string,
+        public email: string,
         public pass: string,
         public lat: string,
         public long: string,
         public pais: string,
         public ciudad: string,
         public foto,
+        public admin: boolean,
         public estado: boolean
     ) {
 

@@ -12,16 +12,22 @@
   <ion-content>
     <ion-list>
       <ion-list-header color="medium">
-        <ion-label>Carreras Aceptadas new</ion-label>
+        <ion-label>Carreras Aceptadas</ion-label>
       </ion-list-header>
-      <ion-item *ngFor="let carrera of carrerasAceptadas">
-        <ion-label text-wrap (click)="irDetalleCarrera(carrera)">
+      <ion-item-sliding *ngFor="let carrera of carrerasAceptadas">
+        <ion-item-options side="end">
+          <ion-item-option color="verdec" (click)="irDetalleCarrera(carrera)">Carrera</ion-item-option>
+          <ion-item-option color="rosadoClaro" (click)="irDetalleConductora(carrera)">Conductora</ion-item-option>
+        </ion-item-options>
+        
+        <ion-label text-wrap>
           <ion-text color="primary">
             <h3>{{ carrera.descLugar }}</h3>
           </ion-text>
           <p><i>{{carrera.fechaInicio | date: 'dd/MM/yyyy HH:mm:ss'}}</i></p>
-        </ion-label>      
-      </ion-item>
+        </ion-label>
+        
+      </ion-item-sliding>
     </ion-list>
   
     <div class="fondo-home"></div>

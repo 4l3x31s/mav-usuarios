@@ -1,0 +1,20 @@
+<ion-card>
+  <ion-item *ngIf="titulo">
+    <ion-label>{{ titulo }}</ion-label>
+    <div *ngIf="soloLectura === 'no'">
+      <ion-icon *ngIf="urlImagenFirebase" slot="end" name="trash" (click)="eliminarImagen()"></ion-icon>
+    </div>
+  </ion-item>
+  <div *ngIf="urlImagenFirebase">
+    <img [src]="urlImagenFirebase" />
+  </div>
+  <ion-spinner *ngIf="cargando"></ion-spinner>
+  
+  <div *ngIf="soloLectura === 'no'">
+    <div class="fileUpload" *ngIf="!cargando">
+      <span>Cargar Imagen</span>
+      <input type="file" class="upload" (change)="uploadImagen($event)" />
+    </div>
+  </div>
+
+</ion-card>

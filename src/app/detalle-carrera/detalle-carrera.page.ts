@@ -91,6 +91,18 @@ export class DetalleCarreraPage implements OnInit {
     })
   }
  
+
+  async validarHoraPeticionCarrera() {
+    const alert = await this.alertController.create({
+      header: 'Error',
+      subHeader: 'Subtitle',
+      message: 'No puede registrar una fecha menor a la actual.',
+      buttons: ['Aceptar']
+    });
+
+    await alert.present();
+  }
+
   async confirmarFecha() {
     let fechaCarrera =  moment(this.carrera.fechaInicio).toObject();
     let fechaCarreraMoment = moment(fechaCarrera);  
@@ -98,33 +110,34 @@ export class DetalleCarreraPage implements OnInit {
     let mensaje = null;    
     
     if(fechaCarreraMoment.diff(fechaActual, 'seconds') < 0 ) {
-      mensaje = 'No puede registrar una fecha menor a la actual.'
+      this.validarHoraPeticionCarrera();
     }else{
       mensaje = 'Desea crear la carrera en:  <br>' + 
                 'Fecha:  <strong>' + fechaCarrera.date  + '/' + (fechaCarrera.months + 1) + '/'+ fechaCarrera.years +'</strong> <br> '+ 
                 'Hora :  <strong>' + fechaCarrera.hours + ':' + fechaCarrera.minutes + ' ? </strong>'
-    }
-    const alert = await this.alertController.create({
-      header: 'Confirmar',
-      message: mensaje,
-      buttons: [
-        {
-          text: 'cancelar',
-          role: 'cancelar',
-          cssClass: 'secondary',
-          handler: (blah) => {
-            //this.grabar();
+    
+      const alert = await this.alertController.create({
+        header: 'Confirmar',
+        message: mensaje,
+        buttons: [
+          {
+            text: 'cancelar',
+            role: 'cancelar',
+            cssClass: 'secondary',
+            handler: (blah) => {
+              //this.grabar();
+            }
+          }, {
+            text: 'Confirmar',
+            handler: () => {
+              this.grabar();
+            }
           }
-        }, {
-          text: 'Confirmar',
-          handler: () => {
-            this.grabar();
-          }
-        }
-      ]
-    });
+        ]
+      });
 
-    await alert.present();
+      await alert.present();
+    }
   }
   public grabar(){
     this.loadingServices.present();

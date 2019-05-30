@@ -7,6 +7,10 @@ import { MdlCliente } from '../modelo/mdlCliente';
 import { LoadingService } from '../services/util/loading.service';
 import * as _ from 'lodash'; 
 import { DetalleCarreraPage } from '../comun/detalle-carrera/detalle-carrera.page';
+import { MdlConductora } from '../modelo/mldConductora';
+import { ConductoraService } from '../services/db/conductora.service';
+import { AngularFireStorage } from '@angular/fire/storage';
+import { NavParamService } from '../services/nav-param.service';
 
 @Component({
   selector: 'app-carreras-aceptadas',
@@ -17,14 +21,20 @@ export class CarrerasAceptadasPage implements OnInit {
   public carreras: MdlCarrera[] = [];
   public carrerasAceptadas: MdlCarrera[] = [];
   public cliente: MdlCliente;
+  public conductora: MdlConductora;
+  
   filtros = {}
-
+  urlFoto: string;
+  
   constructor(
     public navController: NavController,
     public sesionService: SesionService,
     public carreraService: CarreraService,
     public loading: LoadingService,
     public modalController: ModalController,
+    public conductoraService: ConductoraService,
+    private storage: AngularFireStorage,
+    public navParams: NavParamService,
   ) {
     
    }
@@ -73,4 +83,29 @@ export class CarrerasAceptadasPage implements OnInit {
     });
     return await modal.present();
   }
+
+  public irDetalleConductora(carrera:MdlCarrera) {    
+    console.log('carrera.idConductora: ' + carrera.idConductora);        
+    this.conductoraService.getConductora(carrera.idConductora)
+      .subscribe( conductora => {
+        this.conductora = conductora;
+        console.log('conductora asignada: ' + this.conductora.id);              
+          this.storage.ref('mav/conductora/'+conductora.id+'-foto').getDownloadURL()
+          .subscribe(ruta => {
+            this.urlFoto = ruta;
+          }, error => {
+            this.urlFoto = undefined;
+            //console.error(error);
+          });
+
+          this.navParams.set({
+            conductora: this.conductora
+          });
+          this.navController.navigateForward('/detalle-conductora');
+      });
+     
+    
+  }
+
+  
 }

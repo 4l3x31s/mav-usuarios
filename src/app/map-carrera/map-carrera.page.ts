@@ -92,10 +92,10 @@ export class MapCarreraPage implements OnInit {
             markers.push(new google.maps.Marker({
               map: map,
               draggable: true,
-              title: 'Mueveme',
+              title: 'Destino Carrera',
               position: place.geometry.location,
               animation: google.maps.Animation.DROP,
-              icon: 'assets/image/car-pin.png'
+              icon: 'assets/image/pin-end.png'
             }));
             console.log(markers.length);
             if (place.geometry.viewport) {
@@ -164,9 +164,9 @@ export class MapCarreraPage implements OnInit {
       position: myLatlng,
       map: map,
       draggable: true,
-      title: 'Mueveme',
+      title: 'Inicio Carrera',
       animation: google.maps.Animation.DROP,
-      icon: 'assets/image/person-pin-2.png'
+      icon: 'assets/image/pin-user.png'
     });
     marker.addListener('dragend', () => {
       console.log(JSON.stringify(marker.getPosition()));
