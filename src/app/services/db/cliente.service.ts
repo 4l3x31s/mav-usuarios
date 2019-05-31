@@ -16,12 +16,13 @@ export class ClienteService {
     this.rootRef = this.afDB.database.ref();
    }
    crearCliente(mdlCliente: MdlCliente): Promise<any> {
-     console.log('metodo crear cliente');
+    
     if(!mdlCliente.id){
       mdlCliente.id = Date.now();
     }
+    console.log('metodo crear cliente : ', mdlCliente);
     return this.afDB.database.ref('cliente/' + mdlCliente.id)
-      .set(this.utilService.serializar(mdlCliente))
+      .set(mdlCliente)
         .then(()=>{
           return Promise.resolve(mdlCliente);
         })

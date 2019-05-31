@@ -162,8 +162,9 @@ export class DetalleClientePage implements OnInit {
           .then((conductora) => {
             this.cliente = conductora;
             this.loadingService.dismiss();
-            this.alertService.present('Info', 'Datos guardados correctamente.');
-            this.navController.navigateRoot('/home');
+            this.alertService.present('Info', 'Datos guardados correctamente.');  // edita cliente
+            this.navController.navigateRoot('/home'); 
+            //this.ingresar();
           })
           .catch(error => {
             this.loadingService.dismiss();
@@ -178,8 +179,9 @@ export class DetalleClientePage implements OnInit {
             .then((cliente) => {
               this.cliente = cliente;
               this.loadingService.dismiss();
-              this.alertService.present('Info', 'Datos guardados correctamente.');
-              this.navController.navigateRoot('/home');
+              this.alertService.present('Info', 'Datos guardados correctamente.');   // nuevo cliente           
+              //this.navController.navigateRoot('/home');
+              this.ingresar();
             })
             .catch(error => {
               this.loadingService.dismiss();
