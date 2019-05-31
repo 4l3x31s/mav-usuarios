@@ -5,13 +5,13 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
 
-import { DetalleCarreraPage } from './detalle-carrera.page';
+import { RegistroCarreraPage } from './registro-carrera.page';
 import { ComponentesComunesModule } from '../componentes-comunes/componentes-comunes.module';
 
 const routes: Routes = [
   {
     path: '',
-    component: DetalleCarreraPage
+    component: RegistroCarreraPage
   }
 ];
 
@@ -24,6 +24,6 @@ const routes: Routes = [
     ComponentesComunesModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [DetalleCarreraPage]
+  declarations: [RegistroCarreraPage]
 })
-export class DetalleCarreraPageModule {}
+export class RegistroCarreraPageModule {}

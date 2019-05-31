@@ -188,7 +188,7 @@ export class MapCarreraPage implements OnInit {
     })
   }
 
-  public irDetalleCarrera() {
+  public irRegistroCarrera() {
     console.log('ini:  ' + this.latitudIni + ', ' + this.longitudIni);
     console.log('fin:  ' + this.latitudFin + ', ' + this.longitudFin);
     if (this.latitudFin === null) {
@@ -200,7 +200,7 @@ export class MapCarreraPage implements OnInit {
         latitudFin: this.latitudFin,
         longitudFin: this.longitudFin
       });
-      this.navController.navigateForward('/detalle-carrera');
+      this.navController.navigateForward('/registro-carrera');
     }
   }
 

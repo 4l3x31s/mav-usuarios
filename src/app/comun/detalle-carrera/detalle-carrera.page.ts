@@ -29,7 +29,8 @@ export class DetalleCarreraPage implements OnInit {
     public navController: NavController,
     public loadingService: LoadingService,
     public iab: InAppBrowser,
-    public actionSheetController: ActionSheetController
+    public actionSheetController: ActionSheetController,
+  
   ) { }
 
   ngOnInit() {
@@ -102,10 +103,13 @@ export class DetalleCarreraPage implements OnInit {
         text: 'Editar Carrera',
         icon: 'create',
         handler: () => {
-          console.log('editar');
-          this.navController.navigateForward('/detalle-carrera');
+          console.log('Editar Carrera...');
+          this.navController.navigateForward('/registro-carrera');
+          this.modalCtrl.dismiss();
         }
       });
+
+      
     }
     
     const actionSheet = await this.actionSheetController.create({

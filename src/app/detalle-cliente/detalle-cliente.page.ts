@@ -8,6 +8,7 @@ import { NavController, Events } from '@ionic/angular';
 import { SesionService } from '../services/sesion.service';
 import { MdlParametrosCarrera } from '../modelo/mdlParametrosCarrera';
 import { ParametrosCarreraService } from '../services/db/parametros-carrera.service';
+import { AuthService } from '../services/firebase/auth.service';
 
 @Component({
   selector: 'app-detalle-cliente',
@@ -32,7 +33,8 @@ export class DetalleClientePage implements OnInit {
     public sesionService: SesionService,
     public loadingService: LoadingService,
     public parametrosService: ParametrosCarreraService,
-    public events: Events
+    public events: Events,
+    public authService: AuthService
     ) { console.log('constructor');
     this.sesionService.crearSesionBase()
         .then(() => {
@@ -140,7 +142,7 @@ export class DetalleClientePage implements OnInit {
 }
 
   public grabar(){
-    this.loadingServices.present();
+    /*this.loadingServices.present();
       this.clienteService.crearCliente(this.cliente)
       .then(() => {
         this.loadingServices.dismiss();
@@ -152,13 +154,53 @@ export class DetalleClientePage implements OnInit {
         console.log(error);
         this.alertService.present('Error','Hubo un error al grabar los datos');
         this.navController.navigateRoot('/home');
-      })
+      })*/
+      this.loadingService.present().then(() => {
+        this.cliente.user = this.cliente.email;        
+        if (this.cliente && this.cliente.id != null) {
+          this.clienteService.crearCliente(this.cliente)
+          .then((conductora) => {
+            this.cliente = conductora;
+            this.loadingService.dismiss();
+            this.alertService.present('Info', 'Datos guardados correctamente.');
+            this.navController.navigateRoot('/home');
+          })
+          .catch(error => {
+            this.loadingService.dismiss();
+            console.log(error);
+            this.alertService.present('Error', 'Hubo un error al grabar los datos');
+            this.navController.navigateRoot('/home');
+          });
+        } else {
+          this.authService.doRegister(this.cliente.user, this.cliente.pass)
+          .then(res => {
+            this.clienteService.crearCliente(this.cliente)
+            .then((cliente) => {
+              this.cliente = cliente;
+              this.loadingService.dismiss();
+              this.alertService.present('Info', 'Datos guardados correctamente.');
+              this.navController.navigateRoot('/home');
+            })
+            .catch(error => {
+              this.loadingService.dismiss();
+              console.log(error);
+              this.alertService.present('Error', 'Hubo un error al grabar los datos');
+              this.navController.navigateRoot('/home');
+            });
+          }, error => {
+            this.loadingService.dismiss();
+            console.log(error);
+            this.alertService.present('Error', 'Hubo un error al grabar los datos');
+            this.navController.navigateRoot('/home');
+          })
+        }
+      });  
   }
 
   public ingresar() {
     this.loadingService.present()
       .then(() => {
-        this.sesionService.login(this.cliente.user, this.cliente.pass)
+        this.sesionService.login(this.cliente.user)
           .subscribe(() => {
             console.log('login exito : ' + this.sesionService.clienteSesionPrueba.nombre);
             this.events.publish('user:login');

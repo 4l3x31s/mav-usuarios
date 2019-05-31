@@ -1,21 +1,26 @@
 .fondo-login {
-    background-image: url("../../assets/image/login.png") !important;
-    position: absolute;
-    background-repeat: no-repeat;
-    width: 100%;
-    height: 100%;
-    background-position: center;
-    background-size: cover;
-  }
-  img {
-      width: 350px;
-      margin: auto;
-  }
-  h1 {
-      text-align: center !important;
-  }
+  background-image: url("../../assets/image/login.png") !important;
+  position: absolute;
+  background-repeat: no-repeat;
+  width: 100%;
+  height: 100%;
+  background-position: center;
+  background-size: cover;
+}
+img {
+    width: 350px;
+    margin: auto;
+}
+h1 {
+    text-align: center !important;
+}
 
-  .fondo-transparente {
-    background: inherit;
-    background-color: transparent !important;
-  }
+.fondo-transparente {
+  background: inherit;
+  background-color: transparent !important;
+}
+.texto-inicio a {
+  color: white;
+  font-size: 12px;
+  text-decoration: underline;
+}

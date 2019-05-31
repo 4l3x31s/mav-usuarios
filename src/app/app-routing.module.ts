@@ -17,7 +17,6 @@ const routes: Routes = [
   },
   { path: 'detalle-cliente', loadChildren: './detalle-cliente/detalle-cliente.module#DetalleClientePageModule' },
   { path: 'login', loadChildren: './login/login.module#LoginPageModule' },
-  { path: 'detalle-carrera', loadChildren: './detalle-carrera/detalle-carrera.module#DetalleCarreraPageModule' },
   { path: 'mapa', loadChildren: './comun/mapa/mapa.module#MapaPageModule' },
   { path: 'calendario', loadChildren: './comun/calendario/calendario.module#CalendarioPageModule' },
   { path: 'detalle-contrato', loadChildren: './detalle-contrato/detalle-contrato.module#DetalleContratoPageModule' },
@@ -27,7 +26,9 @@ const routes: Routes = [
   { path: 'lista-contratos-vigentes', loadChildren: './lista-contratos-vigentes/lista-contratos-vigentes.module#ListaContratosVigentesPageModule' },
   { path: 'map-carrera', loadChildren: './map-carrera/map-carrera.module#MapCarreraPageModule' },
   { path: 'carreras-aceptadas', loadChildren: './carreras-aceptadas/carreras-aceptadas.module#CarrerasAceptadasPageModule' },
-  { path: 'detalle-conductora', loadChildren: './comun/detalle-conductora/detalle-conductora.module#DetalleConductoraPageModule' }
+  { path: 'detalle-conductora', loadChildren: './comun/detalle-conductora/detalle-conductora.module#DetalleConductoraPageModule' },
+  { path: 'registro-carrera', loadChildren: './registro-carrera/registro-carrera.module#RegistroCarreraPageModule' }
+
 
 
 ];

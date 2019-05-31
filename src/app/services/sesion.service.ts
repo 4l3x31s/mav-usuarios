@@ -28,15 +28,15 @@ export class SesionService {
     public events: Events
   ) { }
 
-  public login(user: string, pass: string) : Observable<any> {
+  public login(user: string) : Observable<any> {
     return new Observable<boolean>(observer => {
-      this.clienteService.getClientePorUserPass(user, pass)
+      this.clienteService.getClientePorUser(user)
         .subscribe(cliente=>{
           if(cliente){
             if(environment.isSesionPrueba){
               this.clienteSesionPrueba = cliente[0];
               //this.clienteSesionPrueba.nombre += '(PRUEBA)';
-              //console.log('bienvenido: ' + this.clienteSesionPrueba.nombre);
+              console.log('bienvenido: ' + this.clienteSesionPrueba.nombre);
             } else {
               this.sqlite.setclienteSesion(cliente[0]);
             }

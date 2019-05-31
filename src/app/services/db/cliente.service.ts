@@ -2,6 +2,7 @@ import { MdlCliente } from './../../modelo/mdlCliente';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { UtilService } from '../util/util.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,14 +10,24 @@ import { Observable } from 'rxjs';
 export class ClienteService {
 
   rootRef: firebase.database.Reference;
+  public utilService: UtilService;
+  
   constructor(public afDB: AngularFireDatabase) {
     this.rootRef = this.afDB.database.ref();
    }
    crearCliente(mdlCliente: MdlCliente): Promise<any> {
-     if(!mdlCliente.id){
+     console.log('metodo crear cliente');
+    if(!mdlCliente.id){
       mdlCliente.id = Date.now();
-     }
-    return this.afDB.database.ref('cliente/' + mdlCliente.id).set(mdlCliente);
+    }
+    return this.afDB.database.ref('cliente/' + mdlCliente.id)
+      .set(this.utilService.serializar(mdlCliente))
+        .then(()=>{
+          return Promise.resolve(mdlCliente);
+        })
+        .catch(e=>{
+          return Promise.reject(e);
+        });
   }
 
   getClienteSesion(): MdlCliente {
@@ -37,13 +48,13 @@ export class ClienteService {
     return this.afDB.object<MdlCliente>('cliente/'+id).valueChanges();
   }
 
-  getClientePorUserPass(user: string, pass: string) : Observable<MdlCliente[]> {
+  getClientePorUser(user: string) : Observable<MdlCliente[]> {
     return new Observable<MdlCliente[]>(observer => {
       this.afDB.list<MdlCliente>('cliente/',
         ref => ref.orderByChild('user').equalTo(user)).valueChanges()
         .subscribe(cliente=>{
           console.log('service',cliente);
-          if(cliente.length > 0 && pass == cliente[0].pass){
+          if(cliente.length > 0 ){
             observer.next(cliente);
           } else {
             observer.next();

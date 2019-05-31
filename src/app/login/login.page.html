@@ -1,34 +1,39 @@
-<ion-content>
+
+  <ion-content>
     <div class="fondo-login"></div>
-    <ion-card>
-        <ion-card-header>
-          <img src="../../assets/image/Auto.png" />
-        </ion-card-header>
-        <ion-card-content class="fondo-transparente">
-          <form [formGroup]="formLogin" novalidate>
-            <ion-list>
-              <ion-item>
-                <ion-label position="stacked">Usuario/Correo Electrónico</ion-label>
-                <ion-input formControlName="vuser" [(ngModel)]="user"></ion-input>
-              </ion-item>
-              <print-error [control]="f.vuser"></print-error>
+  <ion-card>
+    <ion-card-header>
+      <img src="../../assets/image/Auto.png" />
+      <br />
+      <img src="../../assets/image/texto.png" />
+    </ion-card-header>
+    <ion-card-content class="fondo-transparente">
+      <form [formGroup]="form" novalidate>
+        <ion-list class="fondo-transparente">
+          <ion-item class="fondo-transparente">
+            <ion-label class="fondo-transparente" position="floating">Usuario/Correo Electrónico</ion-label>
+            <ion-input class="fondo-transparente" formControlName="vuser" [(ngModel)]="user"></ion-input>
+          </ion-item>
+          <print-error [control]="f.vuser"></print-error>
 
-              <ion-item>
-                <ion-label position="stacked">Contraseña</ion-label>
-                <ion-input formControlName="vpass" [(ngModel)]="pass" type="password"></ion-input>
-              </ion-item>
-              <print-error [control]="f.vpass"></print-error>
+          <ion-item>
+            <ion-label position="floating">Contraseña</ion-label>
+            <ion-input class="fondo-transparente" formControlName="vpass" [(ngModel)]="pass" type="password"></ion-input>
+          </ion-item>
+          <print-error [control]="f.vpass"></print-error>
 
-            </ion-list>
-
-            <ion-button expand="block" color="verdec" (click)="ingresar()" [disabled]="formLogin.invalid">
-              Ingresar
-            </ion-button>
-            
-            <ion-button expand="block" color="verdec" (click)="irRegistrarCliente()" >
-              Crear Cuenta
-            </ion-button>
-          </form>
-        </ion-card-content>
-    </ion-card>
+        </ion-list>
+        <div class="texto-inicio">
+          <a (click)="enviarCorreo()" >Olvidaste tu contraseña?</a>
+        </div>
+        <div class="texto-inicio">
+            <a (click)="registrar()">Regístrate</a>
+          </div>
+        <ion-button expand="block" color="verdec" (click)="ingresar()" [disabled]="form.invalid">
+          Ingresar
+        </ion-button>
+       
+      </form>
+    </ion-card-content>
+  </ion-card>
 </ion-content>

@@ -14,12 +14,12 @@ import { NavParamService } from '../services/nav-param.service';
 import { MapParamService } from '../services/map-param.service';
 
 @Component({
-  selector: 'app-detalle-carrera',
-  templateUrl: './detalle-carrera.page.html',
-  styleUrls: ['./detalle-carrera.page.scss'],
+  selector: 'app-registro-carrera',
+  templateUrl: './registro-carrera.page.html',
+  styleUrls: ['./registro-carrera.page.scss'],
 })
-export class DetalleCarreraPage implements OnInit {
 
+export class RegistroCarreraPage implements OnInit {
   frmCarrera: FormGroup;
 
   public cliente: MdlCliente;
@@ -63,7 +63,7 @@ export class DetalleCarreraPage implements OnInit {
         .then((cliente) => {
           if (cliente) {
             this.cliente = cliente;
-            console.log("cliente: " +this.cliente.nombre)
+            console.log("cliente:::: " +this.cliente.nombre)
           } else {
             this.navController.navigateRoot('/login');
           }
@@ -95,8 +95,7 @@ export class DetalleCarreraPage implements OnInit {
   async validarHoraPeticionCarrera() {
     const alert = await this.alertController.create({
       header: 'Error',
-      subHeader: 'Subtitle',
-      message: 'No puede registrar una fecha menor a la actual.',
+      message: 'No puede registrar una hora menor a la actual.',
       buttons: ['Aceptar']
     });
 
@@ -199,3 +198,4 @@ export class DetalleCarreraPage implements OnInit {
   }
 
 }
+

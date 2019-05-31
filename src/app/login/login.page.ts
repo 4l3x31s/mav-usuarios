@@ -1,10 +1,11 @@
+import { AuthService } from './../services/firebase/auth.service';
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SesionService } from '../services/sesion.service';
-import { environment } from 'src/environments/environment';
 import { LoadingService } from '../services/util/loading.service';
-import { NavController, Events } from '@ionic/angular';
+import { NavController, Events, AlertController, ToastController } from '@ionic/angular';
 import { AlertService } from '../services/util/alert.service';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -12,10 +13,9 @@ import { AlertService } from '../services/util/alert.service';
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage implements OnInit {
-  formLogin: FormGroup;
+  form: FormGroup;
   public user: string;
   public pass: string;
-
 
   constructor(
     public fb: FormBuilder,
@@ -23,8 +23,10 @@ export class LoginPage implements OnInit {
     public loadingService: LoadingService,
     public navController: NavController,
     public alertService: AlertService,
-    public events: Events
-
+    public events: Events,
+    public authService: AuthService,
+    public alertController: AlertController,
+    public toastController: ToastController
   ) { }
 
   ngOnInit() {
@@ -32,18 +34,35 @@ export class LoginPage implements OnInit {
     if(environment.isSesionPrueba){
       //datos prueba
       this.user='cbotello@gmail.com';
-      this.pass='1234';
+      this.pass='123456';
     }
-    this.sesionService.getSesion()
-      .then((conductora)=>{
-        if(conductora){
-          this.navController.navigateRoot('/home');
-        }
+    this.loadingService.present()
+      .then(()=>{
+        this.sesionService.crearSesionBase()
+        .then(() => {
+          this.sesionService.getSesion()
+            .then((conductora)=>{
+              if(conductora){
+                this.navController.navigateRoot('/home');
+              }
+              this.loadingService.dismiss();
+            })
+            .catch(e=>{
+              console.log(e);
+              this.loadingService.dismiss();
+              this.alertService.present('Error', 'Error al obtener la sesion.');
+            });
+        })
+        .catch(e=>{
+          console.log(e);
+          this.loadingService.dismiss();
+          this.alertService.present('Error','Error al crear la BD de sesion')
+        });
       });
+    
   }
-
   iniciaValidaciones() {
-    this.formLogin = this.fb.group({
+    this.form = this.fb.group({
       vuser: ['', [
         Validators.required,
       ]],
@@ -52,31 +71,90 @@ export class LoginPage implements OnInit {
       ]]
     });
   }
-  get f() { return this.formLogin.controls; }
+  get f() { return this.form.controls; }
 
   ingresar() {
     this.loadingService.present()
       .then(() => {
-        this.sesionService.login(this.user, this.pass)
-          .subscribe(() => {
-            console.log('login exito : ' + this.sesionService.clienteSesionPrueba.nombre);
+        this.authService.doLogin(this.user, this.pass)
+        .then( res => {
+          this.sesionService.login(this.user)
+          .subscribe((cliente) => {
             this.events.publish('user:login');
             this.navController.navigateRoot('/home');
             this.loadingService.dismiss();
           }, error => {
-            console.log('error-login', error);
             if (error.message) {
-              this.alertService.present('Error', error.message);
+              this.alertService.present('Información', error.message);
             } else {
               this.alertService.present('Error', 'Hubo un error al ingresar.');
             }
             this.loadingService.dismiss();
           });
+        }, err => {
+          console.log(err);
+          if (err.message) {
+            this.alertService.present('Información', 'Usuario o Contraseña inválidos.');
+          } else {
+            this.alertService.present('Error', 'Hubo un error al ingresar.');
+          }
+          this.loadingService.dismiss();
+        });
       })
+
   }
-
-
-  public irRegistrarCliente(){
+  registrar() {
     this.navController.navigateRoot('/detalle-cliente');
+  }
+  async presentToast(mensaje: string) {
+    const toast = await this.toastController.create({
+      message: mensaje,
+      duration: 2000
+    });
+    toast.present();
+  }
+  async presentAlertPrompt() {
+    const alert = await this.alertController.create({
+      header: 'Recuperación Contraseña',
+      message: 'Ingrese su correo electrónico.',
+      inputs: [
+        {
+          name: 'txtEmailPop',
+          type: 'text',
+          placeholder: 'ejemplo@ejemplo.com',
+          label: 'Email'
+        }
+      ],
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+            console.log('Confirm Cancel');
+          }
+        }, {
+          text: 'Enviar',
+          handler: (data) => {
+            console.log('Confirm Ok');
+            if (data.txtEmailPop.length > 0) {
+              this.authService.resetPassword(data.txtEmailPop)
+              .then( () => {
+                this.presentToast('Se ha enviado el correo.');
+              }, err => {
+                this.presentToast('Hubo un error al enviar el correo.');
+              })
+            } else {
+              this.presentToast('Debe ingresar un correo válido.');
+            }
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+  enviarCorreo() {
+    this.presentAlertPrompt();
   }
 }
