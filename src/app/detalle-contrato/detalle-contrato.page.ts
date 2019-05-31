@@ -18,6 +18,7 @@ import {MdlParametrosCarrera} from 'src/app/modelo/mdlParametrosCarrera';
 import {Observable} from 'rxjs';
 import { SesionService } from '../services/sesion.service';
 import { ContratoService } from '../services/db/contrato.service';
+import { MapParamService } from '../services/map-param.service';
 
 declare var google: any;
 
@@ -56,7 +57,8 @@ export class DetalleContratoPage implements OnInit {
                 public alertController: AlertController,
                 public sesionService: SesionService,
                 public contratoService: ContratoService,
-                public loadingServices: LoadingService,) {
+                public loadingServices: LoadingService,
+                public mapParamService: MapParamService) {
        // this.cliente = this.navParams.get().cliente;
         this.distance = new google.maps.DistanceMatrixService();
     }
@@ -174,6 +176,9 @@ export class DetalleContratoPage implements OnInit {
     }
 
     async irMapaOrigen() {
+        //let ubicacion: any = { lat: this.contrato.latOrigen, lng: this.contrato.latOrigen}; 
+        let ubicacion: any = { lat: -16.4978888, lng: -68.1314424}; 
+        this.mapParamService.set(ubicacion);
         const modal = await this.modalController.create({
             component: MapaPage
         }).then(dato => {
@@ -190,6 +195,9 @@ export class DetalleContratoPage implements OnInit {
     }
 
     async irMapaDestino() {
+        //let ubicacion: any = { lat: this.contrato.latDestino, lng: this.contrato.latDestino}; 
+        let ubicacion: any = { lat: -16.4978888, lng: -68.1314424}; 
+        this.mapParamService.set(ubicacion);
         const modal = await this.modalController.create({
             component: MapaPage
         }).then(dato => {
