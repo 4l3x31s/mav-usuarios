@@ -64,7 +64,8 @@ export class MapCarreraPage implements OnInit {
     navigator.geolocation.getCurrentPosition((resp) => {
       // resp.coords.latitude
       // resp.coords.longitude
-      const myLatlng = { lat: resp.coords.latitude, lng: resp.coords.longitude};
+      //const myLatlng = { lat: resp.coords.latitude, lng: resp.coords.longitude};
+      let myLatlng: any = { lat: -16.4971653, lng: -68.1320507};
       this.cargarMapa(myLatlng);
      });
   }

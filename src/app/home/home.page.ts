@@ -74,7 +74,7 @@ export class HomePage implements OnInit, OnDestroy {
           }
         }
         let updatelocation = new google.maps.LatLng(data.coords.latitude,data.coords.longitude);
-        let image = 'assets/image/car-pin.png';
+        let image = 'assets/image/pin-user.png';
         this.addMarker(updatelocation,image);
         this.setMapOnAll(this.map);
       }, error => {

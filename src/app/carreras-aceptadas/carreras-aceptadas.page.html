@@ -4,7 +4,7 @@
         <ion-menu-button></ion-menu-button>
       </ion-buttons>
       <ion-title>
-        Inicio
+        Carreras Aceptadas
       </ion-title>
     </ion-toolbar>
   </ion-header>
@@ -12,12 +12,12 @@
   <ion-content>
     <ion-list>
       <ion-list-header color="medium">
-        <ion-label>Carreras Aceptadas</ion-label>
+        <ion-label>Lista De Carreras Aceptadas</ion-label>
       </ion-list-header>
       <ion-item-sliding *ngFor="let carrera of carrerasAceptadas">
         <ion-item-options side="end">
-          <ion-item-option color="verdec" (click)="irDetalleCarrera(carrera)">Carrera</ion-item-option>
-          <ion-item-option color="rosadoClaro" (click)="irDetalleConductora(carrera)">Conductora</ion-item-option>
+          <ion-item-option color="verdec" (click)="irDetalleCarrera(carrera)" expandable>Carrera</ion-item-option>
+          <ion-item-option color="rosadoClaro" (click)="irDetalleConductora(carrera)" expandable>Conductora</ion-item-option>
         </ion-item-options>
         
         <ion-label text-wrap>

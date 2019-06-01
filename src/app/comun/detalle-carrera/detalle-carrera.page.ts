@@ -6,6 +6,7 @@ import { AlertService } from 'src/app/services/util/alert.service';
 import { MdlCliente } from 'src/app/modelo/mdlCliente';
 import { LoadingService } from 'src/app/services/util/loading.service';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
+import { CarreraService } from 'src/app/services/db/carrera.service';
 
 @Component({
   selector: 'app-detalle-carrera',
@@ -30,10 +31,18 @@ export class DetalleCarreraPage implements OnInit {
     public loadingService: LoadingService,
     public iab: InAppBrowser,
     public actionSheetController: ActionSheetController,
+    public carreraService: CarreraService
   
   ) { }
 
   ngOnInit() {
+    this.carreraService.getCarrerasPorId(this.carrera.id).subscribe(carrera=>{
+      this.carrera = Object.assign(carrera[0]); 
+    },error=>{
+      
+    });
+    console.log("this.carrera: ", this.carrera);
+    
     this.loadingService.present()
       .then(()=>{
         this.clienteService.getCliente(this.carrera.idUsuario)
@@ -48,7 +57,7 @@ export class DetalleCarreraPage implements OnInit {
             this.navController.navigateRoot('/login');
           })
       })
-    
+     
   }
 
   initAutocomplete() {
