@@ -27,7 +27,7 @@ export class MapCarreraPage implements OnInit {
   paginaRetorno: string;
 
   searchBox: any;
-
+  paisCiudad: any;
   constructor(
     public sesionService: SesionService,
     public navParam: NavParamService,
@@ -36,15 +36,18 @@ export class MapCarreraPage implements OnInit {
     public alertService: AlertService,
     public alertController: AlertController,
     public geolocation: Geolocation,
-    public navController: NavController,
     public events: Events,
-    public navParams: NavParamService,
     public platform: Platform
-  ) { }
+  ) {
+    
+   }
 
   ngOnInit() {
+    this.paisCiudad = this.navParam.get();
+    console.log("Putito");
+    console.log(this.paisCiudad);
     this.latitudFin = null;
-    this.sesionService.crearSesionBase()
+    /*this.sesionService.crearSesionBase()
       .then(() => {
         this.sesionService.getSesion()
           .then((cliente) => {
@@ -54,19 +57,15 @@ export class MapCarreraPage implements OnInit {
               this.navCtrl.navigateRoot('/login');
             }
           });
-      });
+      });*/
       this.posicionamiento();
   }
   posicionamiento() {
-    this.geolocation.getCurrentPosition().then((resp) => {
+    navigator.geolocation.getCurrentPosition((resp) => {
       // resp.coords.latitude
       // resp.coords.longitude
       const myLatlng = { lat: resp.coords.latitude, lng: resp.coords.longitude};
       this.cargarMapa(myLatlng);
-     }).catch((error) => {
-       console.log('Error getting location', error);
-       const myLatlng = { lat: -16.4978888, lng: -68.1314424};
-       this.cargarMapa(myLatlng);
      });
   }
   buscarTexto(map, markers, alertService): Observable<any> {
@@ -143,8 +142,12 @@ export class MapCarreraPage implements OnInit {
       zoom: 16,
       mapTypeId: google.maps.MapTypeId.ROADMAP,
       mapTypeControl: false,
-      streetViewControl: true,
+      streetViewControl: false,
       fullScreenControl: false,
+      zoomControl: false,
+      scaleControl: false,
+      rotateControl: false,
+      fullscreenControl: false,
       center: myLatlng
     };
     this.latitudIni = myLatlng.lat.toString();
@@ -194,13 +197,13 @@ export class MapCarreraPage implements OnInit {
     if (this.latitudFin === null) {
       this.alertService.present('Error', 'Debe buscar zona de destino');
     } else {
-      this.navParams.set({
+      this.navParam.set({
         latitudIni: this.latitudIni,
         longitudIni: this.longitudIni,
         latitudFin: this.latitudFin,
         longitudFin: this.longitudFin
       });
-      this.navController.navigateForward('/registro-carrera');
+      this.navCtrl.navigateForward('/registro-carrera');
     }
   }
 

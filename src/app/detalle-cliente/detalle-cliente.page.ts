@@ -19,8 +19,9 @@ export class DetalleClientePage implements OnInit {
 
   frmCliente: FormGroup;
   public titulo: string;
+  public myclass: string;
   public cliente: MdlCliente;
-    public lstPaisesFiltrados = [];
+  public lstPaisesFiltrados = [];
   public lstCiudadesFiltrado: MdlParametrosCarrera [] = [];
   public lstParametros: MdlParametrosCarrera [] = [];
 
@@ -34,7 +35,7 @@ export class DetalleClientePage implements OnInit {
     public loadingService: LoadingService,
     public parametrosService: ParametrosCarreraService,
     public events: Events,
-    public authService: AuthService
+    public authService: AuthService    
     ) { console.log('constructor');
     this.sesionService.crearSesionBase()
         .then(() => {
@@ -54,10 +55,16 @@ export class DetalleClientePage implements OnInit {
   get f() { return this.frmCliente.controls; }
 
   ngOnInit() {
-    console.log('ngOnInit')
+    console.log('ngOnInit')    
     this.iniciarValidaciones();
-    //this.cliente = this.clienteService.getClienteSesion();
     this.obtenerParametros();
+    if(this.cliente.id !== null){
+      this.myclass = "ocultar";
+      this.frmCliente.get('vconfirmPass').setValue(this.cliente.pass);
+    }else{
+      this.myclass = "mostrar";      
+    }
+    
   }
 
   public iniciarValidaciones(){
@@ -142,19 +149,6 @@ export class DetalleClientePage implements OnInit {
 }
 
   public grabar(){
-    /*this.loadingServices.present();
-      this.clienteService.crearCliente(this.cliente)
-      .then(() => {
-        this.loadingServices.dismiss();
-        this.alertService.present('Información','Datos guardados correctamente.');
-        this.ingresar();
-      })
-      .catch( error => {
-        this.loadingServices.dismiss();
-        console.log(error);
-        this.alertService.present('Error','Hubo un error al grabar los datos');
-        this.navController.navigateRoot('/home');
-      })*/
       this.loadingService.present().then(() => {
         this.cliente.user = this.cliente.email;        
         if (this.cliente && this.cliente.id != null) {
@@ -253,4 +247,11 @@ export class DetalleClientePage implements OnInit {
     this.cliente.user = this.cliente.email;
   }
 
+  public cerrar(){
+    if(this.cliente.id !== null){
+      this.navController.navigateRoot('/home');
+    }else{
+      this.navController.navigateRoot('/login');  
+    }
+  }
 }

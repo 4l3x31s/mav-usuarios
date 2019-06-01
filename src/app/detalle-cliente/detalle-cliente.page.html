@@ -1,4 +1,11 @@
-<cabecera titulo="{{titulo}}"></cabecera>
+<ion-header>
+  <ion-toolbar color="rosado">
+    <ion-title>{{titulo}}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="cerrar()"><ion-icon name="close"></ion-icon></ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
 
 <ion-content>
   <form [formGroup]="frmCliente" novalidate>
@@ -42,30 +49,34 @@
         <ion-input formControlName="vdireccion" name="vdireccion"  [(ngModel)]="cliente.direccion"></ion-input>
       </ion-item>
       <print-error [control]="f.vdireccion"></print-error>
-
-      <ion-item>
-        <ion-label position="stacked">Correo</ion-label>
-        <ion-input formControlName="vemail" name="vemail"  [(ngModel)]="cliente.email" (ionChange)="generarUsuario()"></ion-input>
-      </ion-item>
-      <print-error [control]="f.vemail"></print-error>  
-
+      
+      <div [ngClass]="myclass">
+        <ion-item>
+          <ion-label position="stacked">Correo</ion-label>
+          <ion-input formControlName="vemail" name="vemail"  [(ngModel)]="cliente.email" (ionChange)="generarUsuario()"></ion-input>
+        </ion-item>
+        <print-error [control]="f.vemail"></print-error>  
+      </div>
+      
       <ion-item>
         <ion-label position="stacked">Usuario</ion-label>
         <ion-input formControlName="vuser" name="vuser"  [(ngModel)]="cliente.user" disabled></ion-input>
       </ion-item>
       <print-error [control]="f.vuser"></print-error>
 
-      <ion-item>
-        <ion-label position="stacked">Contraseña</ion-label>
-        <ion-input type="password" formControlName="vpass" name="vpass"  [(ngModel)]="cliente.pass"></ion-input>
-      </ion-item>
-      <print-error [control]="f.vpass"></print-error>
+      <div [ngClass]="myclass">
+        <ion-item >
+          <ion-label position="stacked">Contraseña</ion-label>
+          <ion-input type="password" formControlName="vpass" name="vpass"  [(ngModel)]="cliente.pass"></ion-input>
+        </ion-item>
+        <print-error [control]="f.vpass"></print-error>
 
-      <ion-item>
-        <ion-label position="stacked">Confirmar Contraseña</ion-label>
-        <ion-input type="password" formControlName="vconfirmPass" name="vconfirmPass" ></ion-input>
-      </ion-item>
-      <print-error [control]="f.vconfirmPass"></print-error>
+        <ion-item *ngIf="!cliente.id">
+          <ion-label position="stacked">Confirmar Contraseña</ion-label>
+          <ion-input type="password" formControlName="vconfirmPass" name="vconfirmPass" ></ion-input>
+        </ion-item>
+        <print-error  [control]="f.vconfirmPass"></print-error>     
+      </div>
 
       <ion-item>
         <ion-label position="stacked">Telefono</ion-label>

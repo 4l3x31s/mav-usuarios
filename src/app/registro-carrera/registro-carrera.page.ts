@@ -111,12 +111,14 @@ export class RegistroCarreraPage implements OnInit {
     if(fechaCarreraMoment.diff(fechaActual, 'seconds') < 0 ) {
       this.validarHoraPeticionCarrera();
     }else{
-      mensaje = 'Desea crear la carrera en:  <br>' + 
+     /* mensaje = 'Desea crear la carrera en:  <br>' + 
                 'Fecha:  <strong>' + fechaCarrera.date  + '/' + (fechaCarrera.months + 1) + '/'+ fechaCarrera.years +'</strong> <br> '+ 
-                'Hora :  <strong>' + fechaCarrera.hours + ':' + fechaCarrera.minutes + ' ? </strong>'
+                'Hora :  <strong>' + fechaCarrera.hours + ':' + fechaCarrera.minutes + ' ? </strong>'*/
     
       const alert = await this.alertController.create({
-        header: 'Confirmar',
+        header: 'Desea crear la carrera en:  <br>' + 
+                'Fecha:  <strong>' + fechaCarrera.date  + '/' + (fechaCarrera.months + 1) + '/'+ fechaCarrera.years +'</strong> <br> '+ 
+                'Hora :  <strong>' + fechaCarrera.hours + ':' + fechaCarrera.minutes + ' ? </strong>',
         message: mensaje,
         buttons: [
           {
@@ -197,5 +199,6 @@ export class RegistroCarreraPage implements OnInit {
     });
   }
 
+  
 }
 

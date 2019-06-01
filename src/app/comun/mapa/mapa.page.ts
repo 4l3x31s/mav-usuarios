@@ -40,7 +40,12 @@ export class MapaPage implements OnInit {
   }
   initAutocomplete() {
     let ubicacion = this.mapParamService.get();
-    const myLatlng = { lat: parseFloat(ubicacion.lat), lng: parseFloat(ubicacion.lng)};    
+    let myLatlng: any = { lat: -16.4971653, lng: -68.1320507};
+    if (ubicacion) {
+      if (ubicacion.lat !== null) {
+        myLatlng = { lat: parseFloat(ubicacion.lat), lng: parseFloat(ubicacion.lng)};
+      }
+    }
     const mapOptions = {
       zoom: 16,
       mapTypeId: google.maps.MapTypeId.ROADMAP,
@@ -68,7 +73,8 @@ export class MapaPage implements OnInit {
         map: map,
         draggable: true,
         title: 'Mueveme',
-        animation: google.maps.Animation.DROP
+        animation: google.maps.Animation.DROP,
+        icon: 'assets/image/car-pin.png'
       }));
     markers[0].addListener('dragend', () => {
       console.log(JSON.stringify(markers[0].getPosition()));
@@ -165,5 +171,9 @@ export class MapaPage implements OnInit {
     } else {
       this.alertController.present('Alerta', 'Debes seleccionar un punto antes de terminar.');
     }
+  }
+
+  cerrar(){
+    this.modalController.dismiss();
   }
 }

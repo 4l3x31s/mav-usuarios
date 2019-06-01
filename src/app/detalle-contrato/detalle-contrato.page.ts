@@ -176,8 +176,8 @@ export class DetalleContratoPage implements OnInit {
     }
 
     async irMapaOrigen() {
-        //let ubicacion: any = { lat: this.contrato.latOrigen, lng: this.contrato.latOrigen}; 
-        let ubicacion: any = { lat: -16.4978888, lng: -68.1314424}; 
+        let ubicacion: any = { lat: this.contrato.latOrigen, lng: this.contrato.longOrigen}; 
+        //let ubicacion: any = { lat: -16.4978888, lng: -68.1314424}; 
         this.mapParamService.set(ubicacion);
         const modal = await this.modalController.create({
             component: MapaPage
@@ -195,8 +195,8 @@ export class DetalleContratoPage implements OnInit {
     }
 
     async irMapaDestino() {
-        //let ubicacion: any = { lat: this.contrato.latDestino, lng: this.contrato.latDestino}; 
-        let ubicacion: any = { lat: -16.4978888, lng: -68.1314424}; 
+        let ubicacion: any = { lat: this.contrato.latDestino, lng: this.contrato.longDestino}; 
+        //let ubicacion: any = { lat: -16.4978888, lng: -68.1314424}; 
         this.mapParamService.set(ubicacion);
         const modal = await this.modalController.create({
             component: MapaPage

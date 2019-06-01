@@ -1,9 +1,11 @@
-
-<ion-header>
+  <ion-header>
     <ion-toolbar color="rosado">
       <ion-title>Mapa</ion-title>
+      <ion-buttons slot="end">
+        <ion-button (click)="cerrar()"><ion-icon name="close"></ion-icon></ion-button>
+      </ion-buttons>
     </ion-toolbar>
-  </ion-header>
+  </ion-header>  
   
   <ion-content>
     <input id="pac-input" class="controls" type="text" placeholder="Busca alguna zona de tu interés">
