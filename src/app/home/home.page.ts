@@ -19,13 +19,9 @@ export class HomePage implements OnInit, OnDestroy {
   markers = [];
   watchID: any;
   listaGeoPosicionamiento: MdlGeoLocalizacion[] = [];
-  ciudad: string;
-  pais: string;
-  geocodePaises: any;
   constructor(public navCtrl: NavController,
     public geolocation: Geolocation,
-    public geolocalizacionService: GeolocalizacionService,
-    public navParamCtrl: NavParamService) {}
+    public geolocalizacionService: GeolocalizacionService) {}
   ngOnInit() {
     this.initMap();
     this.geolocalizacionService.listarCambios().subscribe( data => {
@@ -55,35 +51,7 @@ export class HomePage implements OnInit, OnDestroy {
           rotateControl: false,
           fullscreenControl: false
         });
-        let geocode = this.setPais(mylocation);
-        geocode.subscribe( respuestaGeocode => {
-          this.geocodePaises = respuestaGeocode;
-        });
-      }, (error) => {
-        console.log("error current position")
-        console.log(error);
-      }, { enableHighAccuracy: true });
-        this.watchID = navigator.geolocation.watchPosition((data) => {
-        this.deleteMarkers();
-        if(this.listaGeoPosicionamiento.length > 0) {
-          for (let geoObj of this.listaGeoPosicionamiento) {
-            let image = 'assets/image/pin-mav.png';
-              let updatelocation = new google.maps.LatLng(geoObj.latitude, geoObj.longitude);
-              this.addMarker(updatelocation,image);
-              this.setMapOnAll(this.map);
-          }
-        }
-        let updatelocation = new google.maps.LatLng(data.coords.latitude,data.coords.longitude);
-        let image = 'assets/image/pin-user.png';
-        this.addMarker(updatelocation,image);
-        this.setMapOnAll(this.map);
-      }, error => {
-        console.log(error);
-      });
-  }
-  setPais(mylocation): Observable<any> {
-    return Observable.create((observer) => {
-      let geoResults = [];
+        let geoResults = [];
         let geoResults1 = [];
         var geocoder = new google.maps.Geocoder();
         geocoder.geocode({'location': mylocation}, function(results, status){
@@ -102,15 +70,59 @@ export class HomePage implements OnInit, OnDestroy {
             console.log(this.pais);
             geoResults = [];
             geoResults1 = [];
-            let datos = {
-              pais:this.pais,
-              ciudad: this.ciudad
-            }
-            observer.next(datos);
-            observer.complete();
           }
         })
-    });
+
+      }, (error) => {
+        console.log("error current position")
+        console.log(error);
+      }, { enableHighAccuracy: true });
+
+      //navigator.geolocation.clearWatch(watchID);
+      /*this.geolocation.getCurrentPosition({ enableHighAccuracy: true }).then((resp) => {
+        let mylocation = new google.maps.LatLng(resp.coords.latitude, resp.coords.longitude);
+        this.map = new google.maps.Map(this.mapElement.nativeElement, {
+          zoom: 15,
+          center: mylocation,
+          mapTypeControl: false,
+          streetViewControl: false,
+          fullScreenControl: false,
+          zoomControl: false,
+          scaleControl: false,
+          rotateControl: false,
+          fullscreenControl: false
+        });
+      }, err => {
+        console.log(err);
+      });*/
+
+        this.watchID = navigator.geolocation.watchPosition((data) => {
+        this.deleteMarkers();
+        if(this.listaGeoPosicionamiento.length > 0) {
+          for (let geoObj of this.listaGeoPosicionamiento) {
+            let image = 'assets/image/pin-mav.png';
+              let updatelocation = new google.maps.LatLng(geoObj.latitude, geoObj.longitude);
+              this.addMarker(updatelocation,image);
+              this.setMapOnAll(this.map);
+          }
+        }
+        let updatelocation = new google.maps.LatLng(data.coords.latitude,data.coords.longitude);
+        let image = 'assets/image/car-pin.png';
+        this.addMarker(updatelocation,image);
+        this.setMapOnAll(this.map);
+      }, error => {
+        console.log(error);
+      });
+      /*let watch = this.geolocation.watchPosition();
+      watch.subscribe((data) => {
+        this.deleteMarkers();
+        let updatelocation = new google.maps.LatLng(data.coords.latitude,data.coords.longitude);
+        let image = 'assets/image/blue-bike.png';
+        this.addMarker(updatelocation,image);
+        this.setMapOnAll(this.map);
+      }, err => {
+        console.log(err);
+      });*/
   }
   addMarker(location, image) {
     let marker = new google.maps.Marker({
@@ -137,10 +149,5 @@ export class HomePage implements OnInit, OnDestroy {
   }
   ngOnDestroy(): void {
     navigator.geolocation.clearWatch(this.watchID);
-  }
-  guardarLatLong() {
-    console.log(this.geocodePaises);
-    this.navParamCtrl.set (this.geocodePaises)
-    this.navCtrl.navigateForward('/map-carrera');
   }
 }
