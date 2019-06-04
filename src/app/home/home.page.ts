@@ -105,7 +105,8 @@ export class HomePage implements OnInit, OnDestroy {
     let marker = new google.maps.Marker({
       position: location,
       map: this.map,
-      icon: image
+      icon: image,
+      title: 'prueb'
     });
     this.markers.push(marker);
   }

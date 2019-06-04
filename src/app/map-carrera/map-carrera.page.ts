@@ -170,10 +170,9 @@ export class MapCarreraPage implements OnInit {
       position: myLatlng,
       map: map,
       draggable: true,
-      title: 'Inicio Carrera---',
+      title: 'Inicio Carrera',
       animation: google.maps.Animation.DROP,
-      icon: 'assets/image/pin-user.png',
-      name: 'park'
+      icon: 'assets/image/pin-user.png'
     });
     marker.addListener('dragend', () => {
       console.log(JSON.stringify(marker.getPosition()));

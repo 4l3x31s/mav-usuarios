@@ -239,6 +239,7 @@ export class RegistroCarreraPage implements OnInit {
     };
     
     this.parametrosPorPais(this.pais);
+    console.log('parametroCarrera:--> ' , this.parametroCarrera);
     let datos = this.getDistanceMatrix(responseMatrix);
     datos.subscribe(data => {
         console.log(data);        
@@ -251,10 +252,7 @@ export class RegistroCarreraPage implements OnInit {
                 const time = element.duration.value;
                 console.log(distance, time);
                 // calcular costos UBER: https://calculouber.netlify.com/
-                let montoFinal: number = Math.round((this.parametroCarrera.base + 
-                                                    ((element.duration.value / 60) * this.parametroCarrera.tiempo) + 
-                                                    ((element.distance.value / 1000) * this.parametroCarrera.distancia))* this.parametroCarrera.tarifaDinamica + 
-                                                    this.parametroCarrera.cuotaSolicitud);
+                let montoFinal: number = Math.round((this.parametroCarrera.base + ((element.duration.value / 60) * this.parametroCarrera.tiempo) + ((element.distance.value / 1000) * this.parametroCarrera.distancia))* this.parametroCarrera.tarifaDinamica + this.parametroCarrera.cuotaSolicitud);
                 console.log(montoFinal);
                 if (montoFinal < 10) {
                     this.carrera.costo = 10;
