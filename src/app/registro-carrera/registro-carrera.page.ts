@@ -108,18 +108,14 @@ export class RegistroCarreraPage implements OnInit {
     let fechaActual = moment().format();
     let mensaje = null;    
     
-    if(fechaCarreraMoment.diff(fechaActual, 'seconds') < 0 ) {
+    if(fechaCarreraMoment.diff(fechaActual, 'seconds') < -120 ) {
       this.validarHoraPeticionCarrera();
-    }else{
-     /* mensaje = 'Desea crear la carrera en:  <br>' + 
-                'Fecha:  <strong>' + fechaCarrera.date  + '/' + (fechaCarrera.months + 1) + '/'+ fechaCarrera.years +'</strong> <br> '+ 
-                'Hora :  <strong>' + fechaCarrera.hours + ':' + fechaCarrera.minutes + ' ? </strong>'*/
-    
+    }else{     
       const alert = await this.alertController.create({
-        header: 'Desea crear la carrera en:  <br>' + 
-                'Fecha:  <strong>' + fechaCarrera.date  + '/' + (fechaCarrera.months + 1) + '/'+ fechaCarrera.years +'</strong> <br> '+ 
-                'Hora :  <strong>' + fechaCarrera.hours + ':' + fechaCarrera.minutes + ' ? </strong>',
-        message: mensaje,
+        header: 'Confirmar',
+        message: 'Desea crear la carrera en:  <br>' + 
+                 'Fecha:  <strong>' + fechaCarrera.date  + '/' + (fechaCarrera.months + 1) + '/'+ fechaCarrera.years +'</strong> <br> '+ 
+                 'Hora :  <strong>' + fechaCarrera.hours + ':' + fechaCarrera.minutes + ' ? </strong>',
         buttons: [
           {
             text: 'cancelar',
@@ -145,6 +141,7 @@ export class RegistroCarreraPage implements OnInit {
     //var identificadorPrueba = Date.now();
     this.carrera.idUsuario = this.cliente.id;
     this.carrera.estado = 1;
+    this.carrera.nombreCliente = this.cliente.nombre;
 
     //console.log('idcarrera: ' + identificadorPrueba);
 

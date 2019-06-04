@@ -27,7 +27,7 @@ export class ContratoService {
     return this.afDB.list('contrato', ref =>
       ref.orderByChild('idUsuario').equalTo(idUsuario)).valueChanges();
   }
-
+  
   listaContratosPorEstado(idUsuario: number, estadoContrato: number) {
     console.log('idUsuario: ' + idUsuario);
     return new Observable<MdlContrato[]>(observer => {

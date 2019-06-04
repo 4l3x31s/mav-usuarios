@@ -10,6 +10,12 @@
           </ion-item>
 
           <ion-item>
+            <ion-label position="stacked" >Titulo Contrato</ion-label>            
+            <ion-input formControlName="vTituloContrato" name="vTituloContrato"  [(ngModel)]="contrato.codigoContrato"></ion-input>
+          </ion-item>
+          <print-error [control]="f.vTituloContrato"></print-error>
+          
+          <ion-item>
               <ion-label position="stacked">Pais</ion-label>
               <ion-select interface="popover" formControlName="vPais" placeholder="Seleccione el Pais"
                           (ngModelChange)="filtrarCiudades($event)" [(ngModel)]="contrato.pais">

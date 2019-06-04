@@ -50,7 +50,7 @@ export class AppComponent {
       icon: 'clipboard'
     },
     {
-      title: 'Lista de Contratos Vigentes',
+      title: 'Lista de Contratos Aceptados',
       url: '/lista-contratos-vigentes',
       icon: 'clipboard'
     }

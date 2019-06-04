@@ -6,6 +6,7 @@ import { NavController } from '@ionic/angular';
 import { MdlCliente } from '../modelo/mdlCliente';
 import { SesionService } from '../services/sesion.service';
 import * as _ from 'lodash'; 
+import { NavParamService } from '../services/nav-param.service';
 
 @Component({
   selector: 'app-lista-contratos-solicitados',
@@ -21,7 +22,8 @@ export class ListaContratosSolicitadosPage implements OnInit {
     public contratoService: ContratoService,
     public loading: LoadingService,
     public navController: NavController,
-    public sesionService: SesionService
+    public sesionService: SesionService,
+    public navParamService: NavParamService
     ){ }
 
   ngOnInit() {
@@ -76,6 +78,7 @@ export class ListaContratosSolicitadosPage implements OnInit {
   public seleccionarContrato(contrato: MdlContrato) {
     console.log(contrato);
     //this.irActualizarContrato(contrato);
+    this.navParamService.set(contrato);
     this.navController.navigateRoot('/detalle-contrato');
   }
 }

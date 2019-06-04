@@ -17,7 +17,8 @@ export class MdlContrato {
         public estadoPago: string,
         public estado: number, // 0 estimado(creado por el cliente), 1 aprobado, 2 terminado, 3 extendido.
         public pais: string,
-        public ciudad: string
+        public ciudad: string,
+        public codigoContrato: string
     ) {
 
     }

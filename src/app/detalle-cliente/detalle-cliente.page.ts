@@ -78,6 +78,7 @@ export class DetalleClientePage implements OnInit {
         Validators.required,
         Validators.minLength(4),
         Validators.maxLength(15),
+        Validators.pattern(/^[0-9]/),
       ]],
       vdireccion: ['', [
         Validators.required,

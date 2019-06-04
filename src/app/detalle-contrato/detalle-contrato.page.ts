@@ -30,7 +30,10 @@ declare var google: any;
 export class DetalleContratoPage implements OnInit {
     frmContrato: FormGroup;
     public contrato: MdlContrato = new MdlContrato(
-        null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null
+        null, null, null, null, null, 
+        null, null, null, null, null, 
+        null, null, null, null, null, 
+        null, null, null, null
     );
     public lstClientes: MdlCliente[] = [];
     public lstFeriados: MdlFeriado[] = [];
@@ -39,6 +42,7 @@ export class DetalleContratoPage implements OnInit {
     public lstPaisesFiltrados = [];
     public cliente: MdlCliente;
     public ciudadSeleccionada: string;
+    
 
     // directionsService = new google.maps.DirectionsService;
     // directionsDisplay = new google.maps.DirectionsRenderer;
@@ -51,8 +55,7 @@ export class DetalleContratoPage implements OnInit {
                 public feriadoService: FeriadosService,
                 public carreraService: CarreraService,
                 public loading: LoadingService,
-                public parametrosService: ParametrosCarreraService,
-                public navParams: NavParamService,
+                public parametrosService: ParametrosCarreraService,                
                 public alertService: AlertService,
                 public alertController: AlertController,
                 public sesionService: SesionService,
@@ -73,7 +76,8 @@ export class DetalleContratoPage implements OnInit {
             .then((cliente) => {
             if (cliente) {
                 this.cliente = cliente;
-                console.log("cliente: " +this.cliente.nombre)
+                console.log("cliente del contrato:::: " +this.cliente.nombre)
+                this.contrato = this.navParamService.get();                
             } else {
                 this.navController.navigateRoot('/login');
             }
@@ -167,6 +171,11 @@ export class DetalleContratoPage implements OnInit {
             ]],
             vTipoPago: ['', [
                 Validators.required,
+            ]],
+            vTituloContrato: ['', [
+                Validators.required,
+                Validators.minLength(4),
+                Validators.maxLength(50),
             ]],
         });
     }
