@@ -2,6 +2,7 @@ import { UtilService } from './../util/util.service';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { Injectable } from '@angular/core';
 import { MdlParametrosCarrera } from 'src/app/modelo/mdlParametrosCarrera';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +21,15 @@ export class ParametrosCarreraService {
      }
      return this.afDB.database.ref('parametro-carrera/' + parametro.id).set(this.utilService.serializar(parametro));
    }
+  
    listarParametros() {
      return this.afDB.list('parametro-carrera').valueChanges();
-   }
+   }   
+
+   getParametrosPorPais(pais: string) {    
+    console.log('----->', pais.toUpperCase());
+    return this.afDB.list('parametro-carrera', ref =>
+      ref.orderByChild('pais').equalTo(pais.toUpperCase())).valueChanges();
+  }
+
 }

@@ -27,7 +27,8 @@ export class MapCarreraPage implements OnInit {
   paginaRetorno: string;
 
   searchBox: any;
-  paisCiudad: any;
+  pais: string;
+  ciudad: string;
   constructor(
     public sesionService: SesionService,
     public navParam: NavParamService,
@@ -43,9 +44,10 @@ export class MapCarreraPage implements OnInit {
    }
 
   ngOnInit() {
-    this.paisCiudad = this.navParam.get();
-    console.log("Putito");
-    console.log(this.paisCiudad);
+    this.pais = this.navParam.get().pais;
+    this.ciudad = this.navParam.get().ciudad;
+    console.log("pais:::: ",this.pais);
+    console.log("ciudad:: ",this.ciudad);
     this.latitudFin = null;
     /*this.sesionService.crearSesionBase()
       .then(() => {
@@ -168,9 +170,10 @@ export class MapCarreraPage implements OnInit {
       position: myLatlng,
       map: map,
       draggable: true,
-      title: 'Inicio Carrera',
+      title: 'Inicio Carrera---',
       animation: google.maps.Animation.DROP,
-      icon: 'assets/image/pin-user.png'
+      icon: 'assets/image/pin-user.png',
+      name: 'park'
     });
     marker.addListener('dragend', () => {
       console.log(JSON.stringify(marker.getPosition()));
@@ -202,7 +205,9 @@ export class MapCarreraPage implements OnInit {
         latitudIni: this.latitudIni,
         longitudIni: this.longitudIni,
         latitudFin: this.latitudFin,
-        longitudFin: this.longitudFin
+        longitudFin: this.longitudFin,
+        pais: this.pais,
+        ciudad: this.ciudad
       });
       this.navCtrl.navigateForward('/registro-carrera');
     }

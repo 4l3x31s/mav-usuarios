@@ -18,10 +18,16 @@ export class HomePage implements OnInit, OnDestroy {
   map: any;
   markers = [];
   watchID: any;
+  pais: string;
+  ciudad: string;
+
   listaGeoPosicionamiento: MdlGeoLocalizacion[] = [];
-  constructor(public navCtrl: NavController,
+  constructor(
+    public navCtrl: NavController,
     public geolocation: Geolocation,
-    public geolocalizacionService: GeolocalizacionService) {}
+    public geolocalizacionService: GeolocalizacionService,
+    public navParam: NavParamService,
+    ) {}
   ngOnInit() {
     this.initMap();
     this.geolocalizacionService.listarCambios().subscribe( data => {
@@ -54,48 +60,16 @@ export class HomePage implements OnInit, OnDestroy {
         let geoResults = [];
         let geoResults1 = [];
         var geocoder = new google.maps.Geocoder();
-        geocoder.geocode({'location': mylocation}, function(results, status){
+        geocoder.geocode({'location': mylocation}, (results, status) =>{
           if (status === 'OK') {
-            geoResults  = results[0];
-            geoResults1 = geoResults['address_components'];
-            for(var i=0; i < geoResults1.length; i++){
-              if(geoResults1[i].types[0]=='locality'){
-                this.ciudad=geoResults1[i].short_name;
-              }
-              if(geoResults1[i].types[0]=='country'){
-                this.pais=geoResults1[i].long_name;
-              }
-            }
-            console.log(this.ciudad);
-            console.log(this.pais);
-            geoResults = [];
-            geoResults1 = [];
+            console.log('entra a status ok');
+            this.processLocation(results);
           }
         })
-
       }, (error) => {
         console.log("error current position")
         console.log(error);
       }, { enableHighAccuracy: true });
-
-      //navigator.geolocation.clearWatch(watchID);
-      /*this.geolocation.getCurrentPosition({ enableHighAccuracy: true }).then((resp) => {
-        let mylocation = new google.maps.LatLng(resp.coords.latitude, resp.coords.longitude);
-        this.map = new google.maps.Map(this.mapElement.nativeElement, {
-          zoom: 15,
-          center: mylocation,
-          mapTypeControl: false,
-          streetViewControl: false,
-          fullScreenControl: false,
-          zoomControl: false,
-          scaleControl: false,
-          rotateControl: false,
-          fullscreenControl: false
-        });
-      }, err => {
-        console.log(err);
-      });*/
-
         this.watchID = navigator.geolocation.watchPosition((data) => {
         this.deleteMarkers();
         if(this.listaGeoPosicionamiento.length > 0) {
@@ -113,17 +87,20 @@ export class HomePage implements OnInit, OnDestroy {
       }, error => {
         console.log(error);
       });
-      /*let watch = this.geolocation.watchPosition();
-      watch.subscribe((data) => {
-        this.deleteMarkers();
-        let updatelocation = new google.maps.LatLng(data.coords.latitude,data.coords.longitude);
-        let image = 'assets/image/blue-bike.png';
-        this.addMarker(updatelocation,image);
-        this.setMapOnAll(this.map);
-      }, err => {
-        console.log(err);
-      });*/
   }
+
+  processLocation(location) {    
+    if (location[1]) {
+      for (var i = 0; i < location.length; i++) {
+        if (location[i].types[0] === "locality") {
+          this.ciudad = location[i].address_components[0].short_name;
+          this.pais = location[i].address_components[2].long_name;  
+          console.log(this.ciudad, this.pais);
+        }
+      }
+    }   
+  }
+
   addMarker(location, image) {
     let marker = new google.maps.Marker({
       position: location,
@@ -149,5 +126,13 @@ export class HomePage implements OnInit, OnDestroy {
   }
   ngOnDestroy(): void {
     navigator.geolocation.clearWatch(this.watchID);
+  }
+
+  public irMapCarrera(){
+    this.navParam.set({
+      pais: this.pais,
+      ciudad: this.ciudad
+    });
+    this.navCtrl.navigateForward('/map-carrera');
   }
 }
