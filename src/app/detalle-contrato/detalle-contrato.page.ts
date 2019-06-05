@@ -185,8 +185,12 @@ export class DetalleContratoPage implements OnInit {
     }
 
     async irMapaOrigen() {
-        let ubicacion: any = { lat: this.contrato.latOrigen, lng: this.contrato.longOrigen}; 
-        //let ubicacion: any = { lat: -16.4978888, lng: -68.1314424}; 
+        let ubicacion: any;
+        if(this.contrato.latOrigen){
+            ubicacion = { lat: this.contrato.latOrigen, lng: this.contrato.longOrigen};
+        }else{
+            ubicacion = { lat: -16.4978888, lng: -68.1314424};
+        }
         this.mapParamService.set(ubicacion);
         const modal = await this.modalController.create({
             component: MapaPage
@@ -204,8 +208,12 @@ export class DetalleContratoPage implements OnInit {
     }
 
     async irMapaDestino() {
-        let ubicacion: any = { lat: this.contrato.latDestino, lng: this.contrato.longDestino}; 
-        //let ubicacion: any = { lat: -16.4978888, lng: -68.1314424}; 
+        let ubicacion: any;
+        if(this.contrato.latOrigen){
+            ubicacion = { lat: this.contrato.latDestino, lng: this.contrato.longDestino};
+        }else{
+            ubicacion = { lat: -16.4978888, lng: -68.1314424};
+        }
         this.mapParamService.set(ubicacion);
         const modal = await this.modalController.create({
             component: MapaPage
@@ -216,7 +224,7 @@ export class DetalleContratoPage implements OnInit {
                 this.contrato.latDestino = resultado.data.lat;
                 this.contrato.longDestino = resultado.data.lng;
                 //calcular costo
-                this.contrato.montoTotal = 150;
+                //this.contrato.montoTotal = 150;
                 if(this.contrato.latOrigen != null){
                     this.determinarDistanciaTiempo();
                 }

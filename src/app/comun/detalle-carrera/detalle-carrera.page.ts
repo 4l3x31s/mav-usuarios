@@ -7,6 +7,8 @@ import { MdlCliente } from 'src/app/modelo/mdlCliente';
 import { LoadingService } from 'src/app/services/util/loading.service';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { CarreraService } from 'src/app/services/db/carrera.service';
+import { ConductoraService } from 'src/app/services/db/conductora.service';
+import { MdlConductora } from 'src/app/modelo/mldConductora';
 
 @Component({
   selector: 'app-detalle-carrera',
@@ -19,7 +21,8 @@ export class DetalleCarreraPage implements OnInit {
   carrera: MdlCarrera;
   
   cliente: MdlCliente;
-  
+  conductora: MdlConductora;
+
   @ViewChild('map')
   mapElement: ElementRef;
 
@@ -31,18 +34,24 @@ export class DetalleCarreraPage implements OnInit {
     public loadingService: LoadingService,
     public iab: InAppBrowser,
     public actionSheetController: ActionSheetController,
-    public carreraService: CarreraService
-  
+    public carreraService: CarreraService,
+    public conductoraService: ConductoraService
+
   ) { }
 
   ngOnInit() {
     this.carreraService.getCarrerasPorId(this.carrera.id).subscribe(carrera=>{
-      this.carrera = Object.assign(carrera[0]); 
+      this.carrera = Object.assign(carrera[0]);
     },error=>{
-      
+
     });
     console.log("this.carrera: ", this.carrera);
-    
+    if(this.carrera.nombreConductora){
+      this.conductoraService.getConductora(this.carrera.idConductora).subscribe( conductora => {
+        this.conductora = conductora;
+      });
+      console.log('this.conductora: ',this.conductora);
+    }
     this.loadingService.present()
       .then(()=>{
         this.clienteService.getCliente(this.carrera.idUsuario)
@@ -94,7 +103,7 @@ export class DetalleCarreraPage implements OnInit {
   }
 
   irWhatsApp(){
-    this.iab.create('https://api.whatsapp.com/send?phone=591'+this.cliente.cel+'&text=', '_system', 'location=yes');
+    this.iab.create('https://api.whatsapp.com/send?phone=591'+this.conductora.celular+'&text=', '_system', 'location=yes');
   }
 
   async showOpcionesCarrera(){
