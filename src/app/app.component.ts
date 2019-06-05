@@ -20,19 +20,14 @@ export class AppComponent {
 
   public appPages = [
     {
-      title: 'Inicio',
+      title: 'Solicitar Carrera',
       url: '/home',
-      icon: 'car'
+      icon: 'logo-model-s'
     },
     {
       title: 'Carreras Aceptadas',
       url: '/carreras-aceptadas',
-      icon: 'car'
-    },
-    {
-      title: 'Solicitar Carrera',
-      url: '/map-carrera',
-      icon: 'car'
+      icon: 'map'
     },
     {
       title: 'Calendario Carreras',
@@ -45,14 +40,14 @@ export class AppComponent {
       icon: 'clipboard'
     },
     {
-      title: 'Lista de Contratos Solicitados',
+      title: 'Contratos Solicitados',
       url: '/lista-contratos-solicitados',
-      icon: 'clipboard'
+      icon: 'filing'
     },
     {
-      title: 'Lista de Contratos Aceptados',
+      title: 'Contratos Aceptados',
       url: '/lista-contratos-vigentes',
-      icon: 'clipboard'
+      icon: 'done-all'
     }
   ];
 

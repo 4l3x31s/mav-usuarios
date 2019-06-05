@@ -59,13 +59,13 @@ export class CarrerasAceptadasPage implements OnInit {
      await this.carreraService.getCarrerasPorCliente(idUsuario).subscribe( data => {
       this.loading.dismiss();
       this.carreras = Object.assign(data);
-      this.filtrarCarrera('estado', estado);    
+      this.filtrarCarrera('estado', estado);
     },  error => {
       this.loading.dismiss();
     });
   }
   public irMapCarrera() {
-    this.navController.navigateForward('/map-carrera');  
+    this.navController.navigateForward('/map-carrera');
   }
 
 
