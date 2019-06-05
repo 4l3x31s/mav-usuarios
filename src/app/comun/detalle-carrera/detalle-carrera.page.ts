@@ -40,18 +40,19 @@ export class DetalleCarreraPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    console.log('this.carrera.id:: ' , this.carrera.id);
     this.carreraService.getCarrerasPorId(this.carrera.id).subscribe(carrera=>{
       this.carrera = Object.assign(carrera[0]);
+      console.log("this.carrera:: ", this.carrera);
     },error=>{
 
     });
-    console.log("this.carrera: ", this.carrera);
-    if(this.carrera.nombreConductora){
-      this.conductoraService.getConductora(this.carrera.idConductora).subscribe( conductora => {
+    this.conductoraService.getConductora(this.carrera.idConductora)
+      .subscribe( conductora => {
         this.conductora = conductora;
+        console.log('this.conductora:: ', this.conductora);
       });
-      console.log('this.conductora: ',this.conductora);
-    }
+
     this.loadingService.present()
       .then(()=>{
         this.clienteService.getCliente(this.carrera.idUsuario)
