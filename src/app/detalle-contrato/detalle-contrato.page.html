@@ -29,7 +29,7 @@
           <ion-item>
               <ion-label position="stacked">Ciudad</ion-label>
               <ion-select interface='popover' formControlName="vCiudad" placeholder="Seleccione la Ciudad"
-                          [(ngModel)]="contrato.ciudad">
+                          [(ngModel)]="contrato.ciudad"  (ngModelChange)="seleccionarCiudad($event)">
                   <ion-select-option *ngFor="let parametros of lstCiudadesFiltrado" value="{{parametros.ciudad}}">
                       {{parametros.ciudad}}
                   </ion-select-option>
@@ -40,13 +40,15 @@
           <ion-item>
               <ion-label position="stacked">Fecha Inicio</ion-label>
               <ion-datetime formControlName="vFechaInicio" [(ngModel)]="contrato.fechaInicio"
-                            display-format="DD/MM/YYYY"></ion-datetime>
+                            display-format="DD/MM/YYYY"
+                            cancelText="Cancelar" doneText="Aceptar"></ion-datetime>
           </ion-item>
           <print-error [control]="f.vFechaInicio"></print-error>
           <ion-item>
               <ion-label position="stacked">Fecha Fin</ion-label>
               <ion-datetime formControlName="vFechaFin" [(ngModel)]="contrato.fechaFin"
-                            display-format="DD/MM/YYYY"></ion-datetime>
+                            display-format="DD/MM/YYYY"
+                            cancelText="Cancelar" doneText="Aceptar"></ion-datetime>
           </ion-item>
           <print-error [control]="f.vFechaFin"></print-error>
 
@@ -69,7 +71,7 @@
           </ion-item>
 
           <ion-item>
-              <ion-label position="stacked">Monto Total</ion-label>
+              <ion-label position="stacked">Monto Carrera</ion-label>
               <ion-input> {{ contrato.montoTotal }} </ion-input>
           </ion-item>
 

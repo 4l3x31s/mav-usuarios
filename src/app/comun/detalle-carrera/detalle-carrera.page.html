@@ -9,12 +9,12 @@
 
 <ion-content>
   <div #map id="map"></div>
-  <ion-list *ngIf="cliente">
+  <ion-list *ngIf="conductora">
 
     <ion-item>
-      <ion-label position="stacked">Cliente</ion-label>
-      <ion-input value="{{ cliente.nombre }}" readonly></ion-input>
-      <ion-icon *ngIf="cliente.cel" (click)="irWhatsApp()" slot="end" name="logo-whatsapp" style="color: #00E676"></ion-icon>
+      <ion-label position="stacked">Conductora</ion-label>
+      <ion-input value="{{ conductora.nombre }} {{ conductora.paterno }}" readonly></ion-input>
+      <ion-icon *ngIf="conductora.celular" (click)="irWhatsApp()" slot="end" name="logo-whatsapp" style="color: #00E676"></ion-icon>
     </ion-item>
 
     <ion-item>
@@ -35,6 +35,7 @@
     <div *ngIf="carrera.enCamino">
       Voy en camino
     </div>
+    
   </ion-list>
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button (click)="showOpcionesCarrera()">

@@ -92,6 +92,13 @@ export class DetalleContratoPage implements OnInit {
         );
     }
 
+    seleccionarCiudad(event) {
+        this.ciudadSeleccionada = event;
+        /*this.lstCiudadesFiltrado = this.lstParametros.filter(
+            parametros => parametros.pais.indexOf(event) > -1
+        );*/
+    }
+
     grabar() {
         this.loadingServices.present();
         this.contrato.idUsuario = this.cliente.id;
@@ -209,7 +216,7 @@ export class DetalleContratoPage implements OnInit {
 
     async irMapaDestino() {
         let ubicacion: any;
-        if(this.contrato.latOrigen){
+        if(this.contrato.latDestino){
             ubicacion = { lat: this.contrato.latDestino, lng: this.contrato.longDestino};
         }else{
             ubicacion = { lat: -16.4978888, lng: -68.1314424};
@@ -355,6 +362,8 @@ export class DetalleContratoPage implements OnInit {
             let datos = this.getDistanceMatrix(responseMatrix);
             datos.subscribe(data => {
                 console.log(data);
+                console.log('--> ' , this.lstCiudadesFiltrado);
+                console.log('--> ' , this.ciudadSeleccionada);
                 let ciudadParametro: MdlParametrosCarrera[] = this.lstCiudadesFiltrado.filter(
                     parametros => parametros.ciudad.indexOf(this.ciudadSeleccionada) > -1
                 );
@@ -368,6 +377,7 @@ export class DetalleContratoPage implements OnInit {
                         const time = element.duration.value;
                         console.log(distance, time);
                         // calcular costos UBER: https://calculouber.netlify.com/
+                        console.log('ciudadParametro[0]: ' + ciudadParametro[0]);
                         let montoFinal: number = (ciudadParametro[0].base + ((element.duration.value / 60) * ciudadParametro[0].tiempo) + ((element.distance.value / 1000) * ciudadParametro[0].distancia));
                         console.log(montoFinal);
                         if (montoFinal < 10) {

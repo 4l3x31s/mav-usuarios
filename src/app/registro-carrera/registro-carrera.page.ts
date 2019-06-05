@@ -68,7 +68,7 @@ export class RegistroCarreraPage implements OnInit {
       console.log("pais==== ",this.pais);
       console.log("ciudad== ",this.ciudad);
       this.carrera.moneda = 'Bolivianos';
-      this.distance = new google.maps.DistanceMatrixService();      
+      this.distance = new google.maps.DistanceMatrixService();
       //this.carrera.costo = 35;
      }
 
