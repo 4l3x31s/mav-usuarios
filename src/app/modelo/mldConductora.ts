@@ -20,6 +20,7 @@ export class MdlConductora {
         public long: string,
         public pais: string,
         public ciudad: string,
+        public ui: string,
         public foto,
         public admin: boolean,
         public estado: boolean

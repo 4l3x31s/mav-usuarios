@@ -10,6 +10,10 @@ import { NavParamService } from './services/nav-param.service';
 import { AlertService } from './services/util/alert.service';
 import { LoadingService } from './services/util/loading.service';
 
+import { FCM } from '@ionic-native/fcm/ngx';
+import { Router } from '@angular/router';
+import { TokenNotifService } from './services/token-notif.service';
+
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html'
@@ -62,7 +66,10 @@ export class AppComponent {
     public clienteService: ClienteService,
     public alertService: AlertService,
     public alertController: AlertController,
-    public loadingService: LoadingService
+    public loadingService: LoadingService,
+    private fcm: FCM,
+    private router: Router,
+    private tokenService: TokenNotifService
   ) {
     this.initializeApp();
     events.subscribe('user:login', () => {
@@ -93,6 +100,28 @@ export class AppComponent {
       this.statusBar.styleLightContent();
       this.statusBar.backgroundColorByHexString('#c2185b');
       this.splashScreen.hide();
+
+      this.fcm.subscribeToTopic('people');
+      this.fcm.getToken().then(token => {
+        console.log(token);
+        this.tokenService.set(token);
+      });
+      this.fcm.onNotification().subscribe(data => {
+        console.log(data);
+        if (data.wasTapped) {
+          console.log('Received in background');
+          this.router.navigate([data.landing_page, data.price]);
+        } else {
+          console.log('Received in foreground');
+          this.router.navigate([data.landing_page, data.price]);
+        }
+      });
+
+      this.fcm.onTokenRefresh().subscribe(token => {
+        console.log(token);
+      });
+
+
       this.sesionService.getSesion()
         .then(cliente => {
           if (cliente) {
@@ -153,3 +182,5 @@ export class AppComponent {
     this.navController.navigateRoot('/detalle-cliente');
   }
 }
+
+

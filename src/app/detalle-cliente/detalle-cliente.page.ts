@@ -1,3 +1,4 @@
+import { TokenNotifService } from './../services/token-notif.service';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MdlCliente } from '../modelo/mdlCliente';
@@ -35,7 +36,8 @@ export class DetalleClientePage implements OnInit {
     public loadingService: LoadingService,
     public parametrosService: ParametrosCarreraService,
     public events: Events,
-    public authService: AuthService    
+    public authService: AuthService,
+    public tokenService: TokenNotifService
     ) { console.log('constructor');
     this.sesionService.crearSesionBase()
         .then(() => {
@@ -74,7 +76,7 @@ export class DetalleClientePage implements OnInit {
         Validators.minLength(4),
         Validators.maxLength(50),
       ]],
-      vci: ['', [
+      /*vci: ['', [
         Validators.required,
         Validators.minLength(4),
         Validators.maxLength(15),
@@ -84,7 +86,7 @@ export class DetalleClientePage implements OnInit {
         Validators.required,
         Validators.minLength(4),
         Validators.maxLength(100),
-      ]],
+      ]],*/
       vuser: ['', [
         Validators.required,
         Validators.minLength(4),
@@ -97,12 +99,12 @@ export class DetalleClientePage implements OnInit {
       ]],
       vconfirmPass: ['',
        Validators.required],
-      vtel: ['', [
+      /*vtel: ['', [
         Validators.required,
         Validators.minLength(7),
         Validators.maxLength(7),
         Validators.pattern(/^[0-9]/),
-      ]],
+      ]],*/
       vcel: ['', [
         Validators.required,
         Validators.minLength(8),
@@ -127,7 +129,7 @@ export class DetalleClientePage implements OnInit {
       ]],
     }, {
       validator: this.mustMatch('vpass', 'vconfirmPass')
-    })
+    });
   }
 
   mustMatch(controlName: string, matchingControlName: string) {
@@ -151,7 +153,8 @@ export class DetalleClientePage implements OnInit {
 
   public grabar(){
       this.loadingService.present().then(() => {
-        this.cliente.user = this.cliente.email;        
+        this.cliente.user = this.cliente.email;
+        this.cliente.ui = this.tokenService.get();
         if (this.cliente && this.cliente.id != null) {
           this.clienteService.crearCliente(this.cliente)
           .then((conductora) => {

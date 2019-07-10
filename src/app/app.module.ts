@@ -19,12 +19,16 @@ import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { DetalleCarreraPageModule } from './comun/detalle-carrera/detalle-carrera.module';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 
+import { FCM } from '@ionic-native/fcm/ngx';
+
 export const firebaseConfig = {
   apiKey: 'AIzaSyCC22o8Imks6DbAf4DXrxgtW_wPE6XYLHs',
-  authDomain: 'mav-db.firebaseapp.com',
-  databaseURL: 'https://mav-db.firebaseio.com',
-  storageBucket: 'mav-db.appspot.com',
-  messagingSenderId: '69193804419'
+    authDomain: 'mav-db.firebaseapp.com',
+    databaseURL: 'https://mav-db.firebaseio.com',
+    projectId: 'mav-db',
+    storageBucket: 'mav-db.appspot.com',
+    messagingSenderId: '69193804419',
+    appId: '1:69193804419:web:6c522a0e26f79eb5'
 };
 
 @NgModule({
@@ -48,6 +52,7 @@ export const firebaseConfig = {
     AngularFireDatabase,
     Geolocation,
     InAppBrowser,
+    FCM,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]
