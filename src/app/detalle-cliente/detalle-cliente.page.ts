@@ -92,7 +92,7 @@ export class DetalleClientePage implements OnInit {
       ]],
       vpass: ['', [
         Validators.required,
-        Validators.minLength(4),
+        Validators.minLength(6),
         Validators.maxLength(30),
       ]],
       vconfirmPass: ['',
