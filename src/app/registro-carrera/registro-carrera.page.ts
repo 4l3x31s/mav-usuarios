@@ -163,6 +163,8 @@ export class RegistroCarreraPage implements OnInit {
     this.carrera.idUsuario = this.cliente.id;
     this.carrera.estado = 1;
     this.carrera.nombreCliente = this.cliente.nombre;
+    this.carrera.pais = this.pais;
+    this.carrera.ciudad = this.ciudad;
 
     //console.log('idcarrera: ' + identificadorPrueba);
 

@@ -16,11 +16,20 @@ h1 {
 }
 
 .fondo-transparente {
-  background: inherit;
-  background-color: transparent !important;
+  // background: inherit;
+  // background-color: transparent !important;
+  border-radius: 10px !important;
 }
 .texto-inicio a {
   color: white;
-  font-size: 12px;
+  font-size: 13px;
   text-decoration: underline;
+}
+.espacio-login {
+  height: 5px !important;
+  width: 100% !important;
+}
+.padding-login {
+  padding-left: 10% !important;
+  padding-right: 10% !important;
 }

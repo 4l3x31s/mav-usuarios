@@ -42,7 +42,7 @@ export class ClienteService {
       null,
       null,
       null,
-      null);
+      null, null);
   }
 
   getCliente(id: number): Observable<MdlCliente>{

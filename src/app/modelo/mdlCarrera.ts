@@ -22,7 +22,10 @@ export class MdlCarrera {
         public cobro: string,
         public estado: number, //1:solicitado (usuario), 2:aceptado (conductora), 3 terminado
         public nombreCliente: string,
-        public nombreConductora: string        
+        public nombreConductora: string,
+        public enCamino: boolean,
+        public ciudad: string,
+        public pais: string
     ) {
 
     }

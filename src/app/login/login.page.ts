@@ -71,7 +71,7 @@ export class LoginPage implements OnInit {
       ]]
     });
   }
-  get f() { return this.form.controls; }
+  get f(): any { return this.form.controls; }
 
   ingresar() {
     this.loadingService.present()

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { SQLiteObject, SQLite } from '@ionic-native/sqlite/ngx';
 import { MdlCliente } from '../modelo/mdlCliente';
+import { TokenNotifService } from './token-notif.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,8 @@ export class SqliteService {
 
   db: SQLiteObject;
   constructor(
-    private sqlite: SQLite
+    private sqlite: SQLite,
+    private tokenService: TokenNotifService
   ) { }
 
   getDB(): Promise<SQLiteObject> {
@@ -72,6 +74,7 @@ export class SqliteService {
                 null,
                 null,
                 null,
+                this.tokenService.get(),
                 null
               );
             }
