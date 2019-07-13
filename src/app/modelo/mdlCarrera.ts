@@ -11,7 +11,7 @@ export class MdlCarrera {
         public costo: number,
         public moneda: string,
         public califCliente: string,
-        public califConductora: string,
+        public califConductora: number,
         public obsCliente: string,
         public obsConductora: string,
         public obsCarrera: string,

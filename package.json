@@ -54,10 +54,13 @@
     "core-js": "^2.5.4",
     "firebase": "^5.9.1",
     "fullcalendar": "^3.10.0",
+    "ionic4-rating": "^1.0.9",
     "moment": "^2.24.0",
     "promise-polyfill": "^8.1.0",
     "rxjs": "^6.4.0",
     "rxjs-compat": "^6.4.0",
+    "string-similarity": "^3.0.0",
+    "tslib": "^1.10.0",
     "zone.js": "~0.8.29"
   },
   "devDependencies": {

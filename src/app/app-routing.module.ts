@@ -27,7 +27,9 @@ const routes: Routes = [
   { path: 'map-carrera', loadChildren: './map-carrera/map-carrera.module#MapCarreraPageModule' },
   { path: 'carreras-aceptadas', loadChildren: './carreras-aceptadas/carreras-aceptadas.module#CarrerasAceptadasPageModule' },
   { path: 'detalle-conductora', loadChildren: './comun/detalle-conductora/detalle-conductora.module#DetalleConductoraPageModule' },
-  { path: 'registro-carrera', loadChildren: './registro-carrera/registro-carrera.module#RegistroCarreraPageModule' }
+  { path: 'registro-carrera', loadChildren: './registro-carrera/registro-carrera.module#RegistroCarreraPageModule' },  { path: 'calificar-carrera', loadChildren: './comun/calificar-carrera/calificar-carrera.module#CalificarCarreraPageModule' },
+  { path: 'gg1', loadChildren: './comun/gg1/gg1.module#Gg1PageModule' }
+
 
 
 

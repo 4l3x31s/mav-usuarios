@@ -18,8 +18,8 @@ import { MapaPageModule } from './comun/mapa/mapa.module';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { DetalleCarreraPageModule } from './comun/detalle-carrera/detalle-carrera.module';
 import { AngularFireStorageModule } from '@angular/fire/storage';
-
 import { FCM } from '@ionic-native/fcm/ngx';
+import { CalificarCarreraPageModule } from './comun/calificar-carrera/calificar-carrera.module';
 
 export const firebaseConfig = {
   apiKey: 'AIzaSyCC22o8Imks6DbAf4DXrxgtW_wPE6XYLHs',
@@ -43,7 +43,8 @@ export const firebaseConfig = {
     AngularFireAuthModule,
     MapaPageModule,
     DetalleCarreraPageModule,
-    AngularFireStorageModule
+    AngularFireStorageModule,
+    CalificarCarreraPageModule
   ],
   providers: [
     StatusBar,
