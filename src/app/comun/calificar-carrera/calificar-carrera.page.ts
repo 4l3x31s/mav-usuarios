@@ -37,10 +37,7 @@ export class CalificarCarreraPage implements OnInit {
       ]],
       vobservacion: ['', [
         Validators.required,
-      ]],
-      vcosto: ['', [
-        Validators.required,
-      ]],
+      ]]
     });
   }
 

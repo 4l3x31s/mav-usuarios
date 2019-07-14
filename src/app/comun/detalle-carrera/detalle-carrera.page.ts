@@ -23,7 +23,8 @@ export class DetalleCarreraPage implements OnInit {
 
   @Input()
   carrera: MdlCarrera;
-  mostrar;
+  mostrarBoton;
+  mostrarCalificacion;
 
   form: FormGroup;
   
@@ -70,35 +71,26 @@ export class DetalleCarreraPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.mostrar=false;
+    this.mostrarBoton=false;
     if(!this.carrera.enCamino){
-      this.mostrar=true;
+      this.mostrarBoton=true;
+    }
+    this.mostrarCalificacion=false;
+    if(!this.carrera.enCamino){
+      this.mostrarCalificacion=true;
     }
     console.log('this.carrera.id:: ' , this.carrera.id);
     this.carreraService.getCarrerasPorId(this.carrera.id).subscribe(carrera=>{
       this.carrera = Object.assign(carrera[0]);
       console.log("this.carrera:: ", this.carrera);
-    },error=>{
-      console.log("error al obtener la carrera")
+    }, error=>{
+      console.log("error al obtener la carrera"+error)
     });
     this.conductoraService.getConductora(this.carrera.idConductora).subscribe(conductora=>{
         this.conductora = conductora;
         console.log('this.conductora:: ', this.conductora);
     });
-
-    this.loadingService.present().then(()=>{
-      this.clienteService.getCliente(this.carrera.idUsuario).subscribe(cliente=>{
-        this.cliente = cliente;
-        this.initAutocomplete();
-        this.codigoColorCliente = this.colores.find(x => x.codigo == this.clienteService.getColorPorCliente(this.cliente.id)).codigo;
-        this.loadingService.dismiss();
-      },error=>{
-        console.error(error);
-        this.loadingService.dismiss();
-        this.alertService.present('Error', 'Error al el cliente en la carrera.');
-        this.navController.navigateRoot('/login');
-      })
-    }); 
+    this.cargarDatos();
   }
 
   initAutocomplete() {
@@ -141,6 +133,23 @@ export class DetalleCarreraPage implements OnInit {
         icon: 'assets/image/pin-check.png' //label: 'A'
       }));
     
+  }
+
+  public cargarDatos(){
+    this.loadingService.present().then(()=>{
+      this.clienteService.getCliente(this.carrera.idUsuario).subscribe(cliente=>{
+        
+        this.cliente = cliente;
+        this.codigoColorCliente = this.colores.find(x => x.codigo == this.clienteService.getColorPorCliente(this.cliente.id)).codigo;
+        this.initAutocomplete();
+        this.loadingService.dismiss();
+        }, error=>{
+        console.error(error);
+        this.loadingService.dismiss();
+        this.alertService.present('Error', 'Error al el cliente en la carrera.');
+        this.navController.navigateRoot('/login');
+      })
+    }); 
   }
 
   cerrar(){
@@ -208,6 +217,9 @@ export class DetalleCarreraPage implements OnInit {
       componentProps: {
         carrera: this.carrera
       }
+    });
+    modal.onDidDismiss().then(() => {
+      this.cargarDatos();
     });
     return await modal.present();
   }
