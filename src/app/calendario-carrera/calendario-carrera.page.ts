@@ -41,7 +41,7 @@ export class CalendarioCarreraPage implements OnInit {
     this.loadingService.present()
       .then(() => {
         this.sesionService.getSesion()
-          .then(cliente => {
+          .subscribe(cliente => {
             this.cliente = cliente;
             this.carreraService.getCarrerasPorCliente(this.cliente.id)
               .subscribe(carreras => {
@@ -64,8 +64,7 @@ export class CalendarioCarreraPage implements OnInit {
                 this.alertService.present('Error', 'Error al recuperar las carreras.');
                 this.navController.navigateRoot('/login');
               })
-          })
-          .catch(e => {
+          }, e => {
             console.error(e);
             this.alertService.present('Error', 'Error al recuperar sesion.');
             this.navController.navigateRoot('/login');

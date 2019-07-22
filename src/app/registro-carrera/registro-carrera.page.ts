@@ -79,7 +79,7 @@ export class RegistroCarreraPage implements OnInit {
     this.sesionService.crearSesionBase()
     .then(() => {
       this.sesionService.getSesion()
-        .then((cliente) => {
+        .subscribe((cliente) => {
           if (cliente) {
             this.cliente = cliente;
             console.log("cliente=== " +this.cliente.nombre)
@@ -159,6 +159,7 @@ export class RegistroCarreraPage implements OnInit {
   }
   public grabar(){
     this.loadingServices.present();
+    //Notificaciones PUSH
     //var identificadorPrueba = Date.now();
     this.carrera.idUsuario = this.cliente.id;
     this.carrera.estado = 1;

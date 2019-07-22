@@ -83,7 +83,7 @@ export class AppComponent {
   public loggedIn() {
     console.log("logged in");
     this.sesionService.getSesion()
-      .then(cliente=>{
+      .subscribe(cliente=>{
         this.clienteService.getCliente(cliente.id)
           .subscribe( cliente => {
             this.cliente = cliente;
@@ -123,7 +123,7 @@ export class AppComponent {
 
 
       this.sesionService.getSesion()
-        .then(cliente => {
+        .subscribe(cliente => {
           if (cliente) {
             this.clienteService.getCliente(cliente.id)
             .subscribe( cliente => {

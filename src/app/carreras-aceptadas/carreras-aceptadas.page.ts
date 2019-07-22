@@ -43,7 +43,7 @@ export class CarrerasAceptadasPage implements OnInit {
     this.sesionService.crearSesionBase()
     .then(() => {
       this.sesionService.getSesion()
-        .then((cliente) => {
+        .subscribe((cliente) => {
           if (cliente) {
             this.cliente = cliente;
             this.listaCarerasAceptadas(this.cliente.id, 2);
