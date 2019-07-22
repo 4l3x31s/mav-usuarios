@@ -1,3 +1,4 @@
+import { ConductoraService } from 'src/app/services/db/conductora.service';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ClienteService } from '../services/db/cliente.service';
@@ -51,9 +52,10 @@ export class RegistroCarreraPage implements OnInit {
     public navParams: NavParamService,
     public alertController: AlertController,
     public mapParamService: MapParamService,
-    public parametrosCarreraService: ParametrosCarreraService    
+    public parametrosCarreraService: ParametrosCarreraService,
+    public conductoraService: ConductoraService,
     ) {
-      this.carrera = this.carreraService.getCarreraSesion();      
+      this.carrera = this.carreraService.getCarreraSesion();
       this.carrera.fechaInicio = moment().format();
       this.fechaMin = moment().format('YYYY-MM-DD');
       console.log('this.fechaMin: ' + this.fechaMin );
@@ -160,6 +162,7 @@ export class RegistroCarreraPage implements OnInit {
   public grabar(){
     this.loadingServices.present();
     //Notificaciones PUSH
+    this.cond
     //var identificadorPrueba = Date.now();
     this.carrera.idUsuario = this.cliente.id;
     this.carrera.estado = 1;
