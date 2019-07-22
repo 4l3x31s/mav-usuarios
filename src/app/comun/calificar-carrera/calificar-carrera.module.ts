@@ -1,18 +1,18 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
 
-import { DetalleCarreraPage } from './detalle-carrera.page';
+import { CalificarCarreraPage } from './calificar-carrera.page';
 import { IonicRatingModule } from 'ionic4-rating';
 import { ComponentesComunesModule } from 'src/app/componentes-comunes/componentes-comunes.module';
 
 const routes: Routes = [
   {
     path: '',
-    component: DetalleCarreraPage
+    component: CalificarCarreraPage
   }
 ];
 
@@ -21,11 +21,11 @@ const routes: Routes = [
     CommonModule,
     FormsModule,
     IonicModule,
-    IonicRatingModule,
     ReactiveFormsModule,
+    IonicRatingModule,
     ComponentesComunesModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
   ],
-  declarations: [DetalleCarreraPage]
+  declarations: [CalificarCarreraPage]
 })
-export class DetalleCarreraPageModule {}
+export class CalificarCarreraPageModule {}

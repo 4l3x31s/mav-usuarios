@@ -94,7 +94,7 @@ export class DetalleClientePage implements OnInit {
       ]],
       vpass: ['', [
         Validators.required,
-        Validators.minLength(4),
+        Validators.minLength(6),
         Validators.maxLength(30),
       ]],
       vconfirmPass: ['',
@@ -155,13 +155,16 @@ export class DetalleClientePage implements OnInit {
       this.loadingService.present().then(() => {
         this.cliente.user = this.cliente.email;
         this.cliente.ui = this.tokenService.get();
+        if(this.cliente.ui === undefined) {
+          this.cliente.ui = null;
+        }
         if (this.cliente && this.cliente.id != null) {
           this.clienteService.crearCliente(this.cliente)
           .then((conductora) => {
             this.cliente = conductora;
             this.loadingService.dismiss();
             this.alertService.present('Info', 'Datos guardados correctamente.');  // edita cliente
-            this.navController.navigateRoot('/home'); 
+            this.navController.navigateRoot('/home');
             //this.ingresar();
           })
           .catch(error => {
@@ -177,7 +180,7 @@ export class DetalleClientePage implements OnInit {
             .then((cliente) => {
               this.cliente = cliente;
               this.loadingService.dismiss();
-              this.alertService.present('Info', 'Datos guardados correctamente.');   // nuevo cliente           
+              this.alertService.present('Info', 'Datos guardados correctamente.');   // nuevo cliente
               //this.navController.navigateRoot('/home');
               this.ingresar();
             })

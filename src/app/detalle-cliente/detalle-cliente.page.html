@@ -18,9 +18,8 @@
       
       <ion-item>
         <ion-label position="stacked">Carnet de Identidad</ion-label>
-        <ion-input formControlName="vci" name="vci"  [(ngModel)]="cliente.ci" ></ion-input>
+        <ion-input [ngModelOptions]="{standalone: true}" name="vci"  [(ngModel)]="cliente.ci" ></ion-input>
       </ion-item>
-      <print-error [control]="f.vci"></print-error>
 
       <ion-item>
         <ion-label position="stacked">Pais</ion-label>
@@ -46,9 +45,8 @@
 
       <ion-item>
         <ion-label position="stacked">Dirección</ion-label>
-        <ion-input formControlName="vdireccion" name="vdireccion"  [(ngModel)]="cliente.direccion"></ion-input>
+        <ion-input [ngModelOptions]="{standalone: true}" name="vdireccion"  [(ngModel)]="cliente.direccion"></ion-input>
       </ion-item>
-      <print-error [control]="f.vdireccion"></print-error>
       
       <div [ngClass]="myclass">
         <ion-item>
@@ -80,9 +78,9 @@
 
       <ion-item>
         <ion-label position="stacked">Telefono</ion-label>
-        <ion-input formControlName="vtel" name="vtel"  [(ngModel)]="cliente.tel"></ion-input>
+        <ion-input [ngModelOptions]="{standalone: true}" name="vtel"  [(ngModel)]="cliente.tel"></ion-input>
       </ion-item>
-      <print-error [control]="f.vtel"></print-error>
+     
 
       <ion-item>
         <ion-label position="stacked">Celular</ion-label>

@@ -69,6 +69,11 @@ export class MapCarreraPage implements OnInit {
       //const myLatlng = { lat: resp.coords.latitude, lng: resp.coords.longitude};
       let myLatlng: any = { lat: -16.4971653, lng: -68.1320507};
       this.cargarMapa(myLatlng);
+
+      //funcion que cargue el mapa
+      //funcion que cargue los marcadores
+      //funcion que cargue el searchbar
+      //
      });
   }
   buscarTexto(map, markers, alertService): Observable<any> {

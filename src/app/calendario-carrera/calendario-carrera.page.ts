@@ -11,6 +11,7 @@ import { NavController, ModalController } from '@ionic/angular';
 import { EventInput } from '@fullcalendar/core';
 import { MdlCliente } from '../modelo/mdlCliente';
 import { DetalleCarreraPage } from '../comun/detalle-carrera/detalle-carrera.page';
+import { ClienteService } from '../services/db/cliente.service';
 
 @Component({
   selector: 'app-calendario-carrera',
@@ -35,6 +36,7 @@ export class CalendarioCarreraPage implements OnInit {
     public alertService: AlertService,
     public navController: NavController,
     public modalController: ModalController,
+    public clienteService: ClienteService,
   ) { }
 
   ngOnInit() {
@@ -54,7 +56,7 @@ export class CalendarioCarreraPage implements OnInit {
                       title: 'Carrera',
                       start: element.fechaInicio,
                       idCarrera: element.id,
-                      backgroundColor: 'red'
+                      backgroundColor: this.clienteService.getColorPorCliente(element.idUsuario)
                     })
                   });
                 }
@@ -77,7 +79,6 @@ export class CalendarioCarreraPage implements OnInit {
   }
 
   async handleEventClick(event) {
-    //console.log(event.event.extendedProps.idCarrera);
     let carreraSeleccionada:MdlCarrera = this.carreras.find(x => x.id == event.event.extendedProps.idCarrera);
 
     const modal = await this.modalController.create({

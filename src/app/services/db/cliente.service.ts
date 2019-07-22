@@ -16,13 +16,11 @@ export class ClienteService {
     this.rootRef = this.afDB.database.ref();
    }
    crearCliente(mdlCliente: MdlCliente): Promise<any> {
-    
     if(!mdlCliente.id){
       mdlCliente.id = Date.now();
     }
     console.log('metodo crear cliente : ', mdlCliente);
-    return this.afDB.database.ref('cliente/' + mdlCliente.id)
-      .set(mdlCliente)
+    return this.afDB.database.ref('cliente/' + mdlCliente.id).set(mdlCliente)
         .then(()=>{
           return Promise.resolve(mdlCliente);
         })
@@ -42,7 +40,8 @@ export class ClienteService {
       null,
       null,
       null,
-      null, null);
+      null, 
+      null);
   }
 
   getCliente(id: number): Observable<MdlCliente>{
@@ -63,5 +62,15 @@ export class ClienteService {
           observer.complete();
         });
     });
+  }
+  getColorPorCliente(idCliente: number): string {
+    let color = localStorage.getItem('colorCliente-'+idCliente);
+    if(!color){
+      color = "black";
+    }
+    return color;
+  }
+  setColorCliente(idCliente: number, color:string){
+    localStorage.setItem('colorCliente-'+idCliente, color);
   }
 }

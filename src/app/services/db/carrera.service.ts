@@ -3,6 +3,7 @@ import { AngularFireDatabase } from '@angular/fire/database';
 import { MdlCarrera } from 'src/app/modelo/mdlCarrera';
 import { Observable } from 'rxjs';
 import * as _ from 'lodash';  
+import * as moment from 'moment';
 
 @Injectable({
   providedIn: 'root'
@@ -46,5 +47,10 @@ export class CarreraService {
   getCarrerasPorId(idCarrera: number): Observable<MdlCarrera[]> {
     return this.afDB.list<MdlCarrera>('carrera',
       ref => ref.orderByChild('id').equalTo(idCarrera)).valueChanges();
+  }
+  saveCalif(carrera: MdlCarrera): Promise<any> {
+    carrera.fechaFin = moment().format();
+    carrera.estado = 3;
+    return this.afDB.database.ref('carrera/' + carrera.id).set(carrera);
   }
 }

@@ -31,15 +31,41 @@
       <ion-label position="stacked">Fecha/Hora</ion-label>
       <ion-datetime value="{{ carrera.fechaInicio }}" readonly displayFormat="DD/MM/YYYY HH:mm"></ion-datetime>
     </ion-item>
-
-    <div *ngIf="carrera.enCamino">
-      Voy en camino
-    </div>
     
+    <ion-item *ngIf="codigoColorCliente">
+      <ion-label [ngStyle]="{'color': codigoColorCliente}">Color del contrato</ion-label>
+      <ion-select placeholder="Select One" (ionChange)="cambiarColor()" [(ngModel)]="codigoColorCliente">
+        <ion-select-option value="{{color.codigo}}" *ngFor="let color of colores">{{color.descripcion}}</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <div *ngIf="carrera.estado == 3">
+      <div *ngIf="mostrarCalificacion">
+        <form [formGroup]="form" novalidate>
+          <ion-item>
+            <ion-label position="floating">Valoración Carrera</ion-label>
+          </ion-item>
+          <ion-item>
+            <rating [rate]="carrera.califConductora"
+              readonly="true"
+              size="default">
+            </rating>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked">Observación</ion-label>
+            <ion-textarea readonly value="{{ carrera.obsConductora }}"></ion-textarea>
+          </ion-item>
+        </form>
+      </div>
+    </div>
+    <ion-item *ngIf="carrera.enCamino">
+      <ion-label>Voy en camino</ion-label>
+    </ion-item>
   </ion-list>
+
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button (click)="showOpcionesCarrera()">
-      <ion-icon name="add"></ion-icon>
+    <ion-fab-button (click)="showOpcionesCarrera()" *ngIf="mostrarBoton">
+      <ion-icon name="star"></ion-icon>
     </ion-fab-button>
   </ion-fab>
 </ion-content>
