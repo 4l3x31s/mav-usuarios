@@ -179,7 +179,7 @@ export class RegistroCarreraPage implements OnInit {
 
       this.carreraService.crearCarrera(this.carrera)
       .then(() => {
-        this.conductoraService.getConductoraPorPaisCiudad(this.pais, this.ciudad)
+        this.conductoraService.getConductoraPorPaisCiudad(this.pais.toUpperCase(), this.ciudad.toUpperCase())
           .subscribe( lstConductoras => {
             for(let item of lstConductoras) {
               if(item.ui) {
