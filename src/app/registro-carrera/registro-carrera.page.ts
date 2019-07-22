@@ -1,3 +1,5 @@
+import { Notificaciones } from './../modelo/notificaciones';
+import { MdlConductora } from 'src/app/modelo/mldConductora';
 import { ConductoraService } from 'src/app/services/db/conductora.service';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -18,6 +20,7 @@ import { MdlParametrosCarrera } from '../modelo/mdlParametrosCarrera';
 import { CarrerasAceptadasPage } from '../carreras-aceptadas/carreras-aceptadas.page';
 import { ParametrosCarreraService } from '../services/db/parametros-carrera.service';
 import * as _ from 'lodash';
+import { PushNotifService } from '../services/push-notif.service';
 
 
 
@@ -54,6 +57,7 @@ export class RegistroCarreraPage implements OnInit {
     public mapParamService: MapParamService,
     public parametrosCarreraService: ParametrosCarreraService,
     public conductoraService: ConductoraService,
+    public pushNotifService: PushNotifService,
     ) {
       this.carrera = this.carreraService.getCarreraSesion();
       this.carrera.fechaInicio = moment().format();
@@ -67,8 +71,8 @@ export class RegistroCarreraPage implements OnInit {
       this.carrera.longFin = this.navParams.get().longitudFin;
       this.pais = this.navParams.get().pais;
       this.ciudad = this.navParams.get().ciudad;
-      console.log("pais==== ",this.pais);
-      console.log("ciudad== ",this.ciudad);
+      console.log('pais==== ',this.pais);
+      console.log('ciudad== ',this.ciudad);
       this.carrera.moneda = 'Bolivianos';
       this.distance = new google.maps.DistanceMatrixService();
       //this.carrera.costo = 35;
@@ -84,7 +88,7 @@ export class RegistroCarreraPage implements OnInit {
         .subscribe((cliente) => {
           if (cliente) {
             this.cliente = cliente;
-            console.log("cliente=== " +this.cliente.nombre)
+            console.log('cliente=== ' +this.cliente.nombre)
             //calcular costo
             this.determinarDistanciaTiempo();
           } else {
@@ -127,7 +131,7 @@ export class RegistroCarreraPage implements OnInit {
 
   async confirmarFecha() {
     let fechaCarrera =  moment(this.carrera.fechaInicio).toObject();
-    let fechaCarreraMoment = moment(fechaCarrera);  
+    let fechaCarreraMoment = moment(fechaCarrera);
     let fechaActual = moment().format();
     let mensaje = null;    
     
@@ -136,8 +140,8 @@ export class RegistroCarreraPage implements OnInit {
     }else{     
       const alert = await this.alertController.create({
         header: 'Confirmar',
-        message: 'Desea crear la carrera en:  <br>' + 
-                 'Fecha:  <strong>' + fechaCarrera.date  + '/' + (fechaCarrera.months + 1) + '/'+ fechaCarrera.years +'</strong> <br> '+ 
+        message: 'Desea crear la carrera en:  <br>' +
+                 'Fecha:  <strong>' + fechaCarrera.date  + '/' + (fechaCarrera.months + 1) + '/' + fechaCarrera.years + '</strong> <br> ' +
                  'Hora :  <strong>' + fechaCarrera.hours + ':' + fechaCarrera.minutes + ' ? </strong>',
         buttons: [
           {
@@ -162,7 +166,31 @@ export class RegistroCarreraPage implements OnInit {
   public grabar(){
     this.loadingServices.present();
     //Notificaciones PUSH
-    this.cond
+    this.conductoraService.getConductoraPorPaisCiudad(this.pais,this.ciudad)
+    .subscribe( lstConductoras => {
+      for(let item of lstConductoras) {
+        let notificaciones = {
+          notification:{
+            title: 'Mujeres al Volante',
+            body: 'Hay una carrera disponible, deberias tomarla!!!!',
+            sound: 'default',
+            click_action: 'FCM_PLUGIN_ACTIVITY',
+            icon: 'fcm_push_icon'
+          },
+          data: {
+            landing_page: 'home',
+          },
+          to: item.ui,
+          priority: 'high',
+          restricted_package_name: ''
+        }
+        this.pushNotifService.postGlobal(notificaciones, '')
+        .subscribe(response => {
+          console.log(response);
+        });
+      }
+    });
+
     //var identificadorPrueba = Date.now();
     this.carrera.idUsuario = this.cliente.id;
     this.carrera.estado = 1;

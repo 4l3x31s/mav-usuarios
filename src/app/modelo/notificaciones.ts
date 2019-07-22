@@ -1,16 +1,16 @@
 export class Notificaciones {
     constructor(
-        public notification: Notificacion,
-        public data: Data,
-        public to: string,
-        public priority: string,
+        public notification?: Notificacion,
+        public data?: Data,
+        public to?: string,
+        public priority?: string,
         public restricted_package_name: string = ''
     ) {}
 }
 export class Notificacion {
     constructor(
         public title: string = 'Mujeres al Volante',
-        public body: string ,
+        public body?: string ,
         public sound: string = 'default',
         public click_action: string = 'FCM_PLUGIN_ACTIVITY',
         public icon: string = 'fcm_push_icon'
@@ -18,7 +18,7 @@ export class Notificacion {
 }
 export class Data {
     constructor (
-        public landing_page: string,
-        public nombre: string,
+        public landing_page?: string,
+        public nombre?: string,
     ) {}
 }
