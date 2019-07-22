@@ -166,30 +166,7 @@ export class RegistroCarreraPage implements OnInit {
   public grabar(){
     this.loadingServices.present();
     //Notificaciones PUSH
-    this.conductoraService.getConductoraPorPaisCiudad(this.pais,this.ciudad)
-    .subscribe( lstConductoras => {
-      for(let item of lstConductoras) {
-        let notificaciones = {
-          notification:{
-            title: 'Mujeres al Volante',
-            body: 'Hay una carrera disponible, deberias tomarla!!!!',
-            sound: 'default',
-            click_action: 'FCM_PLUGIN_ACTIVITY',
-            icon: 'fcm_push_icon'
-          },
-          data: {
-            landing_page: 'home',
-          },
-          to: item.ui,
-          priority: 'high',
-          restricted_package_name: ''
-        }
-        this.pushNotifService.postGlobal(notificaciones, '')
-        .subscribe(response => {
-          console.log(response);
-        });
-      }
-    });
+    
 
     //var identificadorPrueba = Date.now();
     this.carrera.idUsuario = this.cliente.id;
@@ -202,8 +179,34 @@ export class RegistroCarreraPage implements OnInit {
 
       this.carreraService.crearCarrera(this.carrera)
       .then(() => {
+        this.conductoraService.getConductoraPorPaisCiudad(this.pais, this.ciudad)
+          .subscribe( lstConductoras => {
+            for(let item of lstConductoras) {
+              if(item.ui) {
+                let notificaciones = {
+                  notification:{
+                    title: 'Mujeres al Volante',
+                    body: 'Hay una carrera disponible, deberias tomarla!!!!',
+                    sound: 'default',
+                    click_action: 'FCM_PLUGIN_ACTIVITY',
+                    icon: 'fcm_push_icon'
+                  },
+                  data: {
+                    landing_page: 'home',
+                  },
+                  to: item.ui,
+                  priority: 'high',
+                  restricted_package_name: ''
+                };
+                this.pushNotifService.postGlobal(notificaciones, '')
+                .subscribe(response => {
+                  console.log(response);
+                });
+              }
+            }
+          });
         this.loadingServices.dismiss();
-        this.alertService.present('Información','Datos guardados correctamente.');
+        this.alertService.present('Información', 'Datos guardados correctamente.');
         this.carrera = this.carreraService.getCarreraSesion();
       })
       .catch( error => {
