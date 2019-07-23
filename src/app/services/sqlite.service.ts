@@ -17,7 +17,7 @@ export class SqliteService {
   getDB(): Promise<SQLiteObject> {
     if (this.db == undefined) {
       return this.sqlite.create({
-        name: 'data.db',
+        name: 'datamav.db',
         location: 'default'
       })
         .then((db: SQLiteObject) => {
@@ -32,7 +32,7 @@ export class SqliteService {
     }
   }
 
-  setclienteSesion(cliente: MdlCliente): Promise<any> { 
+  setclienteSesion(cliente: MdlCliente): Promise<any> {
     return this.getDB()
       .then((db: SQLiteObject) => {
         try{
@@ -41,8 +41,8 @@ export class SqliteService {
             "delete from cliente_sesion"
           ]);
           udpates.push([
-            "insert into cliente_sesion values(?,?)",
-            [cliente.id, cliente.nombre]
+            "insert into cliente_sesion values(?)",
+            [cliente.id]
           ]);
           return db.sqlBatch(udpates)
               .then(() => {
@@ -57,28 +57,16 @@ export class SqliteService {
       });
   }
 
-  getclienteSesion(): Promise<MdlCliente> {
+  getclienteSesion(): Promise<number> {
     return this.getDB()
       .then((db: SQLiteObject) => {
-        return db.executeSql('select * from cliente', [])
+        return db.executeSql('select * from cliente_sesion', [])
           .then((data) => {
-            let cliente: MdlCliente;
+            let idCliente: number;
             if (data.rows.length > 0) {
-              cliente=new MdlCliente(
-                data.rows.item(0).id,
-                data.rows.item(0).nombre,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                this.tokenService.get(),
-                null
-              );
+              idCliente = data.rows.item(0).id;
             }
-            return Promise.resolve(cliente);
+            return Promise.resolve(idCliente);
           })
           .catch(e => {
             return Promise.reject(e);
@@ -91,7 +79,7 @@ export class SqliteService {
       .then((db: SQLiteObject) => {
         let ddl=[];
         ddl.push([
-          "create table IF NOT EXISTS cliente (id, nombre)", []
+          "create table IF NOT EXISTS cliente_sesion (id)", []
         ]);
         return db.sqlBatch(ddl)
           .then(() => {

@@ -73,7 +73,7 @@ export class DetalleContratoPage implements OnInit {
         this.sesionService.crearSesionBase()
         .then(() => {
         this.sesionService.getSesion()
-            .then((cliente) => {
+            .subscribe((cliente) => {
             if (cliente) {
                 this.cliente = cliente;
                 console.log("cliente del contrato:::: " +this.cliente.nombre)

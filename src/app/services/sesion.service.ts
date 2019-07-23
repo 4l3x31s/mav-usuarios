@@ -49,12 +49,22 @@ export class SesionService {
     });
   }
 
-  getSesion(): Promise<MdlCliente> {
-    if(environment.isSesionPrueba){
-      return Promise.resolve(this.clienteSesionPrueba);
-    } else {
-      return this.sqlite.getclienteSesion();
-    }
+  getSesion(): Observable<MdlCliente> {
+    return new Observable<MdlCliente>(observer => {
+      if(environment.isSesionPrueba){
+        observer.next(this.clienteSesionPrueba);
+        observer.complete();
+      } else {
+        this.sqlite.getclienteSesion()
+          .then(idCliente=>{
+            this.clienteService.getCliente(idCliente)
+              .subscribe(cliente => {
+                observer.next(cliente);
+                observer.complete();
+              });
+          });
+      }
+    });
   }
 
   crearSesionBase(): Promise<any> {

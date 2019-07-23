@@ -5,6 +5,7 @@ import { GeolocalizacionService } from '../services/db/geolocalizacion.service';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { NavParamService } from '../services/nav-param.service';
 import { Observable } from 'rxjs';
+import { LoadingService } from '../services/util/loading.service';
 
 declare var google;
 
@@ -27,8 +28,10 @@ export class HomePage implements OnInit, OnDestroy {
     public geolocation: Geolocation,
     public geolocalizacionService: GeolocalizacionService,
     public navParam: NavParamService,
+    public loadingService: LoadingService
     ) {}
   ngOnInit() {
+    this.loadingService.present();
     this.initMap();
     this.geolocalizacionService.listarCambios().subscribe( data => {
       this.deleteMarkers();
@@ -40,6 +43,7 @@ export class HomePage implements OnInit, OnDestroy {
           this.addMarker(updatelocation,image);
           this.setMapOnAll(this.map);
       }
+      this.loadingService.dismiss();
     });
   }
 
@@ -67,6 +71,7 @@ export class HomePage implements OnInit, OnDestroy {
           }
         })
       }, (error) => {
+        this.loadingService.dismiss();
         console.log("error current position")
         console.log(error);
       }, { enableHighAccuracy: true });
@@ -85,6 +90,7 @@ export class HomePage implements OnInit, OnDestroy {
         this.addMarker(updatelocation,image);
         this.setMapOnAll(this.map);
       }, error => {
+        this.loadingService.dismiss();
         console.log(error);
       });
   }

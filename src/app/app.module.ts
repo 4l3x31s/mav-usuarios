@@ -20,6 +20,7 @@ import { DetalleCarreraPageModule } from './comun/detalle-carrera/detalle-carrer
 import { AngularFireStorageModule } from '@angular/fire/storage';
 import { FCM } from '@ionic-native/fcm/ngx';
 import { CalificarCarreraPageModule } from './comun/calificar-carrera/calificar-carrera.module';
+import { HttpClientModule } from '@angular/common/http';
 
 export const firebaseConfig = {
   apiKey: 'AIzaSyCC22o8Imks6DbAf4DXrxgtW_wPE6XYLHs',
@@ -37,6 +38,7 @@ export const firebaseConfig = {
   imports: [
     BrowserModule,
     IonicModule.forRoot(),
+    HttpClientModule,
     AppRoutingModule,
     AngularFireModule.initializeApp(firebaseConfig),
     AngularFireDatabaseModule,

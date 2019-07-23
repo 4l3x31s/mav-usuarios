@@ -12,19 +12,12 @@ export class PushNotifService {
   constructor(private http: HttpClient) { }
 
 
-  public postGlobal<Object>(object: any, url: string, token: string) {
+  public postGlobal<Object>(object: any, url: string) {
     this.valor = JSON.stringify(object);
-    if(token) {
       return this.http.post<Object>(this.URL + url, this.valor, {
         headers: new HttpHeaders()
           .set('Content-Type', 'application/json')
           .set('Authorization', 'key=' + this.key)
       });
-    } else {
-      return this.http.post<Object>(this.URL + url, this.valor, {
-        headers: new HttpHeaders()
-          .set('Content-Type', 'application/json')
-      });
-    }
   }
 }
