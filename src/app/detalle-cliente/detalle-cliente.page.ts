@@ -209,7 +209,7 @@ export class DetalleClientePage implements OnInit {
             this.events.publish('user:login');
             this.navController.navigateRoot('/home');
             this.loadingService.dismiss();
-            console.log('cliente::::: '+this.cliente.user);
+            console.log('cliente::::: ' + this.cliente.user);
           }, error => {
             console.log('error-login', error);
             if (error.message) {
