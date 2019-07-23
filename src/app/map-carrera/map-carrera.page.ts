@@ -38,12 +38,14 @@ export class MapCarreraPage implements OnInit {
     public alertController: AlertController,
     public geolocation: Geolocation,
     public events: Events,
-    public platform: Platform
+    public platform: Platform,
+    public loadingService: LoadingService,
   ) {
     
    }
 
   ngOnInit() {
+    this.loadingService.present();
     this.pais = this.navParam.get().pais;
     this.ciudad = this.navParam.get().ciudad;
     console.log("pais:::: ",this.pais);
@@ -74,6 +76,7 @@ export class MapCarreraPage implements OnInit {
       //funcion que cargue los marcadores
       //funcion que cargue el searchbar
       //
+      this.loadingService.dismiss();
      });
   }
   buscarTexto(map, markers, alertService): Observable<any> {
