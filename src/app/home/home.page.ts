@@ -61,15 +61,6 @@ export class HomePage implements OnInit, OnDestroy {
           rotateControl: false,
           fullscreenControl: false
         });
-        let geoResults = [];
-        let geoResults1 = [];
-        var geocoder = new google.maps.Geocoder();
-        geocoder.geocode({'location': mylocation}, (results, status) =>{
-          if (status === 'OK') {
-            console.log('entra a status ok');
-            this.processLocation(results);
-          }
-        })
       }, (error) => {
         this.loadingService.dismiss();
         console.log("error current position")
@@ -86,7 +77,8 @@ export class HomePage implements OnInit, OnDestroy {
           }
         }
         let updatelocation = new google.maps.LatLng(data.coords.latitude,data.coords.longitude);
-        let image = 'assets/image/car-pin.png';
+        let image = 'assets/image/pin-mav.png';
+        // let image = 'assets/image/car-pin.png';
         this.addMarker(updatelocation,image);
         this.setMapOnAll(this.map);
       }, error => {
@@ -136,10 +128,7 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   public irMapCarrera(){
-    this.navParam.set({
-      pais: this.pais,
-      ciudad: this.ciudad
-    });
+    
     this.navCtrl.navigateForward('/map-carrera');
   }
 }

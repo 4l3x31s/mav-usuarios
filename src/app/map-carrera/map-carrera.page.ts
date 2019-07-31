@@ -9,6 +9,7 @@ import { ToastService } from '../services/util/toast.service';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { Observable } from 'rxjs';
 import { LoadingService } from '../services/util/loading.service';
+import { promise } from 'protractor';
 
 declare var google;
 @Component({
@@ -46,15 +47,9 @@ export class MapCarreraPage implements OnInit {
 
   ngOnInit() {
     this.loadingService.present();
-    this.pais = this.navParam.get().pais;
-    this.ciudad = this.navParam.get().ciudad;
-    console.log("pais:::: ",this.pais);
-    console.log("ciudad:: ",this.ciudad);
     this.latitudFin = null;
-    /*this.sesionService.crearSesionBase()
-      .then(() => {
-        this.sesionService.getSesion()
-          .then((cliente) => {
+    /*this.sesionService.crearSesionBase().then(() => {
+        this.sesionService.getSesion().then((cliente) => {
             if (cliente) {
               this.cliente = cliente;
             } else {
@@ -63,26 +58,102 @@ export class MapCarreraPage implements OnInit {
           });
       });*/
       this.posicionamiento();
-  }
-  posicionamiento() {
-    navigator.geolocation.getCurrentPosition((resp) => {
-      // resp.coords.latitude
-      // resp.coords.longitude
-      //const myLatlng = { lat: resp.coords.latitude, lng: resp.coords.longitude};
-      let myLatlng: any = { lat: -16.4971653, lng: -68.1320507};
-      this.cargarMapa(myLatlng);
-
-      //funcion que cargue el mapa
-      //funcion que cargue los marcadores
-      //funcion que cargue el searchbar
-      //
       this.loadingService.dismiss();
-     });
+  }
+  posicionamiento(){
+    navigator.geolocation.getCurrentPosition((resp) => {
+      let myLatlng = { lat: resp.coords.latitude, lng: resp.coords.longitude};
+      var geocoder = new google.maps.Geocoder();
+      geocoder.geocode({'location': myLatlng}, (results, status) =>{
+        if (status === 'OK') {
+          console.log('entra a status ok');
+          this.processLocation(results);
+        }
+      })
+      this.cargarMapa(myLatlng);
+    });
+  }
+  processLocation(location) {    
+    if (location[1]) {
+      for (var i = 0; i < location.length; i++) {
+        if (location[i].types[0] === "locality") {
+          this.ciudad = location[i].address_components[0].short_name;
+          this.pais = location[i].address_components[2].long_name;  
+          console.log(this.ciudad, this.pais);
+        }
+      }
+    }   
+  }
+  cargarMapa(latLng){
+    const mapOptions = {
+      zoom: 16,
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+      mapTypeControl: false,
+      streetViewControl: false,
+      fullScreenControl: false,
+      zoomControl: false,
+      scaleControl: false,
+      rotateControl: false,
+      fullscreenControl: false,
+      center: latLng
+    };
+    this.latitudIni = latLng.lat.toString();
+    this.longitudIni = latLng.lng.toString();
+    this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
+    let marker = new google.maps.Marker({
+      position: latLng,
+      map: this.map,
+      draggable: false,
+      title: 'Inicio Carrera',
+      animation: google.maps.Animation.DROP,
+      icon: 'assets/image/pin-check.png'
+    });
+    setTimeout(()=>{
+      let markers = [];  
+      this.iniciarBuscador(markers,latLng);
+      let respuesta = this.buscarTexto(this.map, markers, this.alertService);
+      respuesta.subscribe( markers2 => {
+        console.log("ingreso")
+        let respuesta = this.markerEvent(markers2);
+        respuesta.subscribe(obj => {
+          this.latitudFin = obj.lat;
+          this.longitudFin = obj.lng;
+          console.log(this.latitudFin);
+        });
+      })
+    }, 1500)
+  }
+  iniciarBuscador(markers,latLng){
+    markers = [];
+    let input = document.getElementById('pac-input-carrera');
+      this.searchBox = new google.maps.places.SearchBox(input);
+      this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+      this.map.addListener('bounds_changed', () =>{
+        this.searchBox.setBounds(this.map.getBounds());
+    });
+    markers.forEach(function(marker) {
+      marker.setMap(null);
+    });
+    markers = [];
+    markers.push(new google.maps.Marker({
+      map: this.map,
+      draggable: true,
+      title: 'Destino Carrera',
+      position: {lat:latLng.lat, lng:latLng.lng+0.001},
+      animation: google.maps.Animation.DROP,
+      icon: 'assets/image/pin-end.png'
+    }));
+    markers[0].addListener('dragend', () => {
+      console.log(JSON.stringify(markers[0].getPosition()));
+      const objStr: string = JSON.stringify(markers[0].getPosition());
+      const obj = JSON.parse(objStr);
+      this.latitudFin = obj.lat;
+      this.longitudFin = obj.lng;
+    });
   }
   buscarTexto(map, markers, alertService): Observable<any> {
     return Observable.create((observer) => {
       this.searchBox.addListener('places_changed', () =>{
-        //marker.setMap(null);
         let places = this.searchBox.getPlaces();
         if (places.length === 0) {
           return;
@@ -125,7 +196,7 @@ export class MapCarreraPage implements OnInit {
           markers.forEach(function(marker) {
             marker.setMap(null);
           });
-          alertService.present('Alerta', 'debes escojer una opcion de la lista');
+          alertService.present('Alerta', 'Debes escoger una opcion de la lista');
           return;
         }
       });
@@ -145,63 +216,8 @@ export class MapCarreraPage implements OnInit {
         observer.next(obj);
         observer.complete();
       });
-  });
+    });
   }
-  cargarMapa(myLatlng) {
-    // const myLatlng = { lat: -16.4978888, lng: -68.1314424};
-    const mapOptions = {
-      zoom: 16,
-      mapTypeId: google.maps.MapTypeId.ROADMAP,
-      mapTypeControl: false,
-      streetViewControl: false,
-      fullScreenControl: false,
-      zoomControl: false,
-      scaleControl: false,
-      rotateControl: false,
-      fullscreenControl: false,
-      center: myLatlng
-    };
-    this.latitudIni = myLatlng.lat.toString();
-    this.longitudIni = myLatlng.lng.toString();
-    var map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
-    let input = document.getElementById('pac-input-carrera');
-    this.searchBox = new google.maps.places.SearchBox(input);
-    map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-
-    map.addListener('bounds_changed', () =>{
-      this.searchBox.setBounds(map.getBounds());
-    });
-    let markers = [];
-    
-    let marker = new google.maps.Marker
-    ({
-      position: myLatlng,
-      map: map,
-      draggable: true,
-      title: 'Inicio Carrera',
-      animation: google.maps.Animation.DROP,
-      icon: 'assets/image/pin-user.png'
-    });
-    marker.addListener('dragend', () => {
-      console.log(JSON.stringify(marker.getPosition()));
-      const objStr: string = JSON.stringify(marker.getPosition());
-      const obj = JSON.parse(objStr);
-      // window.alert(JSON.stringify(marker.getPosition()));
-      this.latitudIni = obj.lat;
-      this.longitudIni = obj.lng;
-    });
-    let respuesta = this.buscarTexto(map, markers, this.alertService);
-    respuesta.subscribe( markers2 => {
-      console.log("ingreso")
-      let respuesta = this.markerEvent(markers2);
-          respuesta.subscribe(obj => {
-            this.latitudFin = obj.lat;
-            this.longitudFin = obj.lng;
-            console.log(this.latitudFin);
-          });
-    })
-  }
-
   public irRegistroCarrera() {
     console.log('ini:  ' + this.latitudIni + ', ' + this.longitudIni);
     console.log('fin:  ' + this.latitudFin + ', ' + this.longitudFin);
@@ -219,5 +235,4 @@ export class MapCarreraPage implements OnInit {
       this.navCtrl.navigateForward('/registro-carrera');
     }
   }
-
 }
