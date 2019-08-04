@@ -44,6 +44,8 @@ export class RegistroCarreraPage implements OnInit {
   distance: any;
   filtros = {};
   location: any;
+  direccionIni: any = 'Donde te encontramos?';
+  direccionFin: any = 'A donde quieres ir?';
 
   constructor(
     public fb: FormBuilder,
@@ -239,10 +241,35 @@ export class RegistroCarreraPage implements OnInit {
         console.log('irMapaOrigen(): ' + resultado.data);
         this.carrera.latInicio = resultado.data.lat;
         this.carrera.longInicio = resultado.data.lng;
+        var geocoder = new google.maps.Geocoder();
+        let mylocation = new google.maps.LatLng(this.carrera.latInicio, this.carrera.longInicio);
+        geocoder.geocode({'location': mylocation}, (results, status: any) => {
+          if (status === 'OK') {
+            console.log('entra a status ok');
+            this.processLocation(results, true);
+          }
+        });
         //calcular costo
         this.determinarDistanciaTiempo();
       });
     });
+  }
+  processLocation(location, tipo: boolean) {
+    if (location[1]) {
+      for (var i = 0; i < location.length; i++) {
+        console.log('*************************************************');
+        for (let j = 0; j < location[i].types.length; j++) {
+          if (location[i].types[j] === 'route') {
+            console.log(location[i].formatted_address);
+            if (tipo) {
+              this.direccionIni = location[i].formatted_address;
+            } else {
+              this.direccionFin = location[i].formatted_address;
+            }
+          }
+        }
+      }
+    }
   }
 
   async irMapaDestino() {
@@ -256,6 +283,14 @@ export class RegistroCarreraPage implements OnInit {
           console.log('irMapaDestino(): ' + resultado.data);
           this.carrera.latFin = resultado.data.lat;
           this.carrera.longFin = resultado.data.lng;
+          var geocoder = new google.maps.Geocoder();
+          let mylocation = new google.maps.LatLng(this.carrera.latFin, this.carrera.longFin);
+          geocoder.geocode({'location': mylocation}, (results, status: any) => {
+            if (status === 'OK') { 
+              console.log('entra a status ok');
+              this.processLocation(results, false);
+            }
+          });
           //calcular costo
           this.determinarDistanciaTiempo();
         });

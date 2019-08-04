@@ -94,8 +94,8 @@ export class DetalleCarreraPage implements OnInit {
   }
 
   initAutocomplete() {
-    const myLatlngIni = { lat: parseFloat(this.carrera.latInicio), lng: parseFloat(this.carrera.longInicio)};
-    const myLatlngFin = { lat: parseFloat(this.carrera.latFin), lng: parseFloat(this.carrera.longFin)};
+    const myLatlngIni = { lat: this.carrera.latInicio, lng: this.carrera.longInicio};
+    const myLatlngFin = { lat: this.carrera.latFin, lng: this.carrera.longFin};
     const mapOptions = {
       zoom: 11,
       mapTypeId: google.maps.MapTypeId.ROADMAP,
