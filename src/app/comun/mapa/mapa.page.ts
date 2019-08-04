@@ -5,6 +5,7 @@ import { NavParamService } from './../../services/nav-param.service';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Observable } from 'rxjs';
 import { MapParamService } from 'src/app/services/map-param.service';
+import { Geolocation } from '@ionic-native/geolocation/ngx';
 
 declare var google;
 
@@ -27,7 +28,8 @@ export class MapaPage implements OnInit {
     public toastCtrl: ToastService,
     public modalController: ModalController,
     public alertController: AlertService,
-    public mapParamService: MapParamService
+    public mapParamService: MapParamService,
+    public geolocation: Geolocation,
     ) { }
 
   ngOnInit() {
@@ -36,41 +38,53 @@ export class MapaPage implements OnInit {
     } else {
       console.log('no hay pagina retorno');
     }
+    
     this.initAutocomplete();
   }
   initAutocomplete() {
-    let ubicacion = this.mapParamService.get();
+    
     let myLatlng: any = { lat: -16.4971653, lng: -68.1320507};
+    let ubicacion = this.mapParamService.get();
+    console.log(ubicacion);
     if (ubicacion) {
       if (ubicacion.lat !== null) {
         myLatlng = { lat: parseFloat(ubicacion.lat), lng: parseFloat(ubicacion.lng)};
+        this.cargarMapa(myLatlng);
+      } else {
+        this.obtenerGeolocalizacion();
       }
+    } else {
+      this.obtenerGeolocalizacion();
     }
+  }
+  obtenerGeolocalizacion() {
+      navigator.geolocation.getCurrentPosition((resp) => {
+        let myLatlng = { lat: resp.coords.latitude, lng: resp.coords.longitude};
+        this.cargarMapa(myLatlng);
+      });
+  }
+  cargarMapa(myLatlng: any) {
     const mapOptions = {
       zoom: 16,
       mapTypeId: google.maps.MapTypeId.ROADMAP,
       mapTypeControl: false,
-      streetViewControl: true,
+      streetViewControl: false,
       fullScreenControl: false,
+      zoomControl: false,
+      scaleControl: false,
+      rotateControl: false,
+      fullscreenControl: false,
       center: myLatlng
     };
-    this.latitud = myLatlng.lat.toString();
-    this.longitud = myLatlng.lng.toString();
-
-    var map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
-
-    let input = document.getElementById('pac-input');
-    this.searchBox = new google.maps.places.SearchBox(input);
-    map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-
-    map.addListener('bounds_changed', () =>{
-      this.searchBox.setBounds(map.getBounds());
-    });
+    this.latitud = myLatlng.lat;
+    this.longitud = myLatlng.lng;
+    this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
+    this.iniciarBusqueda();
     let markers = [];
     markers.push(new google.maps.Marker
       ({
         position: myLatlng,
-        map: map,
+        map: this.map,
         draggable: true,
         title: 'Mueveme',
         animation: google.maps.Animation.DROP,
@@ -84,8 +98,7 @@ export class MapaPage implements OnInit {
       this.latitud = obj.lat;
       this.longitud = obj.lng;
     });
-    // {"lat":-16.498217987944532,"lng":-68.13232216455685}
-    let respuesta = this.buscarTexto(map, markers, this.alertController);
+    let respuesta = this.buscarTexto(this.map, markers, this.alertController);
     respuesta.subscribe( markers2 => {
       console.log("ingreso")
       let respuesta = this.markerEvent(markers2);
@@ -95,6 +108,15 @@ export class MapaPage implements OnInit {
             console.log(this.latitud);
           })
     })
+  }
+  iniciarBusqueda() {
+    let input = document.getElementById('pac-input');
+    this.searchBox = new google.maps.places.SearchBox(input);
+    this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+    this.map.addListener('bounds_changed', () =>{
+      this.searchBox.setBounds(this.map.getBounds());
+    });
   }
 
   buscarTexto(map,markers, alertController): Observable<any> {

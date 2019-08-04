@@ -21,6 +21,7 @@ export class HomePage implements OnInit, OnDestroy {
   watchID: any;
   pais: string;
   ciudad: string;
+  location: any;
 
   listaGeoPosicionamiento: MdlGeoLocalizacion[] = [];
   constructor(
@@ -50,6 +51,8 @@ export class HomePage implements OnInit, OnDestroy {
   initMap() {
       navigator.geolocation.getCurrentPosition((resp) => {
         let mylocation = new google.maps.LatLng(resp.coords.latitude, resp.coords.longitude);
+        this.location = {lat: resp.coords.latitude, lng: resp.coords.longitude};
+        console.log(this.location);
         this.map = new google.maps.Map(this.mapElement.nativeElement, {
           zoom: 15,
           center: mylocation,
@@ -61,6 +64,15 @@ export class HomePage implements OnInit, OnDestroy {
           rotateControl: false,
           fullscreenControl: false
         });
+        let geoResults = [];
+        let geoResults1 = [];
+        var geocoder = new google.maps.Geocoder();
+        geocoder.geocode({'location': mylocation}, (results, status) =>{
+          if (status === 'OK') {
+            console.log('entra a status ok');
+            this.processLocation(results);
+          }
+        })
       }, (error) => {
         this.loadingService.dismiss();
         console.log("error current position")
@@ -127,8 +139,12 @@ export class HomePage implements OnInit, OnDestroy {
     navigator.geolocation.clearWatch(this.watchID);
   }
 
-  public irMapCarrera(){
-    
-    this.navCtrl.navigateForward('/map-carrera');
+  public irMapCarrera() {
+    this.navParam.set({
+      pais: this.pais.toUpperCase(),
+      ciudad: this.ciudad.toUpperCase(),
+      location: this.location
+    });
+    this.navCtrl.navigateForward('/registro-carrera');
   }
 }

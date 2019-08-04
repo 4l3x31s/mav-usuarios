@@ -43,6 +43,7 @@ export class RegistroCarreraPage implements OnInit {
   ciudad: string;
   distance: any;
   filtros = {};
+  location: any;
 
   constructor(
     public fb: FormBuilder,
@@ -65,20 +66,27 @@ export class RegistroCarreraPage implements OnInit {
       console.log('this.fechaMin: ' + this.fechaMin );
       //this.carrera.horaInicio = moment().format('HH:mm');
       console.log('obtiene datos de la carrera')
-      this.carrera.latInicio = this.navParams.get().latitudIni;
+      /*this.carrera.latInicio = this.navParams.get().latitudIni;
       this.carrera.longInicio = this.navParams.get().longitudIni;
       this.carrera.latFin = this.navParams.get().latitudFin;
-      this.carrera.longFin = this.navParams.get().longitudFin;
+      this.carrera.longFin = this.navParams.get().longitudFin;*/
       this.pais = this.navParams.get().pais;
       this.ciudad = this.navParams.get().ciudad;
-      console.log('pais==== ',this.pais);
-      console.log('ciudad== ',this.ciudad);
+      this.location = this.navParams.get().location;
+      if(this.location) {
+        this.carrera.latInicio = this.location.lat;
+        this.carrera.longInicio = this.location.lng;
+        this.carrera.latFin = this.location.lat;
+        this.carrera.longFin = this.location.lng;
+      }
+      console.log('pais==== ', this.pais);
+      console.log('ciudad== ', this.ciudad);
       this.carrera.moneda = 'Bolivianos';
       this.distance = new google.maps.DistanceMatrixService();
       //this.carrera.costo = 35;
      }
 
-  get f() { return this.frmCarrera.controls; }
+  get f(): any { return this.frmCarrera.controls; }
 
   ngOnInit() {
     this.iniciarValidaciones();
@@ -133,8 +141,8 @@ export class RegistroCarreraPage implements OnInit {
     let fechaCarrera =  moment(this.carrera.fechaInicio).toObject();
     let fechaCarreraMoment = moment(fechaCarrera);
     let fechaActual = moment().format();
-    let mensaje = null;    
-    
+    let mensaje = null;
+
     if(fechaCarreraMoment.diff(fechaActual, 'seconds') < -120 ) {
       this.validarHoraPeticionCarrera();
     }else{     
@@ -221,7 +229,7 @@ export class RegistroCarreraPage implements OnInit {
 
   async irMapaOrigen() {
     
-    let ubicacion: any = { lat: this.carrera.latInicio, lng: this.carrera.longInicio};    
+    let ubicacion: any = { lat: this.carrera.latInicio, lng: this.carrera.longInicio};
     this.mapParamService.set(ubicacion);
     const modal = await this.modalController.create({
       component: MapaPage
@@ -238,7 +246,7 @@ export class RegistroCarreraPage implements OnInit {
   }
 
   async irMapaDestino() {
-    let ubicacion: any = { lat: this.carrera.latFin, lng: this.carrera.longFin};    
+    let ubicacion: any = { lat: this.carrera.latFin, lng: this.carrera.longFin};
     this.mapParamService.set(ubicacion);
     const modal = await this.modalController.create({
         component: MapaPage
