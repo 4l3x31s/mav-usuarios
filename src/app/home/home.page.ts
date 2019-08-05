@@ -31,7 +31,7 @@ export class HomePage implements OnInit, OnDestroy {
     public loadingService: LoadingService
     ) {}
   ngOnInit() {
-    this.loadingService.present();
+    //this.loadingService.present();
     this.initMap();
     this.geolocalizacionService.listarCambios().subscribe( data => {
       this.deleteMarkers();
@@ -43,7 +43,7 @@ export class HomePage implements OnInit, OnDestroy {
           this.addMarker(updatelocation,image);
           this.setMapOnAll(this.map);
       }
-      this.loadingService.dismiss();
+      //this.loadingService.dismiss();
     });
   }
 
@@ -61,8 +61,17 @@ export class HomePage implements OnInit, OnDestroy {
           rotateControl: false,
           fullscreenControl: false
         });
+        let geoResults = [];
+        let geoResults1 = [];
+        var geocoder = new google.maps.Geocoder();
+        geocoder.geocode({'location': mylocation}, (results, status) =>{
+          if (status === 'OK') {
+            console.log('entra a status ok');
+            this.processLocation(results);
+          }
+        })
       }, (error) => {
-        this.loadingService.dismiss();
+        //this.loadingService.dismiss();
         console.log("error current position")
         console.log(error);
       }, { enableHighAccuracy: true });
@@ -79,24 +88,24 @@ export class HomePage implements OnInit, OnDestroy {
         let updatelocation = new google.maps.LatLng(data.coords.latitude,data.coords.longitude);
         let image = 'assets/image/pin-mav.png';
         // let image = 'assets/image/car-pin.png';
-        this.addMarker(updatelocation,image);
+        this.addMarker(updatelocation, image);
         this.setMapOnAll(this.map);
       }, error => {
-        this.loadingService.dismiss();
+        //this.loadingService.dismiss();
         console.log(error);
       });
   }
 
-  processLocation(location) {    
+  processLocation(location) {
     if (location[1]) {
       for (var i = 0; i < location.length; i++) {
         if (location[i].types[0] === "locality") {
           this.ciudad = location[i].address_components[0].short_name;
-          this.pais = location[i].address_components[2].long_name;  
+          this.pais = location[i].address_components[2].long_name;
           console.log(this.ciudad, this.pais);
         }
       }
-    }   
+    }
   }
 
   addMarker(location, image) {
@@ -128,7 +137,10 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   public irMapCarrera(){
-    
+    this.navParam.set({
+      pais: this.pais,
+      ciudad: this.ciudad
+    });
     this.navCtrl.navigateForward('/map-carrera');
   }
 }
