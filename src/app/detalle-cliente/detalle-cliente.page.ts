@@ -155,6 +155,7 @@ export class DetalleClientePage implements OnInit {
       this.loadingService.present().then(() => {
         this.cliente.user = this.cliente.email;
         this.cliente.ui = this.tokenService.get();
+        this.cliente.estado = true;
         if(this.cliente.ui === undefined) {
           this.cliente.ui = null;
         }

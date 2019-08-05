@@ -79,8 +79,13 @@ export class LoginPage implements OnInit {
         .then( res => {
           this.sesionService.login(this.user)
           .subscribe((cliente) => {
-            this.events.publish('user:login');
-            this.navController.navigateRoot('/home');
+            if(cliente.estado) {
+              this.events.publish('user:login');
+              this.navController.navigateRoot('/home');
+            }else{
+              this.alertService.present('Error',
+              'Hubo un error al ingresar, el usuario no está activo, porfavor comuníquese con la administración de Mujeres al Volante.');
+            }
             this.loadingService.dismiss();
           }, error => {
             if (error.message) {
