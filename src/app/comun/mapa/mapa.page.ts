@@ -42,7 +42,7 @@ export class MapaPage implements OnInit {
     this.initAutocomplete();
   }
   initAutocomplete() {
-    
+
     let myLatlng: any = { lat: -16.4971653, lng: -68.1320507};
     let ubicacion = this.mapParamService.get();
     console.log(ubicacion);
@@ -101,11 +101,17 @@ export class MapaPage implements OnInit {
     let respuesta = this.buscarTexto(this.map, markers, this.alertController);
     respuesta.subscribe( markers2 => {
       console.log("ingreso")
+      console.log(markers2[0].position);
+      console.log('Lat long del buscar');
+            let direccion = JSON.parse(JSON.stringify(markers2[0].position));
+            this.latitud = direccion.lat;
+            this.longitud = direccion.lng;
       let respuesta = this.markerEvent(markers2);
           respuesta.subscribe(obj => {
             this.latitud = obj.lat;
             this.longitud = obj.lng;
-            console.log(this.latitud);
+            console.log('Direccion obtenida desde el cuadro de texto');
+            console.log(obj);
           })
     })
   }
@@ -143,9 +149,16 @@ export class MapaPage implements OnInit {
               draggable: true,
               title: 'Mueveme',
               animation: google.maps.Animation.DROP,
-              position: place.geometry.location
+              position: place.geometry.location,
+              icon: 'assets/image/car-pin.png'
             }));
+            /*console.log('Lat long del buscar');
+            console.log(JSON.stringify(place.geometry.location));
+            let direccion = JSON.parse(JSON.stringify(place.geometry.location));
+            this.latitud = direccion.lat;
+            this.longitud = direccion.lng;
             console.log(markers.length);
+            */
             if (place.geometry.viewport) {
               bounds.union(place.geometry.viewport);
             } else {
@@ -153,7 +166,6 @@ export class MapaPage implements OnInit {
             }
           }
           contador++;
-          
         });
         console.log(markers.length);
         if(contador === 1) {
