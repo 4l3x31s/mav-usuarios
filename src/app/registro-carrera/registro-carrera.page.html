@@ -16,8 +16,8 @@
       <ion-item (click)="irMapaOrigen()">
         <ion-label>
           <h2>Dirección Origen</h2>
-          <p >Lat:  {{ carrera.latInicio }}</p>
-          <p >Long: {{ carrera.longInicio }}</p>
+          <p >{{ direccionIni }}</p>
+          <!--<p >Long: {{ carrera.longInicio }}</p>-->
         </ion-label>
         <ion-icon name="locate" slot="end"></ion-icon>
       </ion-item>
@@ -25,8 +25,8 @@
       <ion-item (click)="irMapaDestino()">
         <ion-label>
           <h2>Dirección Destino</h2>
-          <p >Lat:  {{ carrera.latFin }}</p>
-          <p >Long: {{ carrera.longFin }}</p>
+          <p >{{ direccionFin }}</p>
+          <!--<p >Long: {{ carrera.longFin }}</p>-->
         </ion-label>
         <ion-icon name="locate" slot="end"></ion-icon>
       </ion-item>

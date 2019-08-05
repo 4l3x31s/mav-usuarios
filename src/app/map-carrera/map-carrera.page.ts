@@ -47,8 +47,9 @@ export class MapCarreraPage implements OnInit {
 
   ngOnInit() {
     this.loadingService.present();
-    this.pais = 'BOLIVIA';
-    this.ciudad = 'LA PAZ';
+    this.latitudFin = null;
+    this.pais = 'BOLIVIA'; // this.navParam.get().pais;
+    this.ciudad = 'LA PAZ'; // this.navParam.get().ciudad;
     this.latitudFin = null;
     /*this.sesionService.crearSesionBase().then(() => {
         this.sesionService.getSesion().then((cliente) => {
@@ -59,34 +60,16 @@ export class MapCarreraPage implements OnInit {
             }
           });
       });*/
-      this.posicionamiento();
-      this.loadingService.dismiss();
+      this.iniciarLocalizacion();
+     
   }
-  posicionamiento(){
+  iniciarLocalizacion() {
     navigator.geolocation.getCurrentPosition((resp) => {
       let myLatlng = { lat: resp.coords.latitude, lng: resp.coords.longitude};
-      /*var geocoder = new google.maps.Geocoder();
-      geocoder.geocode({'location': myLatlng}, (results, status) =>{
-        if (status === 'OK') {
-          console.log('entra a status ok');
-          this.processLocation(results);
-        }
-      })*/
-      this.cargarMapa(myLatlng);
+      this.cargarSoloMapa(myLatlng);
     });
   }
-  /*processLocation(location) {
-    if (location[1]) {
-      for (var i = 0; i < location.length; i++) {
-        if (location[i].types[0] === "locality") {
-          this.ciudad = location[i].address_components[0].short_name;
-          this.pais = location[i].address_components[2].long_name;  
-          console.log(this.ciudad, this.pais);
-        }
-      }
-    }
-  }*/
-  cargarMapa(latLng){
+  cargarSoloMapa(latLng: any) {
     const mapOptions = {
       zoom: 16,
       mapTypeId: google.maps.MapTypeId.ROADMAP,
@@ -99,10 +82,16 @@ export class MapCarreraPage implements OnInit {
       fullscreenControl: false,
       center: latLng
     };
-    // this.latitudIni = latLng.lat.toString();
-    // this.longitudIni = latLng.lng.toString();
-    this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
-    let marker = new google.maps.Marker({
+    this.latitudIni = latLng.lat;
+    this.longitudIni = latLng.lng;
+    setTimeout(() => {
+      this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
+      this.cargarBusqueda(latLng);
+    }, 1500);
+  }
+  anadirMarker(latLng: any) {
+    let marker = new google.maps.Marker
+    ({
       position: latLng,
       map: this.map,
       draggable: true,
@@ -118,65 +107,33 @@ export class MapCarreraPage implements OnInit {
       this.latitudIni = obj.lat;
       this.longitudIni = obj.lng;
     });
-    this.iniciaBusqueda();
-    /*setTimeout(()=>{
-      let markers = [];
-      this.iniciarBuscador(markers,latLng);
-      let respuesta = this.buscarTexto(this.map, markers, this.alertService);
-      respuesta.subscribe( markers2 => {
-        console.log("ingreso")
-        let respuesta = this.markerEvent(markers2);
-        respuesta.subscribe(obj => {
-          this.latitudFin = obj.lat;
-          this.longitudFin = obj.lng;
-          console.log(this.latitudFin);
-        });
-      })
-    }, 1500)*/
   }
-  iniciaBusqueda() {
+  cargarBusqueda(latLng: any) {
     let input = document.getElementById('pac-input-carrera');
     this.searchBox = new google.maps.places.SearchBox(input);
     this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-    this.map.addListener('bounds_changed', () =>{
-      this.searchBox.setBounds(this.map.getBounds());
-    });
-  }
-  iniciaListaMarcadores() {
-    let markers = [];
 
-  }
-  iniciarBuscador(markers,latLng){
-    markers = [];
-    let input = document.getElementById('pac-input-carrera');
-    this.searchBox = new google.maps.places.SearchBox(input);
-    this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
     this.map.addListener('bounds_changed', () =>{
       this.searchBox.setBounds(this.map.getBounds());
     });
-    markers.forEach(function(marker) {
-      marker.setMap(null);
+    let markers = [];
+    this.anadirMarker(latLng);
+    let respuesta = this.buscarTexto(this.map, markers, this.alertService);
+    respuesta.subscribe( markers2 => {
+      console.log("ingreso")
+      let respuesta = this.markerEvent(markers2);
+          respuesta.subscribe(obj => {
+            this.latitudFin = obj.lat;
+            this.longitudFin = obj.lng;
+            console.log(this.latitudFin);
+          });
     });
-    markers = [];
-    markers.push(new google.maps.Marker({
-      map: this.map,
-      draggable: true,
-      title: 'Destino Carrera',
-      position: {lat:latLng.lat, lng:latLng.lng+0.001},
-      animation: google.maps.Animation.DROP,
-      icon: 'assets/image/pin-end.png'
-    }));
-    markers[0].addListener('dragend', () => {
-      console.log(JSON.stringify(markers[0].getPosition()));
-      const objStr: string = JSON.stringify(markers[0].getPosition());
-      const obj = JSON.parse(objStr);
-      this.latitudFin = obj.lat;
-      this.longitudFin = obj.lng;
-    });
+    this.loadingService.dismiss();
   }
   buscarTexto(map, markers, alertService): Observable<any> {
     return Observable.create((observer) => {
       this.searchBox.addListener('places_changed', () =>{
+        //marker.setMap(null);
         let places = this.searchBox.getPlaces();
         if (places.length === 0) {
           return;
@@ -219,7 +176,7 @@ export class MapCarreraPage implements OnInit {
           markers.forEach(function(marker) {
             marker.setMap(null);
           });
-          alertService.present('Alerta', 'Debes escoger una opcion de la lista');
+          alertService.present('Alerta', 'debes escojer una opcion de la lista');
           return;
         }
       });

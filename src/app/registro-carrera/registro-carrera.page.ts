@@ -43,6 +43,9 @@ export class RegistroCarreraPage implements OnInit {
   ciudad: string;
   distance: any;
   filtros = {};
+  location: any;
+  direccionIni: any = 'Donde te encontramos?';
+  direccionFin: any = 'A donde quieres ir?';
 
   constructor(
     public fb: FormBuilder,
@@ -65,20 +68,27 @@ export class RegistroCarreraPage implements OnInit {
       console.log('this.fechaMin: ' + this.fechaMin );
       //this.carrera.horaInicio = moment().format('HH:mm');
       console.log('obtiene datos de la carrera')
-      this.carrera.latInicio = this.navParams.get().latitudIni;
+      /*this.carrera.latInicio = this.navParams.get().latitudIni;
       this.carrera.longInicio = this.navParams.get().longitudIni;
       this.carrera.latFin = this.navParams.get().latitudFin;
-      this.carrera.longFin = this.navParams.get().longitudFin;
+      this.carrera.longFin = this.navParams.get().longitudFin;*/
       this.pais = this.navParams.get().pais;
       this.ciudad = this.navParams.get().ciudad;
-      console.log('pais==== ',this.pais);
-      console.log('ciudad== ',this.ciudad);
+      this.location = this.navParams.get().location;
+      if(this.location) {
+        this.carrera.latInicio = this.location.lat;
+        this.carrera.longInicio = this.location.lng;
+        this.carrera.latFin = this.location.lat;
+        this.carrera.longFin = this.location.lng;
+      }
+      console.log('pais==== ', this.pais);
+      console.log('ciudad== ', this.ciudad);
       this.carrera.moneda = 'Bolivianos';
       this.distance = new google.maps.DistanceMatrixService();
       //this.carrera.costo = 35;
      }
 
-  get f() { return this.frmCarrera.controls; }
+  get f(): any { return this.frmCarrera.controls; }
 
   ngOnInit() {
     this.iniciarValidaciones();
@@ -133,8 +143,8 @@ export class RegistroCarreraPage implements OnInit {
     let fechaCarrera =  moment(this.carrera.fechaInicio).toObject();
     let fechaCarreraMoment = moment(fechaCarrera);
     let fechaActual = moment().format();
-    let mensaje = null;    
-    
+    let mensaje = null;
+
     if(fechaCarreraMoment.diff(fechaActual, 'seconds') < -120 ) {
       this.validarHoraPeticionCarrera();
     }else{     
@@ -221,7 +231,7 @@ export class RegistroCarreraPage implements OnInit {
 
   async irMapaOrigen() {
     
-    let ubicacion: any = { lat: this.carrera.latInicio, lng: this.carrera.longInicio};    
+    let ubicacion: any = { lat: this.carrera.latInicio, lng: this.carrera.longInicio};
     this.mapParamService.set(ubicacion);
     const modal = await this.modalController.create({
       component: MapaPage
@@ -231,14 +241,39 @@ export class RegistroCarreraPage implements OnInit {
         console.log('irMapaOrigen(): ' + resultado.data);
         this.carrera.latInicio = resultado.data.lat;
         this.carrera.longInicio = resultado.data.lng;
+        var geocoder = new google.maps.Geocoder();
+        let mylocation = new google.maps.LatLng(this.carrera.latInicio, this.carrera.longInicio);
+        geocoder.geocode({'location': mylocation}, (results, status: any) => {
+          if (status === 'OK') {
+            console.log('entra a status ok');
+            this.processLocation(results, true);
+          }
+        });
         //calcular costo
         this.determinarDistanciaTiempo();
       });
     });
   }
+  processLocation(location, tipo: boolean) {
+    if (location[1]) {
+      for (var i = 0; i < location.length; i++) {
+        console.log('*************************************************');
+        for (let j = 0; j < location[i].types.length; j++) {
+          if (location[i].types[j] === 'route') {
+            console.log(location[i].formatted_address);
+            if (tipo) {
+              this.direccionIni = location[i].formatted_address;
+            } else {
+              this.direccionFin = location[i].formatted_address;
+            }
+          }
+        }
+      }
+    }
+  }
 
   async irMapaDestino() {
-    let ubicacion: any = { lat: this.carrera.latFin, lng: this.carrera.longFin};    
+    let ubicacion: any = { lat: this.carrera.latFin, lng: this.carrera.longFin};
     this.mapParamService.set(ubicacion);
     const modal = await this.modalController.create({
         component: MapaPage
@@ -248,6 +283,14 @@ export class RegistroCarreraPage implements OnInit {
           console.log('irMapaDestino(): ' + resultado.data);
           this.carrera.latFin = resultado.data.lat;
           this.carrera.longFin = resultado.data.lng;
+          var geocoder = new google.maps.Geocoder();
+          let mylocation = new google.maps.LatLng(this.carrera.latFin, this.carrera.longFin);
+          geocoder.geocode({'location': mylocation}, (results, status: any) => {
+            if (status === 'OK') { 
+              console.log('entra a status ok');
+              this.processLocation(results, false);
+            }
+          });
           //calcular costo
           this.determinarDistanciaTiempo();
         });
