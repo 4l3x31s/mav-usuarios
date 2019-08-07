@@ -44,7 +44,7 @@ export class HomePage implements OnInit, OnDestroy {
           this.addMarker(updatelocation,image);
           this.setMapOnAll(this.map);
       }
-      this.loadingService.dismiss();
+      
     });
   }
 
@@ -73,6 +73,7 @@ export class HomePage implements OnInit, OnDestroy {
             this.processLocation(results);
           }
         })
+        this.loadingService.dismiss();
       }, (error) => {
         this.loadingService.dismiss();
         console.log("error current position")
@@ -93,6 +94,7 @@ export class HomePage implements OnInit, OnDestroy {
         // let image = 'assets/image/car-pin.png';
         this.addMarker(updatelocation,image);
         this.setMapOnAll(this.map);
+        this.loadingService.dismiss();
       }, error => {
         this.loadingService.dismiss();
         console.log(error);
