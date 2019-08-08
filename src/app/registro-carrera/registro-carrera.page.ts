@@ -373,7 +373,6 @@ export class RegistroCarreraPage implements OnInit {
             observer.complete();
         });
     });
-}
-  
+  }
 }
 
