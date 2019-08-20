@@ -8,10 +8,10 @@
   <div *ngIf="urlImagenFirebase">
     <img [src]="urlImagenFirebase" />
   </div>
-  <ion-spinner *ngIf="cargando"></ion-spinner>
+  <ion-spinner *ngIf="cargandoImagen"></ion-spinner>
   
-  <div *ngIf="soloLectura === 'no'">
-    <div class="fileUpload" *ngIf="!cargando">
+  <div *ngIf="soloLectura">
+    <div class="fileUpload" *ngIf="!cargandoImagen">
       <span>Cargar Imagen</span>
       <input type="file" class="upload" (change)="uploadImagen($event)" />
     </div>
