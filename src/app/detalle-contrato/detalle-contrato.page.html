@@ -53,22 +53,22 @@
           <print-error [control]="f.vFechaFin"></print-error>
 
           <ion-item (click)="irMapaOrigen()">
-            <ion-label>
-              <h2>Origen</h2>
-              <p >Lat: {{ contrato.latOrigen }}</p>
-              <p >Long: {{ contrato.longOrigen }}</p>
-            </ion-label>
-            <ion-icon name="locate" slot="end"></ion-icon>
-          </ion-item>
+                <ion-label>
+                    <h2>Dirección Origen</h2>
+                    <p >{{ direccionIni }}</p>
+                    <!--<p >Long: {{ carrera.longInicio }}</p>-->
+                  </ion-label>
+                  <ion-icon name="locate" slot="end"></ion-icon>
+            </ion-item>
 
           <ion-item (click)="irMapaDestino()">
-            <ion-label>
-              <h2>Destino</h2>
-              <p >Lat: {{ contrato.latDestino }}</p>
-              <p >Long: {{ contrato.longDestino }}</p>
-            </ion-label>
-            <ion-icon name="locate" slot="end"></ion-icon>
-          </ion-item>
+                <ion-label>
+                    <h2>Dirección Destino</h2>
+                    <p >{{ direccionFin }}</p>
+                    <!--<p >Long: {{ carrera.longFin }}</p>-->
+                  </ion-label>
+                  <ion-icon name="locate" slot="end"></ion-icon>
+            </ion-item>
 
           <ion-item>
               <ion-label position="stacked">Monto Carrera</ion-label>

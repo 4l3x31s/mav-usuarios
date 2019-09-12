@@ -1,5 +1,5 @@
 export class MdlCarrera {
-    constructor (
+  constructor (
         public id: number,
         public idUsuario: number,
         public idConductora: number,
@@ -11,7 +11,7 @@ export class MdlCarrera {
         public costo: number,
         public moneda: string,
         public califCliente: string,
-        public califConductora: number,
+        public califConductora: number, // 1-5
         public obsCliente: string,
         public obsConductora: string,
         public obsCarrera: string,
@@ -20,7 +20,7 @@ export class MdlCarrera {
         public fechaFin: string,
         public tipoPago: string, // El tipo pago, (empresa, efectivo, total, deposito)
         public cobro: string,
-        public estado: number, //1:solicitado (usuario), 2:aceptado (conductora), 3 terminado
+        public estado: number, // 1: pendiente, 2: aceptado, 3 terminado
         public nombreCliente: string,
         public nombreConductora: string,
         public enCamino: boolean,

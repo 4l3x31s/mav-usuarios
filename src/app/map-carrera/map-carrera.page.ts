@@ -100,7 +100,6 @@ export class MapCarreraPage implements OnInit {
       icon: 'assets/image/pin-user.png'
     });
     marker.addListener('dragend', () => {
-      console.log(JSON.stringify(marker.getPosition()));
       const objStr: string = JSON.stringify(marker.getPosition());
       const obj = JSON.parse(objStr);
       // window.alert(JSON.stringify(marker.getPosition()));
@@ -120,12 +119,10 @@ export class MapCarreraPage implements OnInit {
     this.anadirMarker(latLng);
     let respuesta = this.buscarTexto(this.map, markers, this.alertService);
     respuesta.subscribe( markers2 => {
-      console.log("ingreso")
       let respuesta = this.markerEvent(markers2);
           respuesta.subscribe(obj => {
             this.latitudFin = obj.lat;
             this.longitudFin = obj.lng;
-            console.log(this.latitudFin);
           });
     });
     this.loadingService.dismiss();
@@ -146,7 +143,6 @@ export class MapCarreraPage implements OnInit {
         let contador = 0;
         places.forEach(function(place) {
           if (!place.geometry) {
-            console.log("El lugar buscado no existe");
             return;
           }
           if (contador < 1) {
@@ -158,7 +154,6 @@ export class MapCarreraPage implements OnInit {
               animation: google.maps.Animation.DROP,
               icon: 'assets/image/pin-end.png'
             }));
-            console.log(markers.length);
             if (place.geometry.viewport) {
               bounds.union(place.geometry.viewport);
             } else {
@@ -167,7 +162,6 @@ export class MapCarreraPage implements OnInit {
           }
           contador++;
         });
-        console.log(markers.length);
         if(contador === 1) {
           map.fitBounds(bounds);
           observer.next(markers);
@@ -184,13 +178,11 @@ export class MapCarreraPage implements OnInit {
   }
   markerEvent(markers): Observable<any> {
     return Observable.create((observer) => {
-      console.log(JSON.stringify(markers[0].getPosition()));
       const objStr: string = JSON.stringify(markers[0].getPosition());
       const obj = JSON.parse(objStr);
       this.latitudFin = obj.lat;
       this.longitudFin = obj.lng;
       markers[0].addListener('dragend', () => {
-        console.log(JSON.stringify(markers[0].getPosition()));
         const objStr: string = JSON.stringify(markers[0].getPosition());
         const obj = JSON.parse(objStr);
         observer.next(obj);
@@ -199,8 +191,6 @@ export class MapCarreraPage implements OnInit {
     });
   }
   public irRegistroCarrera() {
-    console.log('ini:  ' + this.latitudIni + ', ' + this.longitudIni);
-    console.log('fin:  ' + this.latitudFin + ', ' + this.longitudFin);
     if (this.latitudFin === null) {
       this.alertService.present('Error', 'Debe buscar zona de destino');
     } else {

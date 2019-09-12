@@ -33,7 +33,7 @@ export class DetalleContratoPage implements OnInit {
         null, null, null, null, null, 
         null, null, null, null, null, 
         null, null, null, null, null, 
-        null, null, null, null
+        null, null, null, null, null, null,null
     );
     public lstClientes: MdlCliente[] = [];
     public lstFeriados: MdlFeriado[] = [];
@@ -48,6 +48,9 @@ export class DetalleContratoPage implements OnInit {
     // directionsDisplay = new google.maps.DirectionsRenderer;
     distance: any;
 
+    direccionIni: any = 'Donde te encontramos?';
+    direccionFin: any = 'A donde quieres ir?';
+
     constructor(public fb: FormBuilder,
                 public navController: NavController,
                 public navParamService: NavParamService,
@@ -55,7 +58,7 @@ export class DetalleContratoPage implements OnInit {
                 public feriadoService: FeriadosService,
                 public carreraService: CarreraService,
                 public loading: LoadingService,
-                public parametrosService: ParametrosCarreraService,                
+                public parametrosService: ParametrosCarreraService,
                 public alertService: AlertService,
                 public alertController: AlertController,
                 public sesionService: SesionService,
@@ -76,8 +79,7 @@ export class DetalleContratoPage implements OnInit {
             .subscribe((cliente) => {
             if (cliente) {
                 this.cliente = cliente;
-                console.log("cliente del contrato:::: " +this.cliente.nombre)
-                this.contrato = this.navParamService.get();                
+                this.contrato = this.navParamService.get();
             } else {
                 this.navController.navigateRoot('/login');
             }
@@ -86,7 +88,6 @@ export class DetalleContratoPage implements OnInit {
     }
 
     filtrarCiudades(event) {
-        console.log(event);
         this.lstCiudadesFiltrado = this.lstParametros.filter(
             parametros => parametros.pais.indexOf(event) > -1
         );
@@ -94,15 +95,18 @@ export class DetalleContratoPage implements OnInit {
 
     seleccionarCiudad(event) {
         this.ciudadSeleccionada = event;
-        /*this.lstCiudadesFiltrado = this.lstParametros.filter(
-            parametros => parametros.pais.indexOf(event) > -1
-        );*/
+        
     }
 
     grabar() {
+        this.contrato.dirOrigen = this.direccionIni;
+        this.contrato.dirDestino = this.direccionFin;
+        console.log(this.contrato);
         this.loadingServices.present();
         this.contrato.idUsuario = this.cliente.id;
         // TODO: Validaciones de guardado acá.
+        
+
         this.contratoService.insertarContrato(this.contrato)
         .then(() => {
             this.loadingServices.dismiss();
@@ -111,7 +115,6 @@ export class DetalleContratoPage implements OnInit {
         })
         .catch( error => {
             this.loadingServices.dismiss();
-            console.log(error);
             this.alertService.present('Error','Hubo un error al grabar los datos');                
         })
     }
@@ -128,7 +131,7 @@ export class DetalleContratoPage implements OnInit {
                         pais: this.lstParametros.find(s => s.pais === id).pais,
                     };
                 });
-            console.log(this.lstPaisesFiltrados);
+            
         }, error => {
             // this.loading.dismiss();
         });
@@ -187,7 +190,7 @@ export class DetalleContratoPage implements OnInit {
         });
     }
 
-    get f() {
+    get f(): any {
         return this.frmContrato.controls;
     }
 
@@ -204,12 +207,17 @@ export class DetalleContratoPage implements OnInit {
         }).then(dato => {
             dato.present();
             dato.onDidDismiss().then(resultado => {
-                console.log(resultado.data);
                 this.contrato.latOrigen = resultado.data.lat;
                 this.contrato.longOrigen = resultado.data.lng;
-                if(this.contrato.latDestino != null){
-                    this.determinarDistanciaTiempo();
+                
+                var geocoder = new google.maps.Geocoder();
+                let mylocation = new google.maps.LatLng(this.contrato.latOrigen, this.contrato.longOrigen);
+                geocoder.geocode({'location': mylocation}, (results, status: any) => {
+                if (status === 'OK') {
+                    
+                    this.processLocation(results, true);
                 }
+                });
             });
         });
     }
@@ -227,14 +235,17 @@ export class DetalleContratoPage implements OnInit {
         }).then(dato => {
             dato.present();
             dato.onDidDismiss().then(resultado => {
-                console.log(resultado.data);
                 this.contrato.latDestino = resultado.data.lat;
                 this.contrato.longDestino = resultado.data.lng;
-                //calcular costo
-                //this.contrato.montoTotal = 150;
-                if(this.contrato.latOrigen != null){
-                    this.determinarDistanciaTiempo();
-                }
+                var geocoder = new google.maps.Geocoder();
+                let mylocation = new google.maps.LatLng(this.contrato.latDestino, this.contrato.longDestino);
+                geocoder.geocode({'location': mylocation}, (results, status: any) => {
+                    if (status === 'OK') {
+                   
+                    this.processLocation(results, false);
+                    }
+                });
+                this.determinarDistanciaTiempo();
             });
         });
     }
@@ -298,13 +309,10 @@ export class DetalleContratoPage implements OnInit {
                     role: 'cancel',
                     cssClass: 'secondary',
                     handler: () => {
-                        console.log('Confirm Cancel');
                     }
                 }, {
                     text: 'Ok',
                     handler: (data) => {
-                        console.log('Confirm Ok');
-                        console.log(data);
                         this.contrato.dias = null;
                         for (let i = 0; i < data.length; i++) {
                             if (this.contrato.dias) {
@@ -325,7 +333,7 @@ export class DetalleContratoPage implements OnInit {
         return Observable.create((observer) => {
             this.distance.getDistanceMatrix(req, (rsp, status) => {
                 // status checking goes here
-                console.log(status);
+     
                 observer.next(rsp);
                 observer.complete();
             });
@@ -333,7 +341,6 @@ export class DetalleContratoPage implements OnInit {
     }
 
     public async determinarDistanciaTiempo() {
-        console.log('ingresa calcula tiempo');
 
         if (this.lstCiudadesFiltrado) {
             let responseMatrix: google.maps.DistanceMatrixRequest;
@@ -361,9 +368,6 @@ export class DetalleContratoPage implements OnInit {
             );*/
             let datos = this.getDistanceMatrix(responseMatrix);
             datos.subscribe(data => {
-                console.log(data);
-                console.log('--> ' , this.lstCiudadesFiltrado);
-                console.log('--> ' , this.ciudadSeleccionada);
                 let ciudadParametro: MdlParametrosCarrera[] = this.lstCiudadesFiltrado.filter(
                     parametros => parametros.ciudad.indexOf(this.ciudadSeleccionada) > -1
                 );
@@ -375,11 +379,10 @@ export class DetalleContratoPage implements OnInit {
                         const element = results[j];
                         const distance = element.distance.value;
                         const time = element.duration.value;
-                        console.log(distance, time);
+                        
                         // calcular costos UBER: https://calculouber.netlify.com/
-                        console.log('ciudadParametro[0]: ' + ciudadParametro[0]);
-                        let montoFinal: number = (ciudadParametro[0].base + ((element.duration.value / 60) * ciudadParametro[0].tiempo) + ((element.distance.value / 1000) * ciudadParametro[0].distancia));
-                        console.log(montoFinal);
+                        let montoFinal: number = Math.round((ciudadParametro[0].base + ((element.duration.value / 60) * ciudadParametro[0].tiempo) + ((element.distance.value / 1000) * ciudadParametro[0].distancia))* ciudadParametro[0].tarifaDinamica + ciudadParametro[0].cuotaSolicitud);
+                        
                         if (montoFinal < 10) {
                             this.contrato.montoTotal = 10;
                         } else {
@@ -394,12 +397,6 @@ export class DetalleContratoPage implements OnInit {
     }
 
     async callBack(response: any, status: any) {
-        console.log('entra acá');
-        console.log(response);
-        console.log(status);
-        /*let ciudadParametro: MdlParametrosCarrera[] = this.lstCiudadesFiltrado.filter(
-          parametros => parametros.ciudad.indexOf(this.ciudadSeleccionada) > -1
-        );*/
         if (status === 'OK') {
             const origins = response.originAddresses;
             const destinations = response.destinationAddresses;
@@ -409,10 +406,6 @@ export class DetalleContratoPage implements OnInit {
                     const element = results[j];
                     const distance = element.distance.value;
                     const time = element.duration.value;
-                    console.log(distance, time);
-                    // let montoFinal: number = (ciudadParametro[0].base + (element.duration.value * ciudadParametro[0].tiempo) + (element.distance.value * ciudadParametro[0].distancia));
-                    // console.log(montoFinal);
-                    // this.contrato.montoTotal = montoFinal;
                     return await {distance: distance, time: time};
                 }
             }
@@ -441,5 +434,19 @@ export class DetalleContratoPage implements OnInit {
 
 
     */
-   
+   processLocation(location, tipo: boolean) {
+    if (location[1]) {
+      for (var i = 0; i < location.length; i++) {
+        for (let j = 0; j < location[i].types.length; j++) {
+          if (location[i].types[j] === 'route') {
+            if (tipo) {
+              this.direccionIni = location[i].formatted_address;
+            } else {
+              this.direccionFin = location[i].formatted_address;
+            }
+          }
+        }
+      }
+    }
+  }
 }

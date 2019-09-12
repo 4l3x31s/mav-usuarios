@@ -11,14 +11,14 @@
         <form [formGroup]="form" novalidate>
           <ion-list class="fondo-transparente">
             <ion-item style="border-radius: 20px !important;" class="fondo-transparente">
-              <ion-label class="fondo-transparente" position="floating">Usuario/Correo Electrónico</ion-label>
+              <ion-label class="fondo-transparente" position="stacked">Usuario/Correo Electrónico</ion-label>
               <ion-input class="fondo-transparente" formControlName="vuser" [(ngModel)]="user"></ion-input>
               <ion-icon name="contact" slot="start"></ion-icon>
             </ion-item>
             <print-error [control]="f.vuser"></print-error>
 
             <ion-item >
-              <ion-label position="floating">Contraseña</ion-label>
+              <ion-label position="stacked">Contraseña</ion-label>
               <ion-input class="fondo-transparente" formControlName="vpass" [(ngModel)]="pass" type="password"></ion-input>
               <ion-icon name="unlock" slot="start"></ion-icon>
             </ion-item>

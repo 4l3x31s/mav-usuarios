@@ -11,8 +11,6 @@ export class MdlCliente {
         public email: string,
         public ui: string,
         public estado: boolean,
-        public pais?: string,
-        public ciudad?: string
     ) {
 
     }

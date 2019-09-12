@@ -61,15 +61,11 @@ export class DetalleConductoraPage implements OnInit {
     this.iniciarValidaciones();
     if (this.navParam.get() && this.navParam.get().conductora){
       this.conductora = this.navParam.get().conductora;
-      console.log('entra al modulo');
-      console.log('conductora asignada modulo: ' + this.conductora.id); 
       this.vehiculoService.getVehiculoPorConductora(this.conductora.id)
         .subscribe(vehiculo=>{          
           if(vehiculo[0]){
             this.vehiculo=vehiculo[0];
-            console.log("capacidad: " + this.vehiculo.capacidad);
           } else {
-            console.log("vacio ");
             this.vehiculo = new MdlVehiculo(
               null,this.conductora.id,null,null,null
             );
@@ -100,7 +96,6 @@ export class DetalleConductoraPage implements OnInit {
           });
           this.filtrarCiudades(this.lstParametros[0].pais);
         }, error => {
-          console.log(error);
         });
       });
   }

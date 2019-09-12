@@ -65,13 +65,7 @@ export class RegistroCarreraPage implements OnInit {
       this.carrera = this.carreraService.getCarreraSesion();
       this.carrera.fechaInicio = moment().format();
       this.fechaMin = moment().format('YYYY-MM-DD');
-      console.log('this.fechaMin: ' + this.fechaMin );
-      //this.carrera.horaInicio = moment().format('HH:mm');
-      console.log('obtiene datos de la carrera')
-      /*this.carrera.latInicio = this.navParams.get().latitudIni;
-      this.carrera.longInicio = this.navParams.get().longitudIni;
-      this.carrera.latFin = this.navParams.get().latitudFin;
-      this.carrera.longFin = this.navParams.get().longitudFin;*/
+     
       this.pais = this.navParams.get().pais;
       this.ciudad = this.navParams.get().ciudad;
       this.location = this.navParams.get().location;
@@ -81,8 +75,6 @@ export class RegistroCarreraPage implements OnInit {
         this.carrera.latFin = this.location.lat;
         this.carrera.longFin = this.location.lng;
       }
-      console.log('pais==== ', this.pais);
-      console.log('ciudad== ', this.ciudad);
       this.carrera.moneda = 'Bolivianos';
       this.distance = new google.maps.DistanceMatrixService();
       //this.carrera.costo = 35;
@@ -98,7 +90,6 @@ export class RegistroCarreraPage implements OnInit {
         .subscribe((cliente) => {
           if (cliente) {
             this.cliente = cliente;
-            console.log('cliente=== ' +this.cliente.nombre)
             //calcular costo
             this.determinarDistanciaTiempo();
           } else {
@@ -185,7 +176,6 @@ export class RegistroCarreraPage implements OnInit {
     this.carrera.pais = this.pais;
     this.carrera.ciudad = this.ciudad;
 
-    //console.log('idcarrera: ' + identificadorPrueba);
 
       this.carreraService.crearCarrera(this.carrera)
       .then(() => {
@@ -210,7 +200,6 @@ export class RegistroCarreraPage implements OnInit {
                 };
                 this.pushNotifService.postGlobal(notificaciones, '')
                 .subscribe(response => {
-                  console.log(response);
                 });
               }
             }
@@ -221,7 +210,6 @@ export class RegistroCarreraPage implements OnInit {
       })
       .catch( error => {
         this.loadingServices.dismiss();
-        console.log(error);
         this.alertService.present('Error','Hubo un error al grabar los datos');
       })
 
@@ -238,14 +226,12 @@ export class RegistroCarreraPage implements OnInit {
     }).then( dato => {
       dato.present();
       dato.onDidDismiss().then(resultado => {
-        console.log('irMapaOrigen(): ' + resultado.data);
         this.carrera.latInicio = resultado.data.lat;
         this.carrera.longInicio = resultado.data.lng;
         var geocoder = new google.maps.Geocoder();
         let mylocation = new google.maps.LatLng(this.carrera.latInicio, this.carrera.longInicio);
         geocoder.geocode({'location': mylocation}, (results, status: any) => {
           if (status === 'OK') {
-            console.log('entra a status ok');
             this.processLocation(results, true);
           }
         });
@@ -257,10 +243,8 @@ export class RegistroCarreraPage implements OnInit {
   processLocation(location, tipo: boolean) {
     if (location[1]) {
       for (var i = 0; i < location.length; i++) {
-        console.log('*************************************************');
         for (let j = 0; j < location[i].types.length; j++) {
           if (location[i].types[j] === 'route') {
-            console.log(location[i].formatted_address);
             if (tipo) {
               this.direccionIni = location[i].formatted_address;
             } else {
@@ -280,14 +264,12 @@ export class RegistroCarreraPage implements OnInit {
     }).then(dato => {
         dato.present();
         dato.onDidDismiss().then(resultado => {
-          console.log('irMapaDestino(): ' + resultado.data);
           this.carrera.latFin = resultado.data.lat;
           this.carrera.longFin = resultado.data.lng;
           var geocoder = new google.maps.Geocoder();
           let mylocation = new google.maps.LatLng(this.carrera.latFin, this.carrera.longFin);
           geocoder.geocode({'location': mylocation}, (results, status: any) => {
-            if (status === 'OK') { 
-              console.log('entra a status ok');
+            if (status === 'OK') {
               this.processLocation(results, false);
             }
           });
@@ -319,21 +301,18 @@ export class RegistroCarreraPage implements OnInit {
     };
     
     this.parametrosPorPais(this.pais);
-    console.log('parametroCarrera:--> ' , this.parametroCarrera);
     let datos = this.getDistanceMatrix(responseMatrix);
     datos.subscribe(data => {
-        console.log(data);        
-        const origins = data.originAddresses;        
+        const origins = data.originAddresses;
         for (let i = 0; i < origins.length; i++) {
             const results = data.rows[i].elements;
             for (let j = 0; j < results.length; j++) {
                 const element = results[j];
                 const distance = element.distance.value;
                 const time = element.duration.value;
-                console.log(distance, time);
                 // calcular costos UBER: https://calculouber.netlify.com/
                 let montoFinal: number = Math.round((this.parametroCarrera.base + ((element.duration.value / 60) * this.parametroCarrera.tiempo) + ((element.distance.value / 1000) * this.parametroCarrera.distancia))* this.parametroCarrera.tarifaDinamica + this.parametroCarrera.cuotaSolicitud);
-                console.log(montoFinal);
+
                 if (montoFinal < 10) {
                     this.carrera.costo = 10;
                 } else {
@@ -342,7 +321,6 @@ export class RegistroCarreraPage implements OnInit {
             }
         }
     });
-    console.log('this.carrera.costo: ' , this.carrera.costo);
   }
 
   
@@ -368,7 +346,7 @@ export class RegistroCarreraPage implements OnInit {
     return Observable.create((observer) => {
         this.distance.getDistanceMatrix(req, (rsp, status) => {
             // status checking goes here
-            console.log(status);
+      
             observer.next(rsp);
             observer.complete();
         });

@@ -39,7 +39,6 @@ export class CarrerasAceptadasPage implements OnInit {
     
    }
   ngOnInit() {
-    console.log('cargar carreras')
     this.sesionService.crearSesionBase()
     .then(() => {
       this.sesionService.getSesion()
@@ -84,12 +83,10 @@ export class CarrerasAceptadasPage implements OnInit {
     return await modal.present();
   }
 
-  public irDetalleConductora(carrera:MdlCarrera) {    
-    console.log('carrera.idConductora: ' + carrera.idConductora);        
+  public irDetalleConductora(carrera:MdlCarrera) {
     this.conductoraService.getConductora(carrera.idConductora)
       .subscribe( conductora => {
         this.conductora = conductora;
-        console.log('conductora asignada: ' + this.conductora.id);              
           this.storage.ref('mav/conductora/'+conductora.id+'-foto').getDownloadURL()
           .subscribe(ruta => {
             this.urlFoto = ruta;

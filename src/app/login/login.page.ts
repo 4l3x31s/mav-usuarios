@@ -33,8 +33,8 @@ export class LoginPage implements OnInit {
     this.iniciaValidaciones();
     if(environment.isSesionPrueba){
       //datos prueba
-      this.user = 'vparedes@gmail.com';
-      this.pass = '123456';
+      this.user = '';
+      this.pass = '';
     }
     this.loadingService.present()
       .then(()=>{
@@ -47,13 +47,12 @@ export class LoginPage implements OnInit {
               }
               this.loadingService.dismiss();
             },e => {
-              console.log(e);
+            
               this.loadingService.dismiss();
               this.alertService.present('Error', 'Error al obtener la sesion.');
             });
         })
         .catch(e=>{
-          console.log(e);
           this.loadingService.dismiss();
           this.alertService.present('Error','Error al crear la BD de sesion')
         });
@@ -96,7 +95,6 @@ export class LoginPage implements OnInit {
             this.loadingService.dismiss();
           });
         }, err => {
-          console.log(err);
           if (err.message) {
             this.alertService.present('Información', 'Usuario o Contraseña inválidos.');
           } else {
@@ -135,12 +133,10 @@ export class LoginPage implements OnInit {
           role: 'cancel',
           cssClass: 'secondary',
           handler: () => {
-            console.log('Confirm Cancel');
           }
         }, {
           text: 'Enviar',
           handler: (data) => {
-            console.log('Confirm Ok');
             if (data.txtEmailPop.length > 0) {
               this.authService.resetPassword(data.txtEmailPop)
               .then( () => {
