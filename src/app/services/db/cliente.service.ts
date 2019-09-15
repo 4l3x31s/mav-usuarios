@@ -39,8 +39,10 @@ export class ClienteService {
       null,
       null,
       null,
-      null, 
-      null,null,null);
+      null,
+      null,
+      null,
+      null);
   }
 
   getCliente(id: number): Observable<MdlCliente>{
@@ -60,6 +62,10 @@ export class ClienteService {
           observer.complete();
         });
     });
+  }
+  getClientePorEmail(email: string): Observable<MdlCliente[]> {
+    return this.afDB.list<MdlCliente>('cliente',
+      ref => ref.orderByChild('email').equalTo(email)).valueChanges();
   }
   getColorPorCliente(idCliente: number): string {
     let color = localStorage.getItem('colorCliente-'+idCliente);

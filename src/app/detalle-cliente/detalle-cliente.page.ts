@@ -54,18 +54,17 @@ export class DetalleClientePage implements OnInit {
         });
   }
 
-  get f() { return this.frmCliente.controls; }
+  get f(): any { return this.frmCliente.controls; }
 
   ngOnInit() {
     this.iniciarValidaciones();
     this.obtenerParametros();
-    if(this.cliente.id !== null){
+    if (this.cliente.id !== null) {
       this.myclass = "ocultar";
       this.frmCliente.get('vconfirmPass').setValue(this.cliente.pass);
-    }else{
-      this.myclass = "mostrar";      
+    } else {
+      this.myclass = "mostrar";
     }
-    
   }
 
   public iniciarValidaciones(){
@@ -179,12 +178,35 @@ export class DetalleClientePage implements OnInit {
             .then((cliente) => {
               this.cliente = cliente;
               this.loadingService.dismiss();
-              this.alertService.present('Info', 'Datos guardados correctamente.');   // nuevo cliente
-              //this.navController.navigateRoot('/home');
+              this.alertService.present('Info', 'Datos guardados correctamente.');
               this.ingresar();
             })
             .catch(error => {
               this.loadingService.dismiss();
+              if (error.code === 'auth/email-already-in-use') {
+                this.clienteService.getClientePorEmail(this.cliente.email)
+                .subscribe(data => {
+                  if (data.length === 0) {
+                    this.clienteService.crearCliente(this.cliente)
+                    .then(resp => {
+                      console.log(resp);
+                      this.authService.resetPassword(this.cliente.email)
+                      .then( dato => {
+                        console.log(dato);
+                      });
+                      this.alertService.present('Alerta', 'Se le envio un correo de confirmacion verifique su email.');
+                      this.navController.navigateRoot('/home');
+                    })
+                  }
+                });
+              } else {
+              this.alertService.present('Error', 'Hubo un error al grabar los datos');
+              this.navController.navigateRoot('/login');
+            }
+
+
+
+
               this.alertService.present('Error', 'Hubo un error al grabar los datos');
               this.navController.navigateRoot('/home');
             });
