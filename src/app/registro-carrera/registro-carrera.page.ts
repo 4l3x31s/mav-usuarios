@@ -176,22 +176,22 @@ export class RegistroCarreraPage implements OnInit {
     this.carrera.pais = this.pais;
     this.carrera.ciudad = this.ciudad;
     
-
+    let carrera:MdlCarrera = this.carrera;
       this.carreraService.crearCarrera(this.carrera)
       .then(() => {
         setTimeout(() => {
-          this.carreraService.getCarrerasPorId(this.carrera.id).subscribe(data => {
+          this.carreraService.getCarrerasPorId(carrera.id).subscribe(data => {
             if(data[0].estado === 1) {
               this.alertService.present('Info','Espere un momento porfavor, estamos buscando la conductora más cercana.');
             }
           });          
-        }, 40000);
+        }, 30000);
         setTimeout(() => {
-          this.carreraService.getCarrerasPorId(this.carrera.id).subscribe(data => {
+          this.carreraService.getCarrerasPorId(carrera.id).subscribe(data => {
             if(data[0].estado === 1) {
               this.alertService.present('Info','Lo sentimos no hay conductoras disponibles.');
               this.carrera.estado = 1000;
-              this.carreraService.crearCarrera(this.carrera);
+              this.carreraService.crearCarrera(carrera);
             }
           });          
         }, 120000);
