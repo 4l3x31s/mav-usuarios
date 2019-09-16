@@ -48,7 +48,7 @@ export class CalendarioCarreraPage implements OnInit {
             this.carreraService.getCarrerasPorCliente(this.cliente.id)
               .subscribe(carreras => {
                 this.loadingService.dismiss();
-                this.carreras = carreras;
+                this.carreras = carreras.filter(data=> data.estado < 999);
                 this.calendarEvents = [];
                 if (this.carreras && this.carreras.length > 0) {
                   this.carreras.forEach(element => {
