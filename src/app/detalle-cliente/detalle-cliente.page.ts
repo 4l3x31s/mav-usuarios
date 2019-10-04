@@ -46,6 +46,7 @@ export class DetalleClientePage implements OnInit {
             if (cliente) {
                 this.cliente = cliente;
                 this.titulo = 'Editar Perfil';
+                this.frmCliente.get('vconfirmPass').setValue(this.cliente.pass);
             } else {
               this.cliente = this.clienteService.getClienteSesion();
               this.titulo = 'Crear nueva cuenta';
@@ -169,7 +170,7 @@ export class DetalleClientePage implements OnInit {
           .catch(error => {
             this.loadingService.dismiss();
             this.alertService.present('Error', 'Hubo un error al grabar los datos');
-            this.navController.navigateRoot('/home');
+            this.navController.navigateRoot('/login');
           });
         } else {
           this.authService.doRegister(this.cliente.user, this.cliente.pass)
@@ -196,27 +197,23 @@ export class DetalleClientePage implements OnInit {
                       });
                       this.alertService.present('Alerta', 'Se le envio un correo de confirmacion verifique su email.');
                       this.navController.navigateRoot('/home');
-                    })
+                    });
                   }
                 });
               } else {
               this.alertService.present('Error', 'Hubo un error al grabar los datos');
               this.navController.navigateRoot('/login');
             }
-
-
-
-
               this.alertService.present('Error', 'Hubo un error al grabar los datos');
-              this.navController.navigateRoot('/home');
+              this.navController.navigateRoot('/login');
             });
           }, error => {
             this.loadingService.dismiss();
             this.alertService.present('Error', 'Hubo un error al grabar los datos');
-            this.navController.navigateRoot('/home');
-          })
+            this.navController.navigateRoot('/login');
+          });
         }
-      });  
+      });
   }
 
   public ingresar() {

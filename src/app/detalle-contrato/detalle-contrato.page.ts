@@ -19,7 +19,7 @@ import {Observable} from 'rxjs';
 import { SesionService } from '../services/sesion.service';
 import { ContratoService } from '../services/db/contrato.service';
 import { MapParamService } from '../services/map-param.service';
-
+import * as moment from 'moment';
 declare var google: any;
 
 @Component({
@@ -73,13 +73,29 @@ export class DetalleContratoPage implements OnInit {
         this.initValidaciones();
         this.obtenerParametros();
         this.obtenerFeriados();
+        this.contrato.fechaInicio = moment().format();
         this.sesionService.crearSesionBase()
         .then(() => {
         this.sesionService.getSesion()
             .subscribe((cliente) => {
             if (cliente) {
                 this.cliente = cliente;
-                this.contrato = this.navParamService.get();
+                
+                if (this.navParamService.get()) {
+                    this.contrato = this.navParamService.get();
+                    if(this.contrato.fechaInicio === undefined) {
+                        this.contrato = new MdlContrato(null, null, null, null,
+                            null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+                        this.contrato.fechaInicio = moment().format();
+                    }
+                    console.log('contrato***********')
+                    console.log(this.contrato)
+                } else {
+                    this.contrato = new MdlContrato(null, null, null, null,
+                        null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+                    this.contrato.fechaInicio = moment().format();
+                    console.log('ingresa contrato null')
+                }
             } else {
                 this.navController.navigateRoot('/login');
             }
@@ -176,9 +192,7 @@ export class DetalleContratoPage implements OnInit {
             vDias: ['', [
                 Validators.required,
             ]],
-            vHora: ['', [
-                Validators.required,
-            ]],
+            
             vTipoPago: ['', [
                 Validators.required,
             ]],

@@ -7,14 +7,14 @@
 
     <ion-grid>
       <ion-row class="cabecera-tabla">
-          <ion-col size="6">Titulo Contrato</ion-col>        
+          <ion-col size="5">Titulo Contrato</ion-col>        
           <ion-col size="3">Dias</ion-col>
-          <ion-col size="3">Hora</ion-col>
+          <ion-col size="4">Hora</ion-col>
       </ion-row>
       <ion-row *ngFor="let contrato of lstContratosFiltrado" (click)="seleccionarContrato(contrato)" nowrap >
-          <ion-col size="6">{{contrato.codigoContrato}} </ion-col>        
+          <ion-col size="5">{{contrato.codigoContrato}} </ion-col>        
           <ion-col size="3">{{contrato.dias}}</ion-col>
-          <ion-col size="3">{{contrato.hora}}</ion-col>
+          <ion-col size="4">{{contrato.fechaInicio}}</ion-col>
       </ion-row>
     </ion-grid>
 </ion-content>

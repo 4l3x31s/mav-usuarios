@@ -189,12 +189,12 @@ export class RegistroCarreraPage implements OnInit {
         setTimeout(() => {
           this.carreraService.getCarrerasPorId(carrera.id).subscribe(data => {
             if(data[0].estado === 1) {
-              this.alertService.present('Info','Lo sentimos no hay conductoras disponibles.');
+              this.alertService.present('Info', 'Lo sentimos no hay conductoras disponibles.');
               this.carrera.estado = 1000;
-              this.carreraService.crearCarrera(carrera);
+              this.carreraService.eliminarCarrera(carrera.id);
             }
-          });          
-        }, 120000);
+          });
+        }, 60000);
 
         this.conductoraService.getConductoraPorPaisCiudad(this.pais.toUpperCase(), this.ciudad.toUpperCase())
           .subscribe( lstConductoras => {
@@ -328,7 +328,7 @@ export class RegistroCarreraPage implements OnInit {
                 const distance = element.distance.value;
                 const time = element.duration.value;
                 // calcular costos UBER: https://calculouber.netlify.com/
-                let montoFinal: number = Math.round((this.parametroCarrera.base + ((element.duration.value / 60) * this.parametroCarrera.tiempo) + ((element.distance.value / 1000) * this.parametroCarrera.distancia))* this.parametroCarrera.tarifaDinamica + this.parametroCarrera.cuotaSolicitud);
+                let montoFinal: number = (Math.round((this.parametroCarrera.base + ((element.duration.value / 60) * this.parametroCarrera.tiempo) + ((element.distance.value / 1000) * this.parametroCarrera.distancia))* this.parametroCarrera.tarifaDinamica) + this.parametroCarrera.cuotaSolicitud);
 
                 if (montoFinal < 10) {
                     this.carrera.costo = 10;

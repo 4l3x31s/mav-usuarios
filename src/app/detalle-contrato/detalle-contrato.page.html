@@ -40,7 +40,7 @@
           <ion-item>
               <ion-label position="stacked">Fecha Inicio</ion-label>
               <ion-datetime formControlName="vFechaInicio" [(ngModel)]="contrato.fechaInicio"
-                            display-format="DD/MM/YYYY"
+                            display-format="DD/MM/YYYY HH:mm"
                             cancelText="Cancelar" doneText="Aceptar"></ion-datetime>
           </ion-item>
           <print-error [control]="f.vFechaInicio"></print-error>
@@ -88,11 +88,11 @@
           </ion-item>
           <print-error [control]="f.vDias"></print-error>
             
-          <ion-item>
+          <!--<ion-item>
               <ion-label position="stacked">Hora</ion-label>
               <ion-datetime formControlName="vHora" [(ngModel)]="contrato.hora" display-format="HH:mm"></ion-datetime>
           </ion-item>
-          <print-error [control]="f.vHora"></print-error>
+          <print-error [control]="f.vHora"></print-error>-->
             
           <ion-item>
               <ion-label position="stacked">Tipo</ion-label>
