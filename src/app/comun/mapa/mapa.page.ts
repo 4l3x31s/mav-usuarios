@@ -6,7 +6,6 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Observable } from 'rxjs';
 import { MapParamService } from 'src/app/services/map-param.service';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
-import { UbicacionService } from 'src/app/services/ubicacion.service';
 
 declare var google;
 
@@ -31,7 +30,6 @@ export class MapaPage implements OnInit {
     public alertController: AlertService,
     public mapParamService: MapParamService,
     public geolocation: Geolocation,
-    public ubicacionService: UbicacionService,
     ) { }
 
   ngOnInit() {
@@ -43,7 +41,6 @@ export class MapaPage implements OnInit {
     this.initAutocomplete();
   }
   initAutocomplete() {
-
     let myLatlng: any = { lat: -16.4971653, lng: -68.1320507};
     let ubicacion = this.mapParamService.get();
     if (ubicacion) {
@@ -74,41 +71,44 @@ export class MapaPage implements OnInit {
       scaleControl: false,
       rotateControl: false,
       fullscreenControl: false,
-      center: myLatlng
+      center: myLatlng,
+	  draggable: true
     };
     this.latitud = myLatlng.lat;
     this.longitud = myLatlng.lng;
     this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
     this.iniciarBusqueda();
     let markers = [];
-    markers.push(new google.maps.Marker
-      ({
+    markers.push(new google.maps.Marker({
         position: myLatlng,
         map: this.map,
-        draggable: true,
         title: 'Mueveme',
+		draggable: false,
         animation: google.maps.Animation.DROP,
         icon: 'assets/image/car-pin.png'
       }));
-    markers[0].addListener('dragend', () => {
-      const objStr: string = JSON.stringify(markers[0].getPosition());
-      const obj = JSON.parse(objStr);
-      // window.alert(JSON.stringify(marker.getPosition()));
-      this.latitud = obj.lat;
-      this.longitud = obj.lng;
-    });
-    let respuesta = this.buscarTexto(this.map, markers, this.alertController);
-    respuesta.subscribe( markers2 => {
-            let direccion = JSON.parse(JSON.stringify(markers2[0].position));
-            this.latitud = direccion.lat;
-            this.longitud = direccion.lng;
-      let respuesta = this.markerEvent(markers2);
-          respuesta.subscribe(obj => {
-            this.latitud = obj.lat;
-            this.longitud = obj.lng;
-          })
+	this.map.addListener('center_changed', () => {
+		markers[0].setPosition(this.map.getCenter());
+		const objStr: string = JSON.stringify(markers[0].getPosition());
+		console.log(objStr);
+		const obj = JSON.parse(objStr);
+		this.latitud = obj.lat;
+		this.longitud = obj.lng;
+	});
+    
+	let respuesta = this.buscarTexto(this.map, markers, this.alertController);
+    respuesta.subscribe(markers2 => {
+		let direccion = JSON.parse(JSON.stringify(markers2[0].position));
+		this.latitud = direccion.lat;
+		this.longitud = direccion.lng;
+		let resp = this.markerEvent(markers2);
+		resp.subscribe(obj => {
+		this.latitud = obj.lat;
+		this.longitud = obj.lng;
+	  })
     })
   }
+  
   iniciarBusqueda() {
     let input = document.getElementById('pac-input');
     this.searchBox = new google.maps.places.SearchBox(input);
@@ -119,7 +119,7 @@ export class MapaPage implements OnInit {
     });
   }
 
-  buscarTexto(map,markers, alertController): Observable<any> {
+  buscarTexto(map, markers, alertController): Observable<any> {
     return Observable.create((observer) => {
       this.searchBox.addListener('places_changed', () =>{
         let places = this.searchBox.getPlaces();
@@ -129,6 +129,7 @@ export class MapaPage implements OnInit {
         markers.forEach(function(marker) {
           marker.setMap(null);
         });
+		
         markers = [];
         var bounds = new google.maps.LatLngBounds();
         let contador = 0;
@@ -139,13 +140,15 @@ export class MapaPage implements OnInit {
           if (contador < 1) {
             markers.push(new google.maps.Marker({
               map: map,
-              draggable: true,
+              draggable: false,
               title: 'Mueveme',
               animation: google.maps.Animation.DROP,
               position: place.geometry.location,
               icon: 'assets/image/car-pin.png'
             }));
-            
+			map.addListener('center_changed', () => {
+				markers[0].setPosition(map.getCenter());
+			});
             if (place.geometry.viewport) {
               bounds.union(place.geometry.viewport);
             } else {
@@ -170,14 +173,16 @@ export class MapaPage implements OnInit {
   }
   markerEvent(markers): Observable<any> {
     return Observable.create((observer) => {
-        markers[0].addListener('dragend', () => {
-        const objStr: string = JSON.stringify(markers[0].getPosition());
-        const obj = JSON.parse(objStr);
-        observer.next(obj);
-        observer.complete();
-      });
-      
-  });
+		this.map.addListener('center_changed', () => {
+			markers[0].setPosition(this.map.getCenter());
+			const objStr: string = JSON.stringify(markers[0].getPosition());
+			console.log(objStr);
+			const obj = JSON.parse(objStr);
+			// window.alert(JSON.stringify(marker.getPosition()));
+			this.latitud = obj.lat;
+			this.longitud = obj.lng;
+		});
+	});
   }
   guardarLatLong() {
     if(this.latitud && this.longitud){
