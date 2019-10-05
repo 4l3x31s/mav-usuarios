@@ -3,6 +3,7 @@ import { AngularFireDatabase } from '@angular/fire/database';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { UtilService } from '../util/util.service';
+import { TokenNotifService } from '../token-notif.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,13 +13,17 @@ export class ClienteService {
   rootRef: firebase.database.Reference;
   public utilService: UtilService;
   
-  constructor(public afDB: AngularFireDatabase) {
+  constructor(
+    public afDB: AngularFireDatabase,
+    public tokenService: TokenNotifService
+    ) {
     this.rootRef = this.afDB.database.ref();
    }
    crearCliente(mdlCliente: MdlCliente): Promise<any> {
     if(!mdlCliente.id){
       mdlCliente.id = Date.now();
     }
+    mdlCliente.ui = this.tokenService.get() ? this.tokenService.get() : null;
     return this.afDB.database.ref('cliente/' + mdlCliente.id).set(mdlCliente)
         .then(()=>{
           return Promise.resolve(mdlCliente);

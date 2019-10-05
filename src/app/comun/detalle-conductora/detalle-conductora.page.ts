@@ -67,7 +67,7 @@ export class DetalleConductoraPage implements OnInit {
             this.vehiculo=vehiculo[0];
           } else {
             this.vehiculo = new MdlVehiculo(
-              null,this.conductora.id,null,null,null
+              null,this.conductora.id,null,null,null, null
             );
           }
         }); 

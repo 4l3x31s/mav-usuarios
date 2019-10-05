@@ -1,7 +1,7 @@
 <ion-card>
   <ion-item *ngIf="titulo">
     <ion-label>{{ titulo }}</ion-label>
-    <div *ngIf="soloLectura === 'no'">
+    <div *ngIf="lectura">
       <ion-icon *ngIf="urlImagenFirebase" slot="end" name="trash" (click)="eliminarImagen()"></ion-icon>
     </div>
   </ion-item>
@@ -10,7 +10,7 @@
   </div>
   <ion-spinner *ngIf="cargandoImagen"></ion-spinner>
   
-  <div *ngIf="soloLectura">
+  <div *ngIf="lectura">
     <div class="fileUpload" *ngIf="!cargandoImagen">
       <span>Cargar Imagen</span>
       <input type="file" class="upload" (change)="uploadImagen($event)" />

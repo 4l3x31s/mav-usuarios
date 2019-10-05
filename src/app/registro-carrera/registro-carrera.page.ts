@@ -1,3 +1,4 @@
+import { DetalleCarreraPage } from './../comun/detalle-carrera/detalle-carrera.page';
 import { Notificaciones } from './../modelo/notificaciones';
 import { MdlConductora } from 'src/app/modelo/mldConductora';
 import { ConductoraService } from 'src/app/services/db/conductora.service';
@@ -21,6 +22,7 @@ import { CarrerasAceptadasPage } from '../carreras-aceptadas/carreras-aceptadas.
 import { ParametrosCarreraService } from '../services/db/parametros-carrera.service';
 import * as _ from 'lodash';
 import { PushNotifService } from '../services/push-notif.service';
+import { UbicacionService } from '../services/ubicacion.service';
 
 
 
@@ -61,13 +63,14 @@ export class RegistroCarreraPage implements OnInit {
     public parametrosCarreraService: ParametrosCarreraService,
     public conductoraService: ConductoraService,
     public pushNotifService: PushNotifService,
+    public ubicacionService: UbicacionService
     ) {
       this.carrera = this.carreraService.getCarreraSesion();
       this.carrera.fechaInicio = moment().format();
       this.fechaMin = moment().format('YYYY-MM-DD');
      
-      this.pais = this.navParams.get().pais;
-      this.ciudad = this.navParams.get().ciudad;
+      this.pais = this.ubicacionService.getPais();//this.navParams.get().pais;
+      this.ciudad = this.ubicacionService.getCiudad();//this.navParams.get().ciudad;
       this.location = this.navParams.get().location;
       if(this.location) {
         this.carrera.latInicio = this.location.lat;
@@ -177,14 +180,18 @@ export class RegistroCarreraPage implements OnInit {
     this.carrera.ciudad = this.ciudad;
     
     let carrera:MdlCarrera = this.carrera;
+    console.log('*************CARRERA REGISTRADA******************');
+    console.log(this.carrera);
       this.carreraService.crearCarrera(this.carrera)
       .then(() => {
+        console.log('*************CARRERA REGISTRADA 2******************');
+        console.log(this.carrera);
         setTimeout(() => {
           this.carreraService.getCarrerasPorId(carrera.id).subscribe(data => {
             if(data[0].estado === 1) {
               this.alertService.present('Info','Espere un momento porfavor, estamos buscando la conductora más cercana.');
             }
-          });          
+          });
         }, 30000);
         setTimeout(() => {
           this.carreraService.getCarrerasPorId(carrera.id).subscribe(data => {
@@ -221,9 +228,12 @@ export class RegistroCarreraPage implements OnInit {
               }
             }
           });
-        this.loadingServices.dismiss();
+          this.loadingServices.dismiss();
+          this.abrirModal();
+        
         this.alertService.present('Información', 'Datos guardados correctamente.');
         this.carrera = this.carreraService.getCarreraSesion();
+        
       })
       .catch( error => {
         this.loadingServices.dismiss();
@@ -232,6 +242,17 @@ export class RegistroCarreraPage implements OnInit {
 
       this.navController.navigateRoot('/calendario-carrera');
 
+  }
+  async abrirModal() {
+    let carreraSeleccionada:MdlCarrera = this.carrera;
+
+    const modal = await this.modalController.create({
+      component: DetalleCarreraPage,
+      componentProps: { 
+        carrera: carreraSeleccionada
+      }
+    });
+    return await modal.present();
   }
 
   async irMapaOrigen() {

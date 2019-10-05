@@ -6,6 +6,7 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Observable } from 'rxjs';
 import { MapParamService } from 'src/app/services/map-param.service';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
+import { UbicacionService } from 'src/app/services/ubicacion.service';
 
 declare var google;
 
@@ -30,6 +31,7 @@ export class MapaPage implements OnInit {
     public alertController: AlertService,
     public mapParamService: MapParamService,
     public geolocation: Geolocation,
+    public ubicacionService: UbicacionService,
     ) { }
 
   ngOnInit() {

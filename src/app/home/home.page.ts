@@ -6,6 +6,7 @@ import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { NavParamService } from '../services/nav-param.service';
 import { Observable } from 'rxjs';
 import { LoadingService } from '../services/util/loading.service';
+import { UbicacionService } from '../services/ubicacion.service';
 
 declare var google;
 
@@ -29,7 +30,8 @@ export class HomePage implements OnInit, OnDestroy {
     public geolocation: Geolocation,
     public geolocalizacionService: GeolocalizacionService,
     public navParam: NavParamService,
-    public loadingService: LoadingService
+    public loadingService: LoadingService,
+    public ubicacionService: UbicacionService
     ) {}
   ngOnInit() {
     this.loadingService.present();
@@ -65,13 +67,9 @@ export class HomePage implements OnInit, OnDestroy {
         });
         let geoResults = [];
         let geoResults1 = [];
-        var geocoder = new google.maps.Geocoder();
-        geocoder.geocode({'location': mylocation}, (results, status) =>{
-          if (status === 'OK') {
-
-            this.processLocation(results);
-          }
-        })
+        this.pais = this.ubicacionService.getPais();
+        this.ciudad = this.ubicacionService.getCiudad();
+        console.log(this.ciudad);
         this.loadingService.dismiss();
       }, (error) => {
         this.loadingService.dismiss();
@@ -95,18 +93,6 @@ export class HomePage implements OnInit, OnDestroy {
       }, error => {
         this.loadingService.dismiss();
       });
-  }
-
-  processLocation(location) {    
-    if (location[1]) {
-      for (var i = 0; i < location.length; i++) {
-        if (location[i].types[0] === "locality") {
-          this.ciudad = location[i].address_components[0].short_name;
-          this.pais = location[i].address_components[3].long_name;  
-
-        }
-      }
-    }   
   }
 
   addMarker(location, image) {

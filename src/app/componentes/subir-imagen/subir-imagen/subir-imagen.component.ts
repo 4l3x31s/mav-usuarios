@@ -17,18 +17,24 @@ export class SubirImagenComponent implements OnInit {
   @Input("url-imagen")
   urlImagen: string;
 
-  @Input("soloLectura")
-  soloLectura: boolean;
+  @Input("solo-lectura")
+  soloLectura: string;
 
   urlImagenFirebase: string;
   cargandoImagen: boolean = false;
+  lectura: boolean = false;
 
   constructor(
     private storage: AngularFireStorage,
     public loadingService: LoadingService,
     public alertService: AlertService,
     public alertController: AlertController
-  ) { }
+  ) {
+    if(this.soloLectura === 'true'){
+      this.lectura = true;
+    }
+    console.log(this.soloLectura);
+  }
 
   ngOnInit() {
     

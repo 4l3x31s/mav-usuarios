@@ -10,7 +10,7 @@
       <ion-grid>          
         <ion-row>
           <ion-col size="5">
-            <subir-imagen soloLectura="si"
+            <subir-imagen solo-lectura="true"
               [url-imagen]="'mav/conductora/'+conductora.id+'-foto'">
             </subir-imagen>
           </ion-col>
@@ -66,7 +66,7 @@
           <ion-col size="6">
             <ion-item>
               <ion-label position="stacked">Pais</ion-label>
-              <ion-select interface="popover" formControlName="vPais" placeholder="Seleccione el Pais"
+              <ion-select readonly interface="popover" formControlName="vPais" placeholder="Seleccione el Pais"
                 (ngModelChange)="filtrarCiudades($event)" [(ngModel)]="conductora.pais" readonly>
                 <ion-select-option *ngFor="let parametros of lstPaisesFiltrados" value="{{parametros.pais}}">
                   {{parametros.pais}}
@@ -79,7 +79,7 @@
           <ion-col size="6">
             <ion-item>
               <ion-label position="stacked">Ciudad</ion-label>
-              <ion-select interface='popover' formControlName="vCiudad" placeholder="Seleccione la Ciudad"
+              <ion-select readonly interface='popover' formControlName="vCiudad" placeholder="Seleccione la Ciudad"
                 [(ngModel)]="conductora.ciudad" readonly>
                 <ion-select-option *ngFor="let parametros of lstCiudadesFiltrado" value="{{parametros.ciudad}}">
                   {{parametros.ciudad}}
@@ -112,7 +112,7 @@
     <ion-grid>          
         <ion-row>
           <ion-col size="5">
-            <subir-imagen id="imgVehiculo"
+            <subir-imagen id="imgVehiculo" [solo-lectura]="true"
             [url-imagen]="'mav/vehiculo/'+vehiculo.id+'-vehiculo'">
             </subir-imagen>      
           </ion-col>

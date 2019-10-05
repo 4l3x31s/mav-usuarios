@@ -4,7 +4,8 @@ export class MdlVehiculo {
         public idConductora: number,
         public capacidad: number,
         public marca: string,
-        public modelo: string
+        public modelo: string,
+        public placa: string
     ) {
 
     }

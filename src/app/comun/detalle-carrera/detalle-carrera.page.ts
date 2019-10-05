@@ -13,6 +13,10 @@ import { ConductoraService } from 'src/app/services/db/conductora.service';
 import { MdlConductora } from 'src/app/modelo/mldConductora';
 import { CalificarCarreraPage } from '../calificar-carrera/calificar-carrera.page';
 import { FormGroup } from '@angular/forms';
+import { NavParamService } from 'src/app/services/nav-param.service';
+import { UbicacionService } from 'src/app/services/ubicacion.service';
+import { MdlVehiculo } from 'src/app/modelo/mdlVehiculo';
+import { VehiculoService } from 'src/app/services/db/vehiculo.service';
 
 @Component({
   selector: 'app-detalle-carrera',
@@ -22,15 +26,16 @@ import { FormGroup } from '@angular/forms';
 export class DetalleCarreraPage implements OnInit {
 
   @Input()
-  carrera: MdlCarrera;
-  mostrarBoton;
-  mostrarCalificacion;
+  public carrera: MdlCarrera;
+  public mostrarBoton: boolean = false;
+  public mostrarCalificacion: boolean = false;
 
   form: FormGroup;
   
 
   cliente: MdlCliente;
   conductora: MdlConductora;
+  public vehiculo: MdlVehiculo;
 
   codigoColorCliente: string;
   colores: any[] = [
@@ -66,27 +71,39 @@ export class DetalleCarreraPage implements OnInit {
     public iab: InAppBrowser,
     public actionSheetController: ActionSheetController,
     public carreraService: CarreraService,
-    public conductoraService: ConductoraService
+    public conductoraService: ConductoraService,
+    public navParam: NavParamService,
+    public ubicacionService: UbicacionService,
+    public vehiculoService: VehiculoService
 
   ) { }
 
   ngOnInit() {
     this.mostrarBoton=false;
-    if(!this.carrera.enCamino){
-      this.mostrarBoton=true;
-    }
-    this.mostrarCalificacion=false;
-    if(!this.carrera.enCamino){
-      this.mostrarCalificacion=true;
-    }
+    
     this.carreraService.getCarrerasPorId(this.carrera.id).subscribe(carrera=>{
       this.carrera = Object.assign(carrera[0]);
+      console.log(this.carrera);
+      if(!this.carrera.enCamino){
+        this.mostrarBoton=true;
+      }
+      this.mostrarCalificacion=false;
+      if(!this.carrera.enCamino){
+        this.mostrarCalificacion=true;
+      }
+      this.conductoraService.getConductora(this.carrera.idConductora).subscribe(conductora=>{
+        this.conductora = conductora;
+        this.vehiculoService.getVehiculoPorConductora(this.carrera.idConductora)
+        .subscribe(vehiculo => {
+          console.log(vehiculo[0]);
+          this.vehiculo = Object.assign(vehiculo[0]);
+        })
+      });
+      this.cargarDatos();
     }, error=>{
     });
-    this.conductoraService.getConductora(this.carrera.idConductora).subscribe(conductora=>{
-        this.conductora = conductora;
-    });
-    this.cargarDatos();
+    
+   
   }
 
   initAutocomplete() {
@@ -101,10 +118,12 @@ export class DetalleCarreraPage implements OnInit {
       zoom: 11,
       mapTypeId: google.maps.MapTypeId.ROADMAP,
       mapTypeControl: false,
-      streetViewControl: true,
+      streetViewControl: false,
       fullScreenControl: false,
+      zoomControl: false,
       scaleControl: false,
       rotateControl: false,
+      fullscreenControl: false,
       center: myLatlngFin
     };
     var directionsService = new google.maps.DirectionsService;
@@ -162,17 +181,23 @@ export class DetalleCarreraPage implements OnInit {
 
   async showOpcionesCarrera(){
     let opciones:any[]=[];
-    if(this.carrera.estado == 1){
+    if(this.carrera.estado === 1){
       opciones.push({
         text: 'Editar Carrera',
         icon: 'create',
         handler: () => {
-          this.navController.navigateForward('/registro-carrera');
           this.modalCtrl.dismiss();
+          this.navParam.set({
+            pais: this.ubicacionService.getPais(),
+            ciudad: this.ubicacionService.getCiudad(),
+            location: {lat: this.carrera.latInicio, lng: this.carrera.longInicio}
+          });
+          this.navController.navigateForward('/registro-carrera');
+          
         }
       });
     }
-    if(this.carrera.enCamino==false){
+    if(this.carrera.enCamino === false){
       opciones.push({
         text: 'Califica la carrera',
         icon: 'star',
@@ -185,12 +210,13 @@ export class DetalleCarreraPage implements OnInit {
         icon: 'close',
         role: 'cancel'
       });
-      const actionSheet = await this.actionSheetController.create({
-        header: 'Opciones Carrera',
-        buttons: opciones
-      });
-      await actionSheet.present();
+      
     }
+    const actionSheet = await this.actionSheetController.create({
+      header: 'Opciones Carrera',
+      buttons: opciones
+    });
+    await actionSheet.present();
   }
   calculateAndDisplayRoute(directionsService, directionsDisplay, myLatlngIni, myLatlngFin): Observable<any> {
     return Observable.create((observer) => {

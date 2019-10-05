@@ -10,6 +10,7 @@ import { SesionService } from '../services/sesion.service';
 import { MdlParametrosCarrera } from '../modelo/mdlParametrosCarrera';
 import { ParametrosCarreraService } from '../services/db/parametros-carrera.service';
 import { AuthService } from '../services/firebase/auth.service';
+import { UbicacionService } from '../services/ubicacion.service';
 
 @Component({
   selector: 'app-detalle-cliente',
@@ -37,7 +38,8 @@ export class DetalleClientePage implements OnInit {
     public parametrosService: ParametrosCarreraService,
     public events: Events,
     public authService: AuthService,
-    public tokenService: TokenNotifService
+    public tokenService: TokenNotifService,
+    public ubicacionService: UbicacionService
     ) { 
     this.sesionService.crearSesionBase()
         .then(() => {
@@ -66,6 +68,9 @@ export class DetalleClientePage implements OnInit {
     } else {
       this.myclass = "mostrar";
     }
+    this.cliente.ciudad = this.ubicacionService.getCiudad();
+    this.cliente.pais = this.ubicacionService.getPais();
+
   }
 
   public iniciarValidaciones(){
@@ -75,17 +80,6 @@ export class DetalleClientePage implements OnInit {
         Validators.minLength(4),
         Validators.maxLength(50),
       ]],
-      /*vci: ['', [
-        Validators.required,
-        Validators.minLength(4),
-        Validators.maxLength(15),
-        Validators.pattern(/^[0-9]/),
-      ]],
-      vdireccion: ['', [
-        Validators.required,
-        Validators.minLength(4),
-        Validators.maxLength(100),
-      ]],*/
       vuser: ['', [
         Validators.required,
         Validators.minLength(4),
@@ -98,12 +92,6 @@ export class DetalleClientePage implements OnInit {
       ]],
       vconfirmPass: ['',
        Validators.required],
-      /*vtel: ['', [
-        Validators.required,
-        Validators.minLength(7),
-        Validators.maxLength(7),
-        Validators.pattern(/^[0-9]/),
-      ]],*/
       vcel: ['', [
         Validators.required,
         Validators.minLength(8),
@@ -115,16 +103,6 @@ export class DetalleClientePage implements OnInit {
         Validators.minLength(10),
         Validators.maxLength(30),
         Validators.email,
-      ]],
-      vciudad: ['', [
-        Validators.required,
-        Validators.minLength(5),
-        Validators.maxLength(30),
-      ]],
-      vpais: ['', [
-        Validators.required,
-        Validators.minLength(7),
-        Validators.maxLength(30),
       ]],
     }, {
       validator: this.mustMatch('vpass', 'vconfirmPass')

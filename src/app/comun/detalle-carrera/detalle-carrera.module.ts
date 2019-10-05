@@ -8,6 +8,7 @@ import { IonicModule } from '@ionic/angular';
 import { DetalleCarreraPage } from './detalle-carrera.page';
 import { IonicRatingModule } from 'ionic4-rating';
 import { ComponentesComunesModule } from 'src/app/componentes-comunes/componentes-comunes.module';
+import { SubirImagenModule } from 'src/app/componentes/subir-imagen/subir-imagen.module';
 
 const routes: Routes = [
   {
@@ -24,6 +25,7 @@ const routes: Routes = [
     IonicRatingModule,
     ReactiveFormsModule,
     ComponentesComunesModule,
+    SubirImagenModule,
     RouterModule.forChild(routes)
   ],
   declarations: [DetalleCarreraPage]

@@ -15,35 +15,17 @@
         <ion-input formControlName="vnombre" name="vnombre"  [(ngModel)]="cliente.nombre"></ion-input>
       </ion-item>
       <print-error [control]="f.vnombre"></print-error>
-      
-      <ion-item>
+       <ion-item>
+        <ion-label position="stacked">Celular</ion-label>
+        <ion-input formControlName="vcel" name="vcel"  [(ngModel)]="cliente.cel"></ion-input>
+      </ion-item>
+      <print-error [control]="f.vcel"></print-error>    
+      <ion-item *ngIf="cliente.id">
         <ion-label position="stacked">Carnet de Identidad</ion-label>
         <ion-input [ngModelOptions]="{standalone: true}" name="vci"  [(ngModel)]="cliente.ci" ></ion-input>
       </ion-item>
 
-      <ion-item>
-        <ion-label position="stacked">Pais</ion-label>
-        <ion-select interface="popover" formControlName="vpais" placeholder="Seleccione el Pais"
-          (ngModelChange)="filtrarCiudades($event)" [(ngModel)]="cliente.pais">
-          <ion-select-option *ngFor="let parametros of lstPaisesFiltrados" value="{{parametros.pais}}">
-            {{parametros.pais}}
-          </ion-select-option>
-        </ion-select>
-      </ion-item>
-      <print-error [control]="f.vpais"></print-error> 
-
-      <ion-item>
-        <ion-label position="stacked">Ciudad</ion-label>
-        <ion-select interface='popover' formControlName="vciudad" placeholder="Seleccione la Ciudad"
-          [(ngModel)]="cliente.ciudad">
-          <ion-select-option *ngFor="let parametros of lstCiudadesFiltrado" value="{{parametros.ciudad}}">
-            {{parametros.ciudad}}
-          </ion-select-option>
-        </ion-select>
-      </ion-item>
-      <print-error [control]="f.vciudad"></print-error>
-
-      <ion-item>
+      <ion-item *ngIf="cliente.id">
         <ion-label position="stacked">Dirección</ion-label>
         <ion-input [ngModelOptions]="{standalone: true}" name="vdireccion"  [(ngModel)]="cliente.direccion"></ion-input>
       </ion-item>
@@ -76,23 +58,19 @@
         <print-error  [control]="f.vconfirmPass"></print-error>     
       </div>
 
-      <ion-item>
+      <ion-item *ngIf="cliente.id">
         <ion-label position="stacked">Telefono</ion-label>
         <ion-input [ngModelOptions]="{standalone: true}" name="vtel"  [(ngModel)]="cliente.tel"></ion-input>
       </ion-item>
      
 
-      <ion-item>
-        <ion-label position="stacked">Celular</ion-label>
-        <ion-input formControlName="vcel" name="vcel"  [(ngModel)]="cliente.cel"></ion-input>
-      </ion-item>
-      <print-error [control]="f.vcel"></print-error>    
+     
         
     </ion-list>
   </form>
 
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button [disabled]="frmCliente.invalid" (click)="grabar()">
+    <ion-fab-button color="verdec" [disabled]="frmCliente.invalid" (click)="grabar()">
       <ion-icon name="send"></ion-icon>
     </ion-fab-button>
   </ion-fab>
