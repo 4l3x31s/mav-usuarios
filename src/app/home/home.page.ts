@@ -24,6 +24,7 @@ export class HomePage implements OnInit, OnDestroy {
   pais: string;
   ciudad: string;
   location: any;
+  subscription: any;
 
   listaGeoPosicionamiento: MdlGeoLocalizacion[] = [];
   constructor(
@@ -33,7 +34,8 @@ export class HomePage implements OnInit, OnDestroy {
     public navParam: NavParamService,
     public loadingService: LoadingService,
     public ubicacionService: UbicacionService,
-    public mapStyleService: MapStyleService
+    public mapStyleService: MapStyleService,
+    public platform: Platform,
     ) {}
   ngOnInit() {
     this.loadingService.present();
@@ -139,4 +141,13 @@ export class HomePage implements OnInit, OnDestroy {
     });
     this.navCtrl.navigateForward('/registro-carrera');
   }
+  ionViewDidEnter(){
+    this.subscription = this.platform.backButton.subscribe(()=>{
+        navigator['app'].exitApp();
+    });
+}
+
+ionViewWillLeave(){
+    this.subscription.unsubscribe();
+}
 }
