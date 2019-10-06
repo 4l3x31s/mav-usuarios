@@ -178,6 +178,8 @@ export class RegistroCarreraPage implements OnInit {
     this.carrera.nombreCliente = this.cliente.nombre;
     this.carrera.pais = this.pais;
     this.carrera.ciudad = this.ciudad;
+    this.carrera.direccionInicio = this.direccionIni;
+    this.carrera.direccionDestino = this.direccionFin;
     
     let carrera:MdlCarrera = this.carrera;
     console.log('*************CARRERA REGISTRADA******************');
