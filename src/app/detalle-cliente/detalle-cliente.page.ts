@@ -26,6 +26,9 @@ export class DetalleClientePage implements OnInit {
   public lstPaisesFiltrados = [];
   public lstCiudadesFiltrado: MdlParametrosCarrera [] = [];
   public lstParametros: MdlParametrosCarrera [] = [];
+  
+  mostrarPass: boolean = false;
+  tipoPass: string = 'password';
 
   constructor(
     public fb: FormBuilder,
@@ -250,5 +253,18 @@ export class DetalleClientePage implements OnInit {
     }else{
       this.navController.navigateRoot('/login');  
     }
+  }
+  cambiarValor() {
+    if(this.mostrarPass) {
+      this.mostrarPass = false;
+      this.tipoPass = 'password';
+    }else {
+      this.mostrarPass = true;
+      this.tipoPass = 'text';
+    }
+  }
+  outFocus() {
+    this.cliente.email = this.cliente.email.trim();
+    this.cliente.email = this.cliente.email.replace(' ', '');
   }
 }

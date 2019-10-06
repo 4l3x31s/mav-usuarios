@@ -32,7 +32,7 @@
       <div [ngClass]="myclass">
         <ion-item>
           <ion-label position="stacked">Correo</ion-label>
-          <ion-input formControlName="vemail" name="vemail"  [(ngModel)]="cliente.email" (ionChange)="generarUsuario()"></ion-input>
+          <ion-input formControlName="vemail" name="vemail" (focusout)="outFocus()" [(ngModel)]="cliente.email" (ionChange)="generarUsuario()"></ion-input>
         </ion-item>
         <print-error [control]="f.vemail"></print-error>  
       </div>
@@ -46,7 +46,8 @@
       <div [ngClass]="myclass">
         <ion-item >
           <ion-label position="stacked">Contraseña</ion-label>
-          <ion-input type="password" formControlName="vpass" name="vpass"  [(ngModel)]="cliente.pass"></ion-input>
+          <ion-input  #pass [type]="tipoPass" formControlName="vpass" name="vpass"  [(ngModel)]="cliente.pass"></ion-input>
+          <ion-icon (click)="cambiarValor()" name="eye" color="medium" slot="end"></ion-icon>
         </ion-item>
         <print-error [control]="f.vpass"></print-error>
 

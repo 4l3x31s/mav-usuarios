@@ -12,7 +12,7 @@
           <ion-list class="fondo-transparente">
             <ion-item style="border-radius: 20px !important;" class="fondo-transparente">
               <ion-label class="fondo-transparente" position="stacked">Usuario/Correo Electrónico</ion-label>
-              <ion-input class="fondo-transparente" formControlName="vuser" [(ngModel)]="user"></ion-input>
+              <ion-input class="fondo-transparente" (focusout)="outFocus()" formControlName="vuser" [(ngModel)]="user"></ion-input>
               <ion-icon name="contact" slot="start"></ion-icon>
             </ion-item>
             <print-error [control]="f.vuser"></print-error>
