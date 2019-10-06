@@ -49,6 +49,15 @@
                   {{p.title}}
                 </ion-label>
               </ion-item>
+              
+            </ion-menu-toggle>
+            <ion-menu-toggle auto-hide="false" *ngFor="let a of pageShare">
+              <ion-item [routerDirection]="'root'" [routerLink]="[a.url]" (click)="compartirViaFacebook()">
+                <ion-icon slot="start" [name]="a.icon"></ion-icon>
+                <ion-label>
+                  {{a.title}}
+                </ion-label>
+              </ion-item>
             </ion-menu-toggle>
           </ion-list>
         </ion-content>

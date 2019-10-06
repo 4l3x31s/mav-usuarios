@@ -11,6 +11,8 @@ import { AlertService } from './services/util/alert.service';
 import { LoadingService } from './services/util/loading.service';
 
 import { FCM } from '@ionic-native/fcm/ngx';
+import { SocialSharing } from '@ionic-native/social-sharing/ngx';
+
 import { Router } from '@angular/router';
 import { TokenNotifService } from './services/token-notif.service';
 
@@ -54,6 +56,16 @@ export class AppComponent {
       icon: 'done-all'
     }
   ];
+  public pageShare = [
+    {
+      title: 'Compartir aplicacion',
+      url: '/home',
+      icon: 'share',
+      handler: () => {
+        this.compartirViaFacebook()
+      }
+    }
+  ]
 
   constructor(
     private platform: Platform,
@@ -69,7 +81,8 @@ export class AppComponent {
     public loadingService: LoadingService,
     private fcm: FCM,
     private router: Router,
-    private tokenService: TokenNotifService
+    private tokenService: TokenNotifService,
+    private socialSharing: SocialSharing
   ) {
     this.initializeApp();
     events.subscribe('user:login', () => {
@@ -171,6 +184,10 @@ export class AppComponent {
   irDetalleCliente(){
     this.navParam.set({cliente:this.cliente})
     this.navController.navigateRoot('/detalle-cliente');
+  }
+  compartirViaFacebook(){
+    const msg = 'Gracias por compartir nuestra aplicacion';
+    this.socialSharing.shareViaFacebook('Esta es una buena aplicacion', null , 'https://www.google.com');
   }
 }
 

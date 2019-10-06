@@ -61,7 +61,10 @@ export class DetalleCarreraPage implements OnInit {
 
   @ViewChild('map')
   mapElement: ElementRef;
-
+  latInicio: any;
+  lngInicio: any;
+  latFin: any;
+  lngFin: any;
   constructor(
     private modalCtrl:ModalController,
     public clienteService:ClienteService,
@@ -79,18 +82,18 @@ export class DetalleCarreraPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.mostrarBoton=false;
-    
+    // this.mostrarBoton = false;
+
     this.carreraService.getCarrerasPorId(this.carrera.id).subscribe(carrera=>{
       this.carrera = Object.assign(carrera[0]);
       console.log(this.carrera);
-      if(!this.carrera.enCamino){
-        this.mostrarBoton=true;
-      }
-      this.mostrarCalificacion=false;
-      if(!this.carrera.enCamino){
-        this.mostrarCalificacion=true;
-      }
+      // if(this.carrera.enCamino){
+      //   this.mostrarBoton=true;
+      // }
+      // this.mostrarCalificacion=true;
+      // if(!this.carrera.enCamino){
+      //   this.mostrarCalificacion=true;
+      // }
       this.conductoraService.getConductora(this.carrera.idConductora).subscribe(conductora=>{
         this.conductora = conductora;
         this.vehiculoService.getVehiculoPorConductora(this.carrera.idConductora)
@@ -107,13 +110,13 @@ export class DetalleCarreraPage implements OnInit {
   }
 
   initAutocomplete() {
-    let latInicio = typeof(this.carrera.latInicio)==='string'?parseFloat(this.carrera.latInicio):this.carrera.latInicio;
-    let lngInicio = typeof(this.carrera.longInicio)==='string'?parseFloat(this.carrera.longInicio):this.carrera.longInicio;
-    let latFin = typeof(this.carrera.latFin)==='string'?parseFloat(this.carrera.latFin):this.carrera.latFin;
-    let lngFin = typeof(this.carrera.longFin)==='string'?parseFloat(this.carrera.longFin):this.carrera.longFin;
+    this.latInicio = typeof(this.carrera.latInicio)==='string'?parseFloat(this.carrera.latInicio):this.carrera.latInicio;
+    this.lngInicio = typeof(this.carrera.longInicio)==='string'?parseFloat(this.carrera.longInicio):this.carrera.longInicio;
+    this.latFin = typeof(this.carrera.latFin)==='string'?parseFloat(this.carrera.latFin):this.carrera.latFin;
+    this.lngFin = typeof(this.carrera.longFin)==='string'?parseFloat(this.carrera.longFin):this.carrera.longFin;
     
-    const myLatlngIni = { lat: latInicio, lng: lngInicio};
-    const myLatlngFin = { lat: latFin, lng: lngFin};
+    const myLatlngIni = { lat: +this.latInicio, lng: +this.lngInicio};
+    const myLatlngFin = { lat: +this.latFin, lng: +this.lngFin};
     const mapOptions = {
       zoom: 11,
       mapTypeId: google.maps.MapTypeId.ROADMAP,
@@ -197,12 +200,32 @@ export class DetalleCarreraPage implements OnInit {
         }
       });
     }
-    if(this.carrera.enCamino === false){
+    if(this.carrera.enCamino === true){
       opciones.push({
         text: 'Califica la carrera',
         icon: 'star',
         handler: () =>{
           this.calificarCarrera();
+        }
+      });
+      opciones.push({
+        text: 'Realizar seguimiento',
+        icon: 'map',
+        handler: () =>{
+          let resp = 'http://www.google.com/maps/dir/'
+          + this.latFin
+          + ','
+          + this.lngFin
+          + '/'
+          + this.carrera.latInicio
+          + ','
+          + this.carrera.longInicio
+          + '/@'
+          + this.latFin
+          + ','
+          + this.lngFin
+          + ',12z/data=!4m2!4m1!3e0';
+          this.iab.create(resp, '_system', 'location=yes')
         }
       });
       opciones.push({
