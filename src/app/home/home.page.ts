@@ -1,3 +1,4 @@
+import { MapStyleService } from './../services/util/map-style.service';
 import { NavController, ModalController, Platform } from '@ionic/angular';
 import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { MdlGeoLocalizacion } from '../modelo/mdlGeoLocalizacion';
@@ -31,7 +32,8 @@ export class HomePage implements OnInit, OnDestroy {
     public geolocalizacionService: GeolocalizacionService,
     public navParam: NavParamService,
     public loadingService: LoadingService,
-    public ubicacionService: UbicacionService
+    public ubicacionService: UbicacionService,
+    public mapStyleService: MapStyleService
     ) {}
   ngOnInit() {
     this.loadingService.present();
@@ -63,8 +65,14 @@ export class HomePage implements OnInit, OnDestroy {
           zoomControl: false,
           scaleControl: false,
           rotateControl: false,
-          fullscreenControl: false
+          fullscreenControl: false,
+          mapTypeControlOptions: {
+            mapTypeIds: ['styled_map']
+          }
         });
+         //Associate the styled map with the MapTypeId and set it to display.
+         this.map.mapTypes.set('styled_map', this.mapStyleService.getStyledMap());
+         this.map.setMapTypeId('styled_map');
         let geoResults = [];
         let geoResults1 = [];
         this.pais = this.ubicacionService.getPais();

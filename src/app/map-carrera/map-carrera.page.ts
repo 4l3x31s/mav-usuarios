@@ -10,6 +10,7 @@ import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { Observable } from 'rxjs';
 import { LoadingService } from '../services/util/loading.service';
 import { promise } from 'protractor';
+import { MapStyleService } from '../services/util/map-style.service';
 
 declare var google;
 @Component({
@@ -41,6 +42,7 @@ export class MapCarreraPage implements OnInit {
     public events: Events,
     public platform: Platform,
     public loadingService: LoadingService,
+    public mapStyleService: MapStyleService
   ) {
     
    }
@@ -80,12 +82,19 @@ export class MapCarreraPage implements OnInit {
       scaleControl: false,
       rotateControl: false,
       fullscreenControl: false,
-      center: latLng
+      center: latLng,
+      mapTypeControlOptions: {
+        mapTypeIds: ['styled_map']
+      }
     };
+     //Associate the styled map with the MapTypeId and set it to display.
+     
     this.latitudIni = latLng.lat;
     this.longitudIni = latLng.lng;
     setTimeout(() => {
       this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
+      this.map.mapTypes.set('styled_map', this.mapStyleService.getStyledMap());
+     this.map.setMapTypeId('styled_map');
       this.cargarBusqueda(latLng);
     }, 1500);
   }

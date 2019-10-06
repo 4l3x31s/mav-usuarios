@@ -17,6 +17,7 @@ import { NavParamService } from 'src/app/services/nav-param.service';
 import { UbicacionService } from 'src/app/services/ubicacion.service';
 import { MdlVehiculo } from 'src/app/modelo/mdlVehiculo';
 import { VehiculoService } from 'src/app/services/db/vehiculo.service';
+import { MapStyleService } from 'src/app/services/util/map-style.service';
 
 @Component({
   selector: 'app-detalle-carrera',
@@ -77,7 +78,8 @@ export class DetalleCarreraPage implements OnInit {
     public conductoraService: ConductoraService,
     public navParam: NavParamService,
     public ubicacionService: UbicacionService,
-    public vehiculoService: VehiculoService
+    public vehiculoService: VehiculoService,
+    public mapStyleService: MapStyleService
 
   ) { }
 
@@ -127,8 +129,13 @@ export class DetalleCarreraPage implements OnInit {
       scaleControl: false,
       rotateControl: false,
       fullscreenControl: false,
-      center: myLatlngFin
+      center: myLatlngFin,
+      mapTypeControlOptions: {
+        mapTypeIds: ['styled_map']
+      }
     };
+     //Associate the styled map with the MapTypeId and set it to display.
+     
     var directionsService = new google.maps.DirectionsService;
     var directionsDisplay = new google.maps.DirectionsRenderer({
       suppressMarkers: true,
@@ -137,6 +144,8 @@ export class DetalleCarreraPage implements OnInit {
       }
     });
     var map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
+    map.mapTypes.set('styled_map', this.mapStyleService.getStyledMap());
+    map.setMapTypeId('styled_map');
     directionsDisplay.setMap(map);
     let respuesta = this.calculateAndDisplayRoute(directionsService, directionsDisplay, myLatlngIni, myLatlngFin);
     respuesta.subscribe(data => {

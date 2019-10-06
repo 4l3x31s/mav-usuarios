@@ -6,6 +6,7 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Observable } from 'rxjs';
 import { MapParamService } from 'src/app/services/map-param.service';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
+import { MapStyleService } from 'src/app/services/util/map-style.service';
 
 declare var google;
 
@@ -30,6 +31,7 @@ export class MapaPage implements OnInit {
     public alertController: AlertService,
     public mapParamService: MapParamService,
     public geolocation: Geolocation,
+    public mapStyleService: MapStyleService,
     ) { }
 
   ngOnInit() {
@@ -72,11 +74,19 @@ export class MapaPage implements OnInit {
       rotateControl: false,
       fullscreenControl: false,
       center: myLatlng,
-	  draggable: true
+      draggable: true,
+      mapTypeControlOptions: {
+        mapTypeIds: ['styled_map']
+      }
     };
+     
+    
     this.latitud = myLatlng.lat;
     this.longitud = myLatlng.lng;
     this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
+    //Associate the styled map with the MapTypeId and set it to display.
+    this.map.mapTypes.set('styled_map', this.mapStyleService.getStyledMap());
+    this.map.setMapTypeId('styled_map');
     this.iniciarBusqueda();
     let markers = [];
     markers.push(new google.maps.Marker({
