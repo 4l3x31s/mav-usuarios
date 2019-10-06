@@ -39,7 +39,8 @@ export class CarreraService {
     null, null, null, null, null,
     null, null, null, null, null,
     null, null, null, null, null,
-    null, null, null,null,null,null);
+    null, null, null,null,null,
+    null, null, null);
   }
 
   getCarrerasPorCliente(idUsuario: number): Observable<MdlCarrera[]> {

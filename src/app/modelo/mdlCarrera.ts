@@ -25,7 +25,9 @@ export class MdlCarrera {
         public nombreConductora: string,
         public enCamino: boolean,
         public ciudad: string,
-        public pais: string
+        public pais: string,
+        public direccionInicio: string,
+        public direccionDestino: string
     ) {
 
     }
