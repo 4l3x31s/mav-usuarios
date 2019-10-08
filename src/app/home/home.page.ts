@@ -8,7 +8,14 @@ import { NavParamService } from '../services/nav-param.service';
 import { Observable } from 'rxjs';
 import { LoadingService } from '../services/util/loading.service';
 import { UbicacionService } from '../services/ubicacion.service';
+import { ContratoService } from '../services/db/contrato.service';
+import { SesionService } from '../services/sesion.service';
+import { MdlCliente } from '../modelo/mdlCliente';
+import { MdlContrato } from '../modelo/mdlContrato';
 
+import * as moment from 'moment';
+import { AlertService } from '../services/util/alert.service';
+import { forEach } from '@angular/router/src/utils/collection';
 declare var google;
 
 @Component({
@@ -24,8 +31,10 @@ export class HomePage implements OnInit, OnDestroy {
   pais: string;
   ciudad: string;
   location: any;
-  subscription: any;
 
+  subscription: any;
+  cliente: MdlCliente;
+  lstContratos: MdlContrato[] = [];
   listaGeoPosicionamiento: MdlGeoLocalizacion[] = [];
   constructor(
     public navCtrl: NavController,
@@ -36,10 +45,39 @@ export class HomePage implements OnInit, OnDestroy {
     public ubicacionService: UbicacionService,
     public mapStyleService: MapStyleService,
     public platform: Platform,
+    public contratoService: ContratoService,
+    public sesionService: SesionService,
+    public navController: NavController,
+    public alertService: AlertService,
     ) {}
   ngOnInit() {
     this.loadingService.present();
     this.initMap();
+    this.sesionService.crearSesionBase()
+    .then(() => {
+      this.sesionService.getSesion()
+        .subscribe((cliente) => {
+          if (cliente) {
+            this.cliente = cliente;
+    
+            this.contratoService.listaContratosPorUsuario(this.cliente.id)
+            .subscribe(lstContratos => {
+              this.lstContratos = Object.assign(lstContratos);
+              let fechaActual = moment();
+              for(let i = 0 ; i < this.lstContratos.length; i++) {
+                let fechaFinContrato = moment(this.lstContratos[i].fechaFin);
+                let fechaNotificacion = fechaFinContrato.add(-3, 'd');
+                if (fechaActual >= fechaNotificacion) {
+                  this.alertService.present('Alerta!', 'Su contrato está por expirar, comuniquese con la administración para ampliar su contrato.');
+                  break;
+                }
+              }
+            });
+          } else {
+            this.navController.navigateRoot('/login');
+          }
+        });
+    });
     this.geolocalizacionService.listarCambios().subscribe( data => {
       this.deleteMarkers();
       this.listaGeoPosicionamiento = Object.assign(data);
@@ -51,6 +89,7 @@ export class HomePage implements OnInit, OnDestroy {
       }
       
     });
+    
   }
 
   initMap() {

@@ -233,7 +233,7 @@ export class RegistroCarreraPage implements OnInit {
           this.loadingServices.dismiss();
           this.abrirModal();
         
-        this.alertService.present('Información', 'Datos guardados correctamente.');
+        this.alertService.present('Información', 'Estamos buscando una conductora disponible.');
         this.carrera = this.carreraService.getCarreraSesion();
         
       })

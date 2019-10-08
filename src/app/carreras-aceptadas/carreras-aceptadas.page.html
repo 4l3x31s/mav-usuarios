@@ -15,7 +15,7 @@
         <ion-label>Carreras Aceptadas</ion-label>
       </ion-list-header>
       <ion-item-sliding *ngFor="let carrera of carrerasAceptadas">
-        <ion-item>
+        <ion-item *ngIf="!carrera.idContrato">
           <ion-label>
             <ion-text color="primary">
               <h3>{{ carrera.descLugar }}</h3>

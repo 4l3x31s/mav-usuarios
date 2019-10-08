@@ -25,6 +25,7 @@ export class CarrerasAceptadasPage implements OnInit {
   
   filtros = {}
   urlFoto: string;
+  colorBack: string;
   
   constructor(
     public navController: NavController,
@@ -39,10 +40,8 @@ export class CarrerasAceptadasPage implements OnInit {
     
    }
   ngOnInit() {
-    this.sesionService.crearSesionBase()
-    .then(() => {
-      this.sesionService.getSesion()
-        .subscribe((cliente) => {
+    this.sesionService.crearSesionBase().then(() => {
+      this.sesionService.getSesion().subscribe((cliente) => {
           if (cliente) {
             this.cliente = cliente;
             this.listaCarerasAceptadas(this.cliente.id, 2);
@@ -62,6 +61,7 @@ export class CarrerasAceptadasPage implements OnInit {
     },  error => {
       this.loading.dismiss();
     });
+    
   }
   public irMapCarrera() {
     this.navController.navigateForward('/map-carrera');
@@ -99,10 +99,6 @@ export class CarrerasAceptadasPage implements OnInit {
             conductora: this.conductora
           });
           this.navController.navigateForward('/detalle-conductora');
-      });
-     
-    
+      }); 
   }
-
-  
 }

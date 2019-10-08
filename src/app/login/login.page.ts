@@ -183,4 +183,8 @@ export class LoginPage implements OnInit {
   enviarCorreo() {
     this.presentAlertPrompt();
   }
+  outFocus() {
+    this.user = this.user.trim();
+    this.user = this.user.replace(' ', '');
+  }
 }
