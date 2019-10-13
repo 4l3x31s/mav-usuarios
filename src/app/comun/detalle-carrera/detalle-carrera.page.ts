@@ -1,3 +1,4 @@
+import { AngularFireStorage } from '@angular/fire/storage';
 /// <reference types='@types/googlemaps' />
 import { Observable } from 'rxjs';
 import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
@@ -66,6 +67,7 @@ export class DetalleCarreraPage implements OnInit {
   lngInicio: any;
   latFin: any;
   lngFin: any;
+  urlImagenFirebase: string;
   constructor(
     private modalCtrl:ModalController,
     public clienteService:ClienteService,
@@ -79,13 +81,16 @@ export class DetalleCarreraPage implements OnInit {
     public navParam: NavParamService,
     public ubicacionService: UbicacionService,
     public vehiculoService: VehiculoService,
-    public mapStyleService: MapStyleService
+    public mapStyleService: MapStyleService,
+    private storage: AngularFireStorage,
 
   ) { }
 
   ngOnInit() {
     // this.mostrarBoton = false;
-
+    // https://firebasestorage.googleapis.com/v0/b/mav-db.appspot.com/o/
+    // mav%2Fconductora%2F1559758039889-foto?alt=media&token=95be6f62-ec1b-4d5a-8c3a-6008be9abb9a
+    
     this.carreraService.getCarrerasPorId(this.carrera.id).subscribe(carrera=>{
       this.carrera = Object.assign(carrera[0]);
       console.log(this.carrera);
@@ -98,6 +103,18 @@ export class DetalleCarreraPage implements OnInit {
       // }
       this.conductoraService.getConductora(this.carrera.idConductora).subscribe(conductora=>{
         this.conductora = conductora;
+        let valor = 'mav/conductora/'+conductora.id+'-foto';
+
+        this.storage.ref(valor).getDownloadURL()
+          .subscribe(ruta => {
+            console.log('pagina....')
+            console.log(ruta);
+            this.urlImagenFirebase = ruta;
+
+          }, error => {
+        
+          });
+
         this.vehiculoService.getVehiculoPorConductora(this.carrera.idConductora)
         .subscribe(vehiculo => {
           console.log(vehiculo[0]);

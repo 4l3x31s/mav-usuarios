@@ -39,6 +39,8 @@ export class SubirImagenComponent implements OnInit {
   ngOnInit() {
     
     this.cargandoImagen = true;
+    console.log('Componente......')
+    console.log(this.urlImagen);
     this.storage.ref(this.urlImagen).getDownloadURL()
       .subscribe(ruta => {
         this.urlImagenFirebase = ruta;
