@@ -5,6 +5,10 @@
 export const environment = {
   production: false,
   isSesionPrueba: true
+<<<<<<< HEAD
+=======
+  
+>>>>>>> 4639065a0058b520fb5ef30947a778e8e4b6251d
 };
 
 /*

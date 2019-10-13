@@ -26,12 +26,12 @@ export class AppComponent {
 
   public appPages = [
     {
-      title: 'Solicitar Carrera',
+      title: 'Pedir Movil',
       url: '/home',
       icon: 'logo-model-s'
     },
     {
-      title: 'Carreras Aceptadas',
+      title: 'Mis carreras',
       url: '/carreras-aceptadas',
       icon: 'map'
     },
@@ -41,11 +41,11 @@ export class AppComponent {
       icon: 'md-calendar'
     },
     {
-      title: 'Crear Contrato',
-      url: '/detalle-contrato',
+      title: 'Solicitar Cotizacion',
+      url: '/solicitar-contrato',
       icon: 'clipboard'
     },
-    {
+    /*{
       title: 'Contratos Solicitados',
       url: '/lista-contratos-solicitados',
       icon: 'filing'
@@ -54,7 +54,7 @@ export class AppComponent {
       title: 'Contratos Aceptados',
       url: '/lista-contratos-vigentes',
       icon: 'done-all'
-    }
+    }*/
   ];
   public pageShare = [
     {
