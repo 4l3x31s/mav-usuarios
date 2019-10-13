@@ -31,17 +31,8 @@ const routes: Routes = [
   { path: 'detalle-conductora', loadChildren: './comun/detalle-conductora/detalle-conductora.module#DetalleConductoraPageModule' },
   { path: 'registro-carrera', loadChildren: './registro-carrera/registro-carrera.module#RegistroCarreraPageModule' },
   { path: 'calificar-carrera', loadChildren: './comun/calificar-carrera/calificar-carrera.module#CalificarCarreraPageModule' },
-<<<<<<< HEAD
   { path: 'registro-remisse', loadChildren: './registro-remisse/registro-remisse.module#RegistroRemissePageModule' },
-
-=======
   { path: 'solicitar-contrato', loadChildren: './solicitar-contrato/solicitar-contrato.module#SolicitarContratoPageModule' },
->>>>>>> 4639065a0058b520fb5ef30947a778e8e4b6251d
-
-
-
-
-
 ];
 
 @NgModule({
