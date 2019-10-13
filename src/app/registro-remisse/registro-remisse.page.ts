@@ -36,7 +36,9 @@ export class RegistroRemissePage implements OnInit {
   public lstFiltroParametrosCarrera: MdlParametrosCarrera [] = [];
   public parametroCarrera: MdlParametrosCarrera;
   public cliente: MdlCliente;
-  public carrera: MdlCarrera;
+  public carrera: MdlCarrera = new MdlCarrera(null, null, null, null, null, null, null, null, null, null, 
+    null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 
+    null, null, null);
   public fechaMin: string;
   lat: any;
   lng: any;
@@ -52,6 +54,7 @@ export class RegistroRemissePage implements OnInit {
   location: any;
   direccionIni: any = 'Donde te encontramos?';
   direccionFin: any = 'A donde quieres ir?';
+  map: any;
   
   @ViewChild('mapre') mapElemnt: ElementRef;
   constructor(
@@ -80,6 +83,7 @@ export class RegistroRemissePage implements OnInit {
   get f(): any { return this.frmCarrera.controls; }
   ngOnInit() {
     this.iniciarValidaciones();
+    this.parametrosPorPais(this.pais);
     if(this.estado===0){
       this.iniciarMapa();
     } else {
@@ -96,6 +100,19 @@ export class RegistroRemissePage implements OnInit {
       });
     }
     
+  }
+  trazarMapaDevuelto() {
+    this.trazarMapa();
+    this.sesionService.crearSesionBase().then(() => {
+    this.sesionService.getSesion().subscribe((cliente) => {
+        if (cliente){
+          this.cliente = cliente;
+          this.determinarDistanciaTiempo();
+        } else {
+          this.navController.navigateRoot('/login');
+        }
+      });
+    });
   }
   public iniciarMapa(){
     console.log(this.location);
@@ -118,12 +135,12 @@ export class RegistroRemissePage implements OnInit {
         mapTypeIds: ['styled_map']
       }
     };
-    var map = new google.maps.Map(this.mapElemnt.nativeElement, mapOptions);
-    map.mapTypes.set('styled_map', this.mapStyleService.getStyledMap());
-    map.setMapTypeId('styled_map');
+    this.map = new google.maps.Map(this.mapElemnt.nativeElement, mapOptions);
+    this.map.mapTypes.set('styled_map', this.mapStyleService.getStyledMap());
+    this.map.setMapTypeId('styled_map');
     let marker = new google.maps.Marker({
       position: this.location,
-      map: map,
+      map: this.map,
       title: '',
       draggable: false,
       animation: google.maps.Animation.DROP,
@@ -156,6 +173,7 @@ export class RegistroRemissePage implements OnInit {
           }
         });
         this.determinarDistanciaTiempo();
+        this.trazarMapaDevuelto();
       });
     });
   }
@@ -178,6 +196,7 @@ export class RegistroRemissePage implements OnInit {
             }
           });
           this.determinarDistanciaTiempo();
+          this.trazarMapaDevuelto()
         });
     });
   }
@@ -194,21 +213,7 @@ export class RegistroRemissePage implements OnInit {
   public trazarMapa(){
     const myLatlngIni = { lat: +this.lat, lng: +this.lng};
     const myLatlngFin = { lat: +this.latF, lng: +this.lngF};
-    const mapOptions = {
-      zoom: 11,
-      mapTypeId: google.maps.MapTypeId.ROADMAP,
-      mapTypeControl: false,
-      streetViewControl: false,
-      fullScreenControl: false,
-      zoomControl: false,
-      scaleControl: false,
-      rotateControl: false,
-      fullscreenControl: false,
-      center: myLatlngFin,
-      mapTypeControlOptions: {
-        mapTypeIds: ['styled_map']
-      }
-    };
+   
     var directionsService = new google.maps.DirectionsService;
     var directionsDisplay = new google.maps.DirectionsRenderer({
       suppressMarkers: true,
@@ -216,23 +221,20 @@ export class RegistroRemissePage implements OnInit {
         strokeColor: '#EE4088'
       }
     });
-    var map = new google.maps.Map(this.mapElemnt.nativeElement, mapOptions);
-    map.mapTypes.set('styled_map', this.mapStyleService.getStyledMap());
-    map.setMapTypeId('styled_map');
-    directionsDisplay.setMap(map);
+    directionsDisplay.setMap(this.map);
     let respuesta = this.calculateAndDisplayRoute(directionsService, directionsDisplay, myLatlngIni, myLatlngFin);
     respuesta.subscribe(data => {});
     let markers = [];
     markers.push(new google.maps.Marker
       ({
         position: myLatlngFin,
-        map: map,
+        map: this.map,
         icon: 'assets/image/pin-flag.png' //label: 'B'
       }));
     markers.push(new google.maps.Marker
       ({
         position: myLatlngIni,
-        map: map,
+        map: this.map,
         icon: 'assets/image/pin-check.png' //label: 'A'
       }));
   }
@@ -408,7 +410,7 @@ export class RegistroRemissePage implements OnInit {
         avoidHighways: false,
         avoidTolls: false
     };
-    this.parametrosPorPais(this.pais);
+    //this.parametrosPorPais(this.pais);
     let datos = this.getDistanceMatrix(responseMatrix);
     datos.subscribe(data => {
         const origins = data.originAddresses;
