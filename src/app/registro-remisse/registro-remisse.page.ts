@@ -42,7 +42,8 @@ export class RegistroRemissePage implements OnInit {
   lng: any;
   latF: any;
   lngF: any;
-  myLatlng: any;
+  estado: number = 0;
+  fecha:any;
 
   pais: string;
   ciudad: string;
@@ -52,7 +53,7 @@ export class RegistroRemissePage implements OnInit {
   direccionIni: any = 'Donde te encontramos?';
   direccionFin: any = 'A donde quieres ir?';
   
-  @ViewChild('map') mapElement: ElementRef;
+  @ViewChild('mapre') mapElemnt: ElementRef;
   constructor(
     public fb: FormBuilder,
     public carreraService: CarreraService,
@@ -73,60 +74,112 @@ export class RegistroRemissePage implements OnInit {
     this.pais = this.ubicacionService.getPais();//this.navParams.get().pais;
     this.ciudad = this.ubicacionService.getCiudad();//this.navParams.get().ciudad;
     this.distance = new google.maps.DistanceMatrixService();
+    this.location = this.navParams.get().location;
+    
   }
   get f(): any { return this.frmCarrera.controls; }
   ngOnInit() {
     this.iniciarValidaciones();
-    // this.carrera.moneda = 'Bolivianos';
-    this.iniciarMapa();
-    this.sesionService.crearSesionBase()
-    .then(() => {
-      this.sesionService.getSesion()
-        .subscribe((cliente) => {
-          if (cliente) {
+    if(this.estado===0){
+      this.iniciarMapa();
+    } else {
+      this.trazarMapa();
+      this.sesionService.crearSesionBase().then(() => {
+      this.sesionService.getSesion().subscribe((cliente) => {
+          if (cliente){
             this.cliente = cliente;
-            // this.determinarDistanciaTiempo();
+            this.determinarDistanciaTiempo();
           } else {
             this.navController.navigateRoot('/login');
           }
         });
-    });
-
+      });
+    }
+    
   }
   public iniciarMapa(){
-    navigator.geolocation.getCurrentPosition((resp) => {
-      this.myLatlng = { lat: resp.coords.latitude, lng: resp.coords.longitude};
-      console.log(this.myLatlng);
-      this.carrera.latInicio = this.myLatlng.lat;
-      this.carrera.longInicio = this.myLatlng.lng;
-      const mapOptions = {
-        zoom: 11,
-        mapTypeId: google.maps.MapTypeId.ROADMAP,
-        mapTypeControl: false,
-        streetViewControl: false,
-        fullScreenControl: false,
-        zoomControl: false,
-        scaleControl: false,
-        rotateControl: false,
-        fullscreenControl: false,
-        center: this.myLatlng,
-        mapTypeControlOptions: {
-          mapTypeIds: ['styled_map']
-        }
-      };
-      var map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
-      map.mapTypes.set('styled_map', this.mapStyleService.getStyledMap());
-      map.setMapTypeId('styled_map');
-      let marker = new google.maps.Marker({
-        position: {lat: this.lat, lng: this.lng},
-        map: map,
-        title: 'Mueveme',
-        draggable: false,
-        animation: google.maps.Animation.DROP,
-        icon: 'assets/image/car-pin.png'
+    console.log(this.location);
+    this.lat = this.location.lat;
+    this.lng = this.location.lng;
+    this.latF = this.location.lat;
+    this.lngF = this.location.lng;
+    const mapOptions = {
+      zoom: 15,
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+      mapTypeControl: false,
+      streetViewControl: false,
+      fullScreenControl: false,
+      zoomControl: false,
+      scaleControl: false,
+      rotateControl: false,
+      fullscreenControl: false,
+      center: this.location,
+      mapTypeControlOptions: {
+        mapTypeIds: ['styled_map']
+      }
+    };
+    var map = new google.maps.Map(this.mapElemnt.nativeElement, mapOptions);
+    map.mapTypes.set('styled_map', this.mapStyleService.getStyledMap());
+    map.setMapTypeId('styled_map');
+    let marker = new google.maps.Marker({
+      position: this.location,
+      map: map,
+      title: '',
+      draggable: false,
+      animation: google.maps.Animation.DROP,
+      icon: 'assets/image/pin-check.png'
+    });
+    var geocoder = new google.maps.Geocoder();
+    let mylocation = new google.maps.LatLng(this.lat, this.lng);
+    geocoder.geocode({'location': mylocation}, (results, status: any) => {
+      if (status === 'OK') {
+        this.processLocation(results, true);
+      }
+    });
+  }
+  async irMapaOrigen() {
+    let ubicacion: any = { lat: this.lat, lng: this.lng};
+    this.estado=1;
+    this.mapParamService.set(ubicacion);
+    const modal = await this.modalController.create({
+      component: MapaPage
+    }).then( dato => {
+      dato.present();
+      dato.onDidDismiss().then(resultado => {
+        this.lat = resultado.data.lat;
+        this.lng = resultado.data.lng;
+        var geocoder = new google.maps.Geocoder();
+        let mylocation = new google.maps.LatLng(this.lat, this.lng);
+        geocoder.geocode({'location': mylocation}, (results, status: any) => {
+          if (status === 'OK') {
+            this.processLocation(results, true);
+          }
+        });
+        this.determinarDistanciaTiempo();
       });
     });
-    
+  }
+  async irMapaDestino() {
+    this.estado = 1;
+    let ubicacion: any = { lat: this.latF, lng: this.lngF};
+    this.mapParamService.set(ubicacion);
+    const modal = await this.modalController.create({
+        component: MapaPage
+    }).then(dato => {
+        dato.present();
+        dato.onDidDismiss().then(resultado => {
+          this.latF = resultado.data.lat;
+          this.lngF = resultado.data.lng;
+          var geocoder = new google.maps.Geocoder();
+          let mylocation = new google.maps.LatLng(this.latF, this.lngF);
+          geocoder.geocode({'location': mylocation}, (results, status: any) => {
+            if (status === 'OK') {
+              this.processLocation(results, false);
+            }
+          });
+          this.determinarDistanciaTiempo();
+        });
+    });
   }
   public iniciarValidaciones(){
     this.frmCarrera = this.fb.group({
@@ -138,186 +191,188 @@ export class RegistroRemissePage implements OnInit {
       ]],
     });
   }
-  async irMapaOrigen() {
-    let ubicacion: any = { lat: this.carrera.latInicio, lng: this.carrera.longInicio};
-    this.mapParamService.set(ubicacion);
-    const modal = await this.modalController.create({
-      component: MapaPage
-    }).then( dato => {
-      dato.present();
-      dato.onDidDismiss().then(resultado => {
-        this.carrera.latInicio = resultado.data.lat;
-        this.carrera.longInicio = resultado.data.lng;
-        var geocoder = new google.maps.Geocoder();
-        let mylocation = new google.maps.LatLng(this.carrera.latInicio, this.carrera.longInicio);
-        geocoder.geocode({'location': mylocation}, (results, status: any) => {
-          if (status === 'OK') {
-            this.processLocation(results, true);
-          }
-        });
-        //calcular costo
-        this.determinarDistanciaTiempo();
+  public trazarMapa(){
+    const myLatlngIni = { lat: +this.lat, lng: +this.lng};
+    const myLatlngFin = { lat: +this.latF, lng: +this.lngF};
+    const mapOptions = {
+      zoom: 11,
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+      mapTypeControl: false,
+      streetViewControl: false,
+      fullScreenControl: false,
+      zoomControl: false,
+      scaleControl: false,
+      rotateControl: false,
+      fullscreenControl: false,
+      center: myLatlngFin,
+      mapTypeControlOptions: {
+        mapTypeIds: ['styled_map']
+      }
+    };
+    var directionsService = new google.maps.DirectionsService;
+    var directionsDisplay = new google.maps.DirectionsRenderer({
+      suppressMarkers: true,
+      polylineOptions: {
+        strokeColor: '#EE4088'
+      }
+    });
+    var map = new google.maps.Map(this.mapElemnt.nativeElement, mapOptions);
+    map.mapTypes.set('styled_map', this.mapStyleService.getStyledMap());
+    map.setMapTypeId('styled_map');
+    directionsDisplay.setMap(map);
+    let respuesta = this.calculateAndDisplayRoute(directionsService, directionsDisplay, myLatlngIni, myLatlngFin);
+    respuesta.subscribe(data => {});
+    let markers = [];
+    markers.push(new google.maps.Marker
+      ({
+        position: myLatlngFin,
+        map: map,
+        icon: 'assets/image/pin-flag.png' //label: 'B'
+      }));
+    markers.push(new google.maps.Marker
+      ({
+        position: myLatlngIni,
+        map: map,
+        icon: 'assets/image/pin-check.png' //label: 'A'
+      }));
+  }
+  calculateAndDisplayRoute(directionsService, directionsDisplay, myLatlngIni, myLatlngFin): Observable<any> {
+    return Observable.create((observer) => {
+      directionsService.route({
+        origin: myLatlngIni,
+        destination: myLatlngFin,
+        travelMode: google.maps.TravelMode.DRIVING
+      }, function(response, status) {
+        if (status === 'OK') {
+          directionsDisplay.setDirections(response);
+        } else {
+          window.alert('Directions request failed due to ' + status);
+        }
+        observer.next(response);
+        observer.complete();
       });
     });
   }
-  async irMapaDestino() {
-    let ubicacion: any = { lat: this.carrera.latFin, lng: this.carrera.longFin};
-    this.mapParamService.set(ubicacion);
-    const modal = await this.modalController.create({
-        component: MapaPage
-    }).then(dato => {
-        dato.present();
-        dato.onDidDismiss().then(resultado => {
-          this.carrera.latFin = resultado.data.lat;
-          this.carrera.longFin = resultado.data.lng;
-          var geocoder = new google.maps.Geocoder();
-          let mylocation = new google.maps.LatLng(this.carrera.latFin, this.carrera.longFin);
-          geocoder.geocode({'location': mylocation}, (results, status: any) => {
-            if (status === 'OK') {
-              this.processLocation(results, false);
-            }
-          });
-          //calcular costo
-          this.determinarDistanciaTiempo();
-        });
+  
+  async confirmarFecha() {
+  let fechaCarrera =  moment(this.fecha).toObject();
+  let fechaCarreraMoment = moment(fechaCarrera);
+  let fechaActual = moment().format();
+  let mensaje = null;
+  const alert = await this.alertController.create({
+    header: 'Confirmar',
+    message: 'Desea crear la carrera en:  <br>' +
+              'Fecha:  <strong>' + fechaCarrera.date  + '/' + (fechaCarrera.months + 1) + '/' + fechaCarrera.years + '</strong> <br> ' +
+              'Hora :  <strong>' + fechaCarrera.hours + ':' + fechaCarrera.minutes + ' ? </strong>',
+    buttons: [
+      {
+        text: 'cancelar',
+        role: 'cancelar',
+        cssClass: 'secondary',
+        handler: (blah) => {
+          
+        }
+      }, {
+        text: 'Confirmar',
+        handler: () => {
+          this.grabar();
+        }
+      }
+    ]
     });
   }
- 
-  // async validarHoraPeticionCarrera() {
-  //   const alert = await this.alertController.create({
-  //     header: 'Error',
-  //     message: 'No puede registrar una hora menor a la actual.',
-  //     buttons: ['Aceptar']
-  //   });
+  public grabar(){
+    this.loadingServices.present();
+    //Notificaciones PUSH
+    //var identificadorPrueba = Date.now();
+    this.carrera.idUsuario = this.cliente.id;
+    this.carrera.estado = 1;
+    this.carrera.nombreCliente = this.cliente.nombre;
+    this.carrera.pais = this.pais;
+    this.carrera.ciudad = this.ciudad;
+    this.carrera.direccionInicio = this.direccionIni;
+    this.carrera.direccionDestino = this.direccionFin;
+    this.carrera.latInicio = this.lat;
+    this.carrera.longInicio = this.lng;
+    this.carrera.latFin = this.latF;
+    this.carrera.longFin = this.lngF;
+    this.carrera.fechaInicio = this.fecha;
 
-  //   await alert.present();
-  // }
+    let carrera:MdlCarrera = this.carrera;
+    console.log('*************CARRERA REGISTRADA******************');
+    console.log(this.carrera);
+      this.carreraService.crearCarrera(this.carrera)
+      .then(() => {
+        console.log('*************CARRERA REGISTRADA 2******************');
+        console.log(this.carrera);
+        setTimeout(() => {
+          this.carreraService.getCarrerasPorId(carrera.id).subscribe(data => {
+            if(data[0].estado === 1) {
+              this.alertService.present('Info','Espere un momento porfavor, estamos buscando la conductora más cercana.');
+            }
+          });
+        }, 30000);
+        setTimeout(() => {
+          this.carreraService.getCarrerasPorId(carrera.id).subscribe(data => {
+            if(data[0].estado === 1) {
+              this.alertService.present('Info', 'Lo sentimos no hay conductoras disponibles.');
+              this.carrera.estado = 1000;
+              this.carreraService.eliminarCarrera(carrera.id);
+            }
+          });
+        }, 60000);
 
-  // async confirmarFecha() {
-  //   let fechaCarrera =  moment(this.carrera.fechaInicio).toObject();
-  //   let fechaCarreraMoment = moment(fechaCarrera);
-  //   let fechaActual = moment().format();
-  //   let mensaje = null;
-
-  //   if(fechaCarreraMoment.diff(fechaActual, 'seconds') < -120 ) {
-  //     this.validarHoraPeticionCarrera();
-  //   }else{     
-  //     const alert = await this.alertController.create({
-  //       header: 'Confirmar',
-  //       message: 'Desea crear la carrera en:  <br>' +
-  //                'Fecha:  <strong>' + fechaCarrera.date  + '/' + (fechaCarrera.months + 1) + '/' + fechaCarrera.years + '</strong> <br> ' +
-  //                'Hora :  <strong>' + fechaCarrera.hours + ':' + fechaCarrera.minutes + ' ? </strong>',
-  //       buttons: [
-  //         {
-  //           text: 'cancelar',
-  //           role: 'cancelar',
-  //           cssClass: 'secondary',
-  //           handler: (blah) => {
-  //             //this.grabar();
-  //           }
-  //         }, {
-  //           text: 'Confirmar',
-  //           handler: () => {
-  //             this.grabar();
-  //           }
-  //         }
-  //       ]
-  //     });
-
-  //     await alert.present();
-  //   }
-  // }
-  // public grabar(){
-  //   this.loadingServices.present();
-  //   //Notificaciones PUSH
-    
-
-  //   //var identificadorPrueba = Date.now();
-  //   this.carrera.idUsuario = this.cliente.id;
-  //   this.carrera.estado = 1;
-  //   this.carrera.nombreCliente = this.cliente.nombre;
-  //   this.carrera.pais = this.pais;
-  //   this.carrera.ciudad = this.ciudad;
-  //   this.carrera.direccionInicio = this.direccionIni;
-  //   this.carrera.direccionDestino = this.direccionFin;
-    
-  //   let carrera:MdlCarrera = this.carrera;
-  //   console.log('*************CARRERA REGISTRADA******************');
-  //   console.log(this.carrera);
-  //     this.carreraService.crearCarrera(this.carrera)
-  //     .then(() => {
-  //       console.log('*************CARRERA REGISTRADA 2******************');
-  //       console.log(this.carrera);
-  //       setTimeout(() => {
-  //         this.carreraService.getCarrerasPorId(carrera.id).subscribe(data => {
-  //           if(data[0].estado === 1) {
-  //             this.alertService.present('Info','Espere un momento porfavor, estamos buscando la conductora más cercana.');
-  //           }
-  //         });
-  //       }, 30000);
-  //       setTimeout(() => {
-  //         this.carreraService.getCarrerasPorId(carrera.id).subscribe(data => {
-  //           if(data[0].estado === 1) {
-  //             this.alertService.present('Info', 'Lo sentimos no hay conductoras disponibles.');
-  //             this.carrera.estado = 1000;
-  //             this.carreraService.eliminarCarrera(carrera.id);
-  //           }
-  //         });
-  //       }, 60000);
-
-  //       this.conductoraService.getConductoraPorPaisCiudad(this.pais.toUpperCase(), this.ciudad.toUpperCase())
-  //         .subscribe( lstConductoras => {
-  //           for(let item of lstConductoras) {
-  //             if(item.ui) {
-  //               let notificaciones = {
-  //                 notification:{
-  //                   title: 'Mujeres al Volante',
-  //                   body: 'Hay una carrera disponible, deberias tomarla!!!!',
-  //                   sound: 'default',
-  //                   click_action: 'FCM_PLUGIN_ACTIVITY',
-  //                   icon: 'fcm_push_icon'
-  //                 },
-  //                 data: {
-  //                   landing_page: 'home',
-  //                 },
-  //                 to: item.ui,
-  //                 priority: 'high',
-  //                 restricted_package_name: ''
-  //               };
-  //               this.pushNotifService.postGlobal(notificaciones, '')
-  //               .subscribe(response => {
-  //               });
-  //             }
-  //           }
-  //         });
-  //         this.loadingServices.dismiss();
-  //         this.abrirModal();
+        this.conductoraService.getConductoraPorPaisCiudad(this.pais.toUpperCase(), this.ciudad.toUpperCase())
+          .subscribe( lstConductoras => {
+            for(let item of lstConductoras) {
+              if(item.ui) {
+                let notificaciones = {
+                  notification:{
+                    title: 'Mujeres al Volante',
+                    body: 'Hay una carrera disponible, deberias tomarla!!!!',
+                    sound: 'default',
+                    click_action: 'FCM_PLUGIN_ACTIVITY',
+                    icon: 'fcm_push_icon'
+                  },
+                  data: {
+                    landing_page: 'home',
+                  },
+                  to: item.ui,
+                  priority: 'high',
+                  restricted_package_name: ''
+                };
+                this.pushNotifService.postGlobal(notificaciones, '')
+                .subscribe(response => {
+                });
+              }
+            }
+          });
+          this.loadingServices.dismiss();
+          this.abrirModal();
         
-  //       this.alertService.present('Información', 'Estamos buscando una conductora disponible.');
-  //       this.carrera = this.carreraService.getCarreraSesion();
+        this.alertService.present('Información', 'Estamos buscando una conductora disponible.');
+        this.carrera = this.carreraService.getCarreraSesion();
         
-  //     })
-  //     .catch( error => {
-  //       this.loadingServices.dismiss();
-  //       this.alertService.present('Error','Hubo un error al grabar los datos');
-  //     })
+      })
+      .catch( error => {
+        this.loadingServices.dismiss();
+        this.alertService.present('Error','Hubo un error al grabar los datos');
+      })
 
-  //     this.navController.navigateRoot('/calendario-carrera');
-
-  // }
-  // async abrirModal() {
-  //   let carreraSeleccionada:MdlCarrera = this.carrera;
-
-  //   const modal = await this.modalController.create({
-  //     component: DetalleCarreraPage,
-  //     componentProps: { 
-  //       carrera: carreraSeleccionada
-  //     }
-  //   });
-  //   return await modal.present();
-  // }
-
+      this.navController.navigateRoot('/calendario-carrera');
+  }
   
+  async abrirModal() {
+    let carreraSeleccionada:MdlCarrera = this.carrera;
+    const modal = await this.modalController.create({
+      component: DetalleCarreraPage,
+      componentProps: { 
+        carrera: carreraSeleccionada
+      }
+    });
+    return await modal.present();
+  }
+
   processLocation(location, tipo: boolean) {
     if (location[1]) {
       for (var i = 0; i < location.length; i++) {
@@ -334,21 +389,18 @@ export class RegistroRemissePage implements OnInit {
     }
   }
 
-  
-
   public async determinarDistanciaTiempo() {
     let responseMatrix: google.maps.DistanceMatrixRequest;
-
     responseMatrix = {
         origins:
             [{
-                lat: Number(this.carrera.latInicio),
-                lng: Number(this.carrera.longInicio)
+                lat: Number(this.lat),
+                lng: Number(this.lng)
             }],
         destinations:
             [{
-                lat: Number(this.carrera.latFin),
-                lng: Number(this.carrera.longFin)
+                lat: Number(this.latF),
+                lng: Number(this.lngF)
             }],
         travelMode: google.maps.TravelMode.DRIVING,
         unitSystem: google.maps.UnitSystem.METRIC,
@@ -356,7 +408,6 @@ export class RegistroRemissePage implements OnInit {
         avoidHighways: false,
         avoidTolls: false
     };
-    
     this.parametrosPorPais(this.pais);
     let datos = this.getDistanceMatrix(responseMatrix);
     datos.subscribe(data => {
@@ -369,7 +420,6 @@ export class RegistroRemissePage implements OnInit {
                 const time = element.duration.value;
                 // calcular costos UBER: https://calculouber.netlify.com/
                 let montoFinal: number = (Math.round((this.parametroCarrera.base + ((element.duration.value / 60) * this.parametroCarrera.tiempo) + ((element.distance.value / 1000) * this.parametroCarrera.distancia))* this.parametroCarrera.tarifaDinamica) + this.parametroCarrera.cuotaSolicitud);
-
                 if (montoFinal < 10) {
                     this.carrera.costo = 10;
                 } else {
@@ -380,8 +430,6 @@ export class RegistroRemissePage implements OnInit {
     });
   }
 
-  
-   
   public parametrosPorPais(pais: string) {
     this.loadingServices.present();    
     this.parametrosCarreraService.getParametrosPorPais(pais).subscribe( data => {
