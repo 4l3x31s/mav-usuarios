@@ -98,7 +98,14 @@
   --ion-color-verdec-tint: #9bcc50;
 
 }
-
+.ion-color-transparente{
+  --ion-color-base: #E91E63;
+  --ion-color-base-rgba: 233, 30, 99,0;
+  --ion-color-contrast: #ffffff;
+  --ion-color-contrast-rgba: 255, 255, 255,0;
+  --ion-color-shade: #c2185b;
+  --ion-color-tint: #E91E63;
+}
 .ion-color-rosado {
   --ion-color-base: #E91E63;
   --ion-color-base-rgb: 233, 30, 99;

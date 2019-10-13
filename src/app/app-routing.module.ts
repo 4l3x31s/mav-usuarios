@@ -31,6 +31,8 @@ const routes: Routes = [
   { path: 'detalle-conductora', loadChildren: './comun/detalle-conductora/detalle-conductora.module#DetalleConductoraPageModule' },
   { path: 'registro-carrera', loadChildren: './registro-carrera/registro-carrera.module#RegistroCarreraPageModule' },
   { path: 'calificar-carrera', loadChildren: './comun/calificar-carrera/calificar-carrera.module#CalificarCarreraPageModule' },
+  { path: 'registro-remisse', loadChildren: './registro-remisse/registro-remisse.module#RegistroRemissePageModule' },
+
 
 
 

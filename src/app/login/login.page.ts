@@ -59,8 +59,8 @@ export class LoginPage implements OnInit {
     this.iniciaValidaciones();
     if(environment.isSesionPrueba){
       //datos prueba
-      this.user = '';
-      this.pass = '';
+      this.user = 'vparedes@gmail.com';
+      this.pass = '123456';
     }
     this.loadingService.present()
       .then(()=>{
@@ -73,7 +73,6 @@ export class LoginPage implements OnInit {
               }
               this.loadingService.dismiss();
             },e => {
-            
               this.loadingService.dismiss();
               this.alertService.present('Error', 'Error al obtener la sesion.');
             });

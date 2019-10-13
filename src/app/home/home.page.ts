@@ -180,6 +180,14 @@ export class HomePage implements OnInit, OnDestroy {
     });
     this.navCtrl.navigateForward('/registro-carrera');
   }
+  public irMapRemisse() {
+    // this.navParam.set({
+    //   pais: this.pais.toUpperCase(),
+    //   ciudad: this.ciudad.toUpperCase(),
+    //   location: this.location
+    // });
+    this.navCtrl.navigateForward('/registro-remisse');
+  }
   ionViewDidEnter(){
     this.subscription = this.platform.backButton.subscribe(()=>{
         navigator['app'].exitApp();
