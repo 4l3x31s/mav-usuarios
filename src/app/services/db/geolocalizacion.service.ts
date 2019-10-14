@@ -26,4 +26,7 @@ export class GeolocalizacionService {
  listarCambios() {
   return this.afDB.list('geolocations').valueChanges();
  }
+ ubicarConductora(id: number) {
+  return this.afDB.list('geolocations', ref => ref.orderByChild('id').equalTo(id)).valueChanges();
+ }
 }

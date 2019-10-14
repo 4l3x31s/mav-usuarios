@@ -19,6 +19,7 @@ import { UbicacionService } from 'src/app/services/ubicacion.service';
 import { MdlVehiculo } from 'src/app/modelo/mdlVehiculo';
 import { VehiculoService } from 'src/app/services/db/vehiculo.service';
 import { MapStyleService } from 'src/app/services/util/map-style.service';
+import { GeolocalizacionService } from 'src/app/services/db/geolocalizacion.service';
 
 @Component({
   selector: 'app-detalle-carrera',
@@ -33,7 +34,8 @@ export class DetalleCarreraPage implements OnInit {
   public mostrarCalificacion: boolean = false;
 
   form: FormGroup;
-  
+  distance: any;
+  tiempoLlegada: any;
 
   cliente: MdlCliente;
   conductora: MdlConductora;
@@ -83,6 +85,7 @@ export class DetalleCarreraPage implements OnInit {
     public vehiculoService: VehiculoService,
     public mapStyleService: MapStyleService,
     private storage: AngularFireStorage,
+    private geoLocalizacionService: GeolocalizacionService
 
   ) { }
 
@@ -103,11 +106,11 @@ export class DetalleCarreraPage implements OnInit {
       // }
       this.conductoraService.getConductora(this.carrera.idConductora).subscribe(conductora=>{
         this.conductora = conductora;
-        let valor = 'mav/conductora/'+conductora.id+'-foto';
+        let valor = 'mav/conductora/' + conductora.id + '-foto';
 
         this.storage.ref(valor).getDownloadURL()
           .subscribe(ruta => {
-            console.log('pagina....')
+            console.log('pagina....');
             console.log(ruta);
             this.urlImagenFirebase = ruta;
 
@@ -119,7 +122,17 @@ export class DetalleCarreraPage implements OnInit {
         .subscribe(vehiculo => {
           console.log(vehiculo[0]);
           this.vehiculo = Object.assign(vehiculo[0]);
-        })
+        });
+        if(this.carrera.estado === 2 && this.carrera.idContrato === undefined) {
+          this.geoLocalizacionService.ubicarConductora(this.carrera.idConductora)
+            .subscribe(data => {
+              console.log('ubicacion')
+              console.log(data);
+              let ubicacion: any = data
+              this.determinarDistanciaTiempo(ubicacion[0].latitude, ubicacion[0].longitude);
+            })
+        }
+        
       });
       this.cargarDatos();
     }, error=>{
@@ -127,6 +140,55 @@ export class DetalleCarreraPage implements OnInit {
     
    
   }
+
+  public async determinarDistanciaTiempo(lat: number, lng: number) {
+    let responseMatrix: google.maps.DistanceMatrixRequest;
+
+    responseMatrix = {
+        origins:
+            [{
+                lat: Number(lat),
+                lng: Number(lng)
+            }],
+        destinations:
+            [{
+                lat: Number(this.carrera.latInicio),
+                lng: Number(this.carrera.longInicio)
+            }],
+        travelMode: google.maps.TravelMode.DRIVING,
+        unitSystem: google.maps.UnitSystem.METRIC,
+        durationInTraffic: false,
+        avoidHighways: false,
+        avoidTolls: false
+    };
+    this.distance = new google.maps.DistanceMatrixService();
+    let datos = this.getDistanceMatrix(responseMatrix);
+    datos.subscribe(data => {
+        const origins = data.originAddresses;
+        for (let i = 0; i < origins.length; i++) {
+            const results = data.rows[i].elements;
+            for (let j = 0; j < results.length; j++) {
+                const element = results[j];
+                const distance = element.distance.value;
+                const time = element.duration.value; // dividir entre 60
+                this.tiempoLlegada = 'Llego en ' + Math.round((time/60)) + ' Minutos';
+                // calcular costos UBER: https://calculouber.netlify.com/
+            }
+        }
+    });
+  }
+  getDistanceMatrix(req: google.maps.DistanceMatrixRequest): Observable<google.maps.DistanceMatrixResponse> {
+    return Observable.create((observer) => {
+        this.distance.getDistanceMatrix(req, (rsp, status) => {
+            // status checking goes here
+      
+            observer.next(rsp);
+            observer.complete();
+        });
+    });
+  }
+
+  //ubicarConductora
 
   initAutocomplete() {
     this.latInicio = typeof(this.carrera.latInicio)==='string'?parseFloat(this.carrera.latInicio):this.carrera.latInicio;

@@ -9,15 +9,14 @@
 <ion-content >
     
     <div #mapge id="mapge"></div>
-    <ion-fab (click)="irMapCarrera()"  vertical="bottom" horizontal="start" slot="fixed">
-        <ion-button color="verdec">
-            <ion-icon name="clock"></ion-icon>&nbsp;Programar carrera
-        </ion-button>
-      </ion-fab>
-      <ion-fab (click)="irMapRemisse()"  vertical="bottom" horizontal="end" slot="fixed">
-          <ion-button color="verdec">
-              <ion-icon name="logo-model-s"></ion-icon>&nbsp;Remisse
-          </ion-button>
-      </ion-fab>
+     <ion-fab vertical="bottom" horizontal="center" slot="fixed" style="left: 30%;">
+
+      <ion-button expand="full" (click)="irMapRemisse()" color="verdec">
+        <ion-icon name="logo-model-s" slot="start" ></ion-icon>Remisse
+      </ion-button>
+      <ion-button expand="full" (click)="irMapCarrera()" color="verdec">
+        <ion-icon name="clock" slot="start" ></ion-icon>Programar carrera
+      </ion-button>
+    </ion-fab>
 </ion-content>
 <!-- 4l3x31sv -->
