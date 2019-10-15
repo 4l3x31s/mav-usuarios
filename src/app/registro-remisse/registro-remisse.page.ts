@@ -55,7 +55,13 @@ export class RegistroRemissePage implements OnInit {
   direccionIni: any = 'Donde te encontramos?';
   direccionFin: any = 'A donde quieres ir?';
   map: any;
-  
+  directionsService = new google.maps.DirectionsService();
+  directionsDisplay = new google.maps.DirectionsRenderer({
+      suppressMarkers: true,
+      polylineOptions: {
+        strokeColor: '#EE4088'
+      }
+    });
   @ViewChild('mapre') mapElemnt: ElementRef;
   constructor(
     public fb: FormBuilder,
@@ -87,7 +93,7 @@ export class RegistroRemissePage implements OnInit {
     if(this.estado===0){
       this.iniciarMapa();
     } else {
-      this.trazarMapa();
+      this.trazarMapa(this.directionsDisplay);
       this.sesionService.crearSesionBase().then(() => {
       this.sesionService.getSesion().subscribe((cliente) => {
           if (cliente){
@@ -102,7 +108,10 @@ export class RegistroRemissePage implements OnInit {
     
   }
   trazarMapaDevuelto() {
-    this.trazarMapa();
+    let respuesta = this.trazarMapa(this.directionsDisplay);
+    respuesta.subscribe(data => {
+      this.directionsDisplay.setDirections(data);
+    })
     /*this.sesionService.crearSesionBase().then(() => {
     this.sesionService.getSesion().subscribe((cliente) => {
         if (cliente){
@@ -115,6 +124,12 @@ export class RegistroRemissePage implements OnInit {
     });*/
   }
   public iniciarMapa(){
+    this.directionsDisplay = new google.maps.DirectionsRenderer({
+      suppressMarkers: true,
+      polylineOptions: {
+        strokeColor: '#EE4088'
+      }
+    });
     console.log(this.location);
     this.lat = this.location.lat;
     this.lng = this.location.lng;
@@ -138,6 +153,9 @@ export class RegistroRemissePage implements OnInit {
     this.map = new google.maps.Map(this.mapElemnt.nativeElement, mapOptions);
     this.map.mapTypes.set('styled_map', this.mapStyleService.getStyledMap());
     this.map.setMapTypeId('styled_map');
+
+    
+    this.directionsDisplay.setMap(this.map);
     /*let marker = new google.maps.Marker({
       position: this.location,
       map: this.map,
@@ -264,41 +282,19 @@ export class RegistroRemissePage implements OnInit {
       ]],
     });
   }
-  public async trazarMapa(){
+  public trazarMapa(directionsDisplay: any): Observable<any>{
     const myLatlngIni = { lat: +this.lat, lng: +this.lng};
     const myLatlngFin = { lat: +this.latF, lng: +this.lngF};
-    
-    var directionsService = new google.maps.DirectionsService;
-    var directionsDisplay = new google.maps.DirectionsRenderer();
-    directionsDisplay.setMap(null);
-  
-    let respuesta = await this.calculateAndDisplayRoute(directionsService, directionsDisplay, myLatlngIni, myLatlngFin);
-    respuesta.subscribe(data => {
-      console.log(data)
-      if (status === 'OK') {
-        directionsDisplay.setDirections(data);
-      } else {
-        //window.alert('Directions request failed due to ' + status);
-      }
+    return Observable.create((observer) => {
+      this.directionsService.route({
+        origin: myLatlngIni,
+        destination: myLatlngFin,
+        travelMode: google.maps.TravelMode.DRIVING
+      }, function(response, status: any) {
+        observer.next(response);
+        observer.complete();
+      });
     });
-
-    
-    directionsDisplay = new google.maps.DirectionsRenderer({
-      suppressMarkers: true,
-      polylineOptions: {
-        strokeColor: '#EE4088'
-      }
-    });
-    directionsDisplay.setMap(this.map);
-    respuesta = await this.calculateAndDisplayRoute(directionsService, directionsDisplay, myLatlngIni, myLatlngFin);
-    respuesta.subscribe(data => {
-      if (status === 'OK') {
-        directionsDisplay.setDirections(data);
-      } else {
-        //window.alert('Directions request failed due to ' + status);
-      }
-    });
-    
   }
   calculateAndDisplayRoute(directionsService, directionsDisplay, myLatlngIni, myLatlngFin): Observable<any> {
     return Observable.create((observer) => {
@@ -307,7 +303,17 @@ export class RegistroRemissePage implements OnInit {
         destination: myLatlngFin,
         travelMode: google.maps.TravelMode.DRIVING
       }, function(response, status) {
-        console.log(response)
+        if (status === 'OK') {
+          if(directionsDisplay!=null) {
+            directionsDisplay.setDirections(response);
+          }else{
+            directionsDisplay = new google.maps.DirectionsRenderer();
+            directionsDisplay.setDirections({routes: []});
+          }
+        } else {
+          //window.alert('Directions request failed due to ' + status);
+          console.log(status);
+        }
         observer.next(response);
         observer.complete();
       });
