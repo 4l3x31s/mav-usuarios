@@ -46,7 +46,7 @@ export class RegistroRemissePage implements OnInit {
   lngF: any;
   estado: number = 0;
   fecha:any;
-
+  markers = [];
   pais: string;
   ciudad: string;
   distance: any;
@@ -103,7 +103,7 @@ export class RegistroRemissePage implements OnInit {
   }
   trazarMapaDevuelto() {
     this.trazarMapa();
-    this.sesionService.crearSesionBase().then(() => {
+    /*this.sesionService.crearSesionBase().then(() => {
     this.sesionService.getSesion().subscribe((cliente) => {
         if (cliente){
           this.cliente = cliente;
@@ -112,7 +112,7 @@ export class RegistroRemissePage implements OnInit {
           this.navController.navigateRoot('/login');
         }
       });
-    });
+    });*/
   }
   public iniciarMapa(){
     console.log(this.location);
@@ -138,21 +138,54 @@ export class RegistroRemissePage implements OnInit {
     this.map = new google.maps.Map(this.mapElemnt.nativeElement, mapOptions);
     this.map.mapTypes.set('styled_map', this.mapStyleService.getStyledMap());
     this.map.setMapTypeId('styled_map');
-    let marker = new google.maps.Marker({
+    /*let marker = new google.maps.Marker({
       position: this.location,
       map: this.map,
       title: '',
       draggable: false,
       animation: google.maps.Animation.DROP,
       icon: 'assets/image/pin-check.png'
+    });*/
+  
+    let marker = new google.maps.Marker({
+      position: this.location,
+      map: this.map,
+      icon: 'assets/image/pin-check.png',
+      title: 'prueb'
     });
+    
+    //this.addMarker(this.location,image);
+    this.markers[0] = marker;
     var geocoder = new google.maps.Geocoder();
     let mylocation = new google.maps.LatLng(this.lat, this.lng);
+    this.setMapOnAll(this.map);
     geocoder.geocode({'location': mylocation}, (results, status: any) => {
       if (status === 'OK') {
         this.processLocation(results, true);
       }
     });
+  }
+
+  addMarker(location, image) {
+    let marker = new google.maps.Marker({
+      position: location,
+      map: this.map,
+      icon: image,
+      title: 'prueb'
+    });
+    this.markers.push(marker);
+  }
+  setMapOnAll(map) {
+    for (let i = 0; i < this.markers.length; i++) {
+      this.markers[i].setMap(map);
+    }
+  }
+  clearMarkers() {
+    this.setMapOnAll(null);
+  }
+  deleteMarkers() {
+    this.clearMarkers();
+    this.markers = [];
   }
   async irMapaOrigen() {
     let ubicacion: any = { lat: this.lat, lng: this.lng};
@@ -172,8 +205,19 @@ export class RegistroRemissePage implements OnInit {
             this.processLocation(results, true);
           }
         });
+        this.clearMarkers();
+        this.markers[0] = null;
+        let marker = new google.maps.Marker({
+          position: mylocation,
+          map: this.map,
+          icon: 'assets/image/pin-check.png',
+          title: 'prueb'
+        });
+        this.markers[0] = marker;
+        this.setMapOnAll(this.map);
+        var geocoder = new google.maps.Geocoder();
         this.determinarDistanciaTiempo();
-        this.trazarMapaDevuelto();
+        //this.trazarMapaDevuelto();
       });
     });
   }
@@ -195,6 +239,16 @@ export class RegistroRemissePage implements OnInit {
               this.processLocation(results, false);
             }
           });
+          this.clearMarkers();
+          this.markers[1] = null;
+          let marker = new google.maps.Marker({
+            position: mylocation,
+            map: this.map,
+            icon: 'assets/image/pin-check.png',
+            title: 'prueb'
+          });
+          this.markers[1] = marker;
+          this.setMapOnAll(this.map);
           this.determinarDistanciaTiempo();
           this.trazarMapaDevuelto()
         });
@@ -210,33 +264,41 @@ export class RegistroRemissePage implements OnInit {
       ]],
     });
   }
-  public trazarMapa(){
+  public async trazarMapa(){
     const myLatlngIni = { lat: +this.lat, lng: +this.lng};
     const myLatlngFin = { lat: +this.latF, lng: +this.lngF};
-   
+    
     var directionsService = new google.maps.DirectionsService;
-    var directionsDisplay = new google.maps.DirectionsRenderer({
+    var directionsDisplay = new google.maps.DirectionsRenderer();
+    directionsDisplay.setMap(null);
+  
+    let respuesta = await this.calculateAndDisplayRoute(directionsService, directionsDisplay, myLatlngIni, myLatlngFin);
+    respuesta.subscribe(data => {
+      console.log(data)
+      if (status === 'OK') {
+        directionsDisplay.setDirections(data);
+      } else {
+        //window.alert('Directions request failed due to ' + status);
+      }
+    });
+
+    
+    directionsDisplay = new google.maps.DirectionsRenderer({
       suppressMarkers: true,
       polylineOptions: {
         strokeColor: '#EE4088'
       }
     });
     directionsDisplay.setMap(this.map);
-    let respuesta = this.calculateAndDisplayRoute(directionsService, directionsDisplay, myLatlngIni, myLatlngFin);
-    respuesta.subscribe(data => {});
-    let markers = [];
-    markers.push(new google.maps.Marker
-      ({
-        position: myLatlngFin,
-        map: this.map,
-        icon: 'assets/image/pin-flag.png' //label: 'B'
-      }));
-    markers.push(new google.maps.Marker
-      ({
-        position: myLatlngIni,
-        map: this.map,
-        icon: 'assets/image/pin-check.png' //label: 'A'
-      }));
+    respuesta = await this.calculateAndDisplayRoute(directionsService, directionsDisplay, myLatlngIni, myLatlngFin);
+    respuesta.subscribe(data => {
+      if (status === 'OK') {
+        directionsDisplay.setDirections(data);
+      } else {
+        //window.alert('Directions request failed due to ' + status);
+      }
+    });
+    
   }
   calculateAndDisplayRoute(directionsService, directionsDisplay, myLatlngIni, myLatlngFin): Observable<any> {
     return Observable.create((observer) => {
@@ -245,11 +307,7 @@ export class RegistroRemissePage implements OnInit {
         destination: myLatlngFin,
         travelMode: google.maps.TravelMode.DRIVING
       }, function(response, status) {
-        if (status === 'OK') {
-          directionsDisplay.setDirections(response);
-        } else {
-          window.alert('Directions request failed due to ' + status);
-        }
+        console.log(response)
         observer.next(response);
         observer.complete();
       });
@@ -415,7 +473,10 @@ export class RegistroRemissePage implements OnInit {
     datos.subscribe(data => {
         const origins = data.originAddresses;
         for (let i = 0; i < origins.length; i++) {
-            const results = data.rows[i].elements;
+            const results: any = data.rows[i].elements;
+            if(results[0].status === 'ZERO_RESULTS') {
+
+            }else{
             for (let j = 0; j < results.length; j++) {
                 const element = results[j];
                 const distance = element.distance.value;
@@ -428,6 +489,7 @@ export class RegistroRemissePage implements OnInit {
                     this.carrera.costo = montoFinal;
                 }
             }
+          }
         }
     });
   }
