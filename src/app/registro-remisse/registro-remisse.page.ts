@@ -88,6 +88,7 @@ export class RegistroRemissePage implements OnInit {
   }
   get f(): any { return this.frmCarrera.controls; }
   ngOnInit() {
+    this.estado=1;
     this.iniciarValidaciones();
     this.sesionService.crearSesionBase()
     .then(() => {
@@ -207,7 +208,7 @@ export class RegistroRemissePage implements OnInit {
   }
   async irMapaOrigen() {
     let ubicacion: any = { lat: this.lat, lng: this.lng};
-    this.estado=1;
+    
     this.mapParamService.set(ubicacion);
     const modal = await this.modalController.create({
       component: MapaPage
@@ -234,13 +235,15 @@ export class RegistroRemissePage implements OnInit {
         this.markers[0] = marker;
         this.setMapOnAll(this.map);
         var geocoder = new google.maps.Geocoder();
-        this.determinarDistanciaTiempo();
-        //this.trazarMapaDevuelto();
+        if (this.estado !== 1) {
+          this.determinarDistanciaTiempo();
+          this.trazarMapaDevuelto();
+        }
       });
     });
   }
   async irMapaDestino() {
-    this.estado = 1;
+    this.estado = 2;
     let ubicacion: any = { lat: this.latF, lng: this.lngF};
     this.mapParamService.set(ubicacion);
     const modal = await this.modalController.create({

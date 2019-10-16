@@ -33,7 +33,8 @@ export class DetalleContratoPage implements OnInit {
         null, null, null, null, null, 
         null, null, null, null, null, 
         null, null, null, null, null, 
-        null, null, null, null, null, null,null
+        null, null, null, null, null, 
+        null, null, null
     );
     public lstClientes: MdlCliente[] = [];
     public lstFeriados: MdlFeriado[] = [];
@@ -85,14 +86,16 @@ export class DetalleContratoPage implements OnInit {
                     this.contrato = this.navParamService.get();
                     if(this.contrato.fechaInicio === undefined) {
                         this.contrato = new MdlContrato(null, null, null, null,
-                            null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+                            null, null, null, null, null, null, null, null, null, 
+                            null, null, null, null, null, null, null, null, null, null);
                         this.contrato.fechaInicio = moment().format();
                     }
                     console.log('contrato***********')
                     console.log(this.contrato)
                 } else {
                     this.contrato = new MdlContrato(null, null, null, null,
-                        null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+                        null, null, null, null, null, null, null, null, null, 
+                        null, null, null, null, null, null, null, null, null, null);
                     this.contrato.fechaInicio = moment().format();
                     console.log('ingresa contrato null')
                 }
