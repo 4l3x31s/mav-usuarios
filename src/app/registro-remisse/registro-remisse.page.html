@@ -11,27 +11,21 @@
   <form [formGroup]="frmCarrera" novalidate>
     <ion-list> 
       <ion-item (click)="irMapaOrigen()">
-        <ion-label position="stacked">
-          <h2>Dirección Origen</h2>
-          <p>{{ direccionIni }}</p>
-        </ion-label>
+        <ion-label position="stacked" >Dirección Origen</ion-label>
+        <ion-input placeholder="Donde te encontramos?" formControlName="vDesde" [(ngModel)]="direccionIni" readonly ></ion-input>
       </ion-item>
       <ion-item (click)="irMapaDestino()">
-        <ion-label position="stacked">
-            <h2>Dirección Destino</h2>
-            <p >{{ direccionFin }}</p>
-        </ion-label>
+        <ion-label position="stacked" >Dirección Destino</ion-label>
+        <ion-input placeholder="Donde quieres que te llevemos?" formControlName="vHasta" [(ngModel)]="direccionFin" readonly ></ion-input>
       </ion-item>
       <ion-item>
-          <ion-label position="stacked">
-              <h2>Costo</h2>
-              <p >{{ carrera.costo }}</p>
-          </ion-label>
+          <ion-label position="stacked" >Costo</ion-label>
+          <ion-input [ngModelOptions]="{standalone: true}" placeholder="Costo" [(ngModel)]="carrera.costo" readonly ></ion-input>
         </ion-item>
     </ion-list>
   </form>
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button color="verdec" (click)=grabar() [disabled]="frmCarrera.invalid">
+    <ion-fab-button color="verdec" (click)="confirmarFecha()" [disabled]="frmCarrera.invalid">
         <ion-icon name="save"></ion-icon>
     </ion-fab-button>
   </ion-fab>

@@ -21,7 +21,8 @@ export class MdlContrato {
         public codigoContrato: string,
         public generoCarrera: boolean,
         public dirOrigen: string,
-        public dirDestino: string
+        public dirDestino: string,
+        public montoTotalCarreras: number,
     ) {
 
     }

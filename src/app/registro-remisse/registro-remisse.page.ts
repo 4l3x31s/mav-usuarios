@@ -52,8 +52,8 @@ export class RegistroRemissePage implements OnInit {
   distance: any;
   filtros = {};
   location: any;
-  direccionIni: any = 'Donde te encontramos?';
-  direccionFin: any = 'A donde quieres ir?';
+  direccionIni: any = null;
+  direccionFin: any = null;
   map: any;
   directionsService = new google.maps.DirectionsService();
   directionsDisplay = new google.maps.DirectionsRenderer({
@@ -89,22 +89,22 @@ export class RegistroRemissePage implements OnInit {
   get f(): any { return this.frmCarrera.controls; }
   ngOnInit() {
     this.iniciarValidaciones();
-    this.parametrosPorPais(this.pais);
-    if(this.estado===0){
-      this.iniciarMapa();
-    } else {
-      this.trazarMapa(this.directionsDisplay);
-      this.sesionService.crearSesionBase().then(() => {
-      this.sesionService.getSesion().subscribe((cliente) => {
-          if (cliente){
+    this.sesionService.crearSesionBase()
+    .then(() => {
+      this.sesionService.getSesion()
+        .subscribe((cliente) => {
+          if (cliente) {
             this.cliente = cliente;
+            //calcular costo
             this.determinarDistanciaTiempo();
           } else {
             this.navController.navigateRoot('/login');
           }
         });
-      });
-    }
+    });
+    this.parametrosPorPais(this.pais);
+    this.iniciarMapa();
+    
     
   }
   trazarMapaDevuelto() {
@@ -321,31 +321,35 @@ export class RegistroRemissePage implements OnInit {
   }
   
   async confirmarFecha() {
-  let fechaCarrera =  moment(this.fecha).toObject();
-  let fechaCarreraMoment = moment(fechaCarrera);
-  let fechaActual = moment().format();
-  let mensaje = null;
-  const alert = await this.alertController.create({
-    header: 'Confirmar',
-    message: 'Desea crear la carrera en:  <br>' +
-              'Fecha:  <strong>' + fechaCarrera.date  + '/' + (fechaCarrera.months + 1) + '/' + fechaCarrera.years + '</strong> <br> ' +
-              'Hora :  <strong>' + fechaCarrera.hours + ':' + fechaCarrera.minutes + ' ? </strong>',
-    buttons: [
-      {
-        text: 'cancelar',
-        role: 'cancelar',
-        cssClass: 'secondary',
-        handler: (blah) => {
-          
+    this.fecha = moment().format();
+    console.log(this.fecha)
+    let fechaCarrera =  moment(this.fecha).toObject();
+    let fechaCarreraMoment = moment(fechaCarrera);
+    let fechaActual = moment().format();
+    let mensaje = null;
+    const alert = await this.alertController.create({
+      header: 'Confirmar',
+      message: 'Desea crear la carrera en:  <br>' +
+                'Fecha:  <strong>' + fechaCarrera.date  + '/' + (fechaCarrera.months + 1) + '/' + fechaCarrera.years + '</strong> <br> ' +
+                'Hora :  <strong>' + fechaCarrera.hours + ':' + fechaCarrera.minutes + ' ? </strong>',
+      buttons: [
+        {
+          text: 'cancelar',
+          role: 'cancelar',
+          cssClass: 'secondary',
+          handler: (blah) => {
+            
+          }
+        }, {
+          text: 'Confirmar',
+          handler: () => {
+            console.log(this.fecha);
+            this.grabar();
+          }
         }
-      }, {
-        text: 'Confirmar',
-        handler: () => {
-          this.grabar();
-        }
-      }
-    ]
+      ]
     });
+    await alert.present();
   }
   public grabar(){
     this.loadingServices.present();
