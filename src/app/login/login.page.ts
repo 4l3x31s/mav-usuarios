@@ -81,8 +81,29 @@ export class LoginPage implements OnInit {
           this.loadingService.dismiss();
           this.alertService.present('Error','Error al crear la BD de sesion')
         });
+      })
+      .catch(err => {
+        console.log(err);
+        this.sesionService.crearSesionBase()
+        .then(() => {
+          this.sesionService.getSesion()
+            .subscribe((conductora)=>{
+              if(conductora){
+                this.navController.navigateRoot('/home');
+              }
+              this.loadingService.dismiss();
+            },e => {
+              this.loadingService.dismiss();
+              this.alertService.present('Error', 'Error al obtener la sesion.');
+            });
+        })
+        .catch(e=>{
+          this.loadingService.dismiss();
+          this.alertService.present('Error','Error al crear la BD de sesion')
+        });
+        
       });
-    
+      
   }
   iniciaValidaciones() {
     this.form = this.fb.group({
@@ -104,6 +125,7 @@ export class LoginPage implements OnInit {
           this.sesionService.login(this.user)
           .subscribe((cliente) => {
             /*if (cliente.estado) {*/
+              console.log(cliente);
               this.events.publish('user:login');
               this.navController.navigateRoot('/home');
             /*} else {

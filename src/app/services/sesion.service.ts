@@ -15,8 +15,6 @@ import { AlertService } from './util/alert.service';
 export class SesionService {
 
   clienteSesionPrueba: MdlCliente;
-  
-
   constructor(
     public sesionService: SesionService,
     public sqlite: SqliteService,
@@ -28,22 +26,31 @@ export class SesionService {
     public events: Events
   ) { }
 
-  public login(user: string) : Observable<any> {
-    return new Observable<boolean>(observer => {
+  public login(user: string) : Observable<MdlCliente> {
+    return new Observable<MdlCliente>(observer => {
       this.clienteService.getClientePorUser(user)
         .subscribe(cliente=>{
           if(cliente){
             if(environment.isSesionPrueba){
               this.clienteSesionPrueba = cliente[0];
+              observer.next(this.clienteSesionPrueba);
+              observer.complete();
               //this.clienteSesionPrueba.nombre += '(PRUEBA)';
             } else {
-              this.sqlite.setclienteSesion(cliente[0]);
+              this.sqlite.setclienteSesion(cliente[0])
+              .then(()=>{
+                observer.next(cliente[0]);
+                observer.complete();
+              })
+              .catch(e=>{
+                observer.error(e);
+                observer.complete();
+              });
             }
-            observer.next();
           } else {
             observer.error({message:'Usuario y/o contraseña inválida'});
+            observer.complete();
           }
-          observer.complete();
         });
     });
   }

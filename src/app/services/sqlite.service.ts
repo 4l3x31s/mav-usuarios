@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { SQLiteObject, SQLite } from '@ionic-native/sqlite/ngx';
+import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
 import { MdlCliente } from '../modelo/mdlCliente';
 import { TokenNotifService } from './token-notif.service';
 
@@ -10,14 +10,14 @@ export class SqliteService {
 
   db: SQLiteObject;
   constructor(
-    private sqlite: SQLite,
+    public sqlite: SQLite,
     private tokenService: TokenNotifService
   ) { }
 
   getDB(): Promise<SQLiteObject> {
     if (this.db == undefined) {
       return this.sqlite.create({
-        name: 'datamav.db',
+        name: 'datamavuser.db',
         location: 'default'
       })
         .then((db: SQLiteObject) => {
