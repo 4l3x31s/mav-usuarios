@@ -23,6 +23,7 @@ export class MdlContrato {
         public dirOrigen: string,
         public dirDestino: string,
         public montoTotalCarreras: number,
+        public nombreConductora: string
     ) {
 
     }
