@@ -34,7 +34,7 @@ export class DetalleContratoPage implements OnInit {
         null, null, null, null, null, 
         null, null, null, null, null, 
         null, null, null, null, null, 
-        null, null, null
+        null, null, null, null
     );
     public lstClientes: MdlCliente[] = [];
     public lstFeriados: MdlFeriado[] = [];
@@ -87,7 +87,7 @@ export class DetalleContratoPage implements OnInit {
                     if(this.contrato.fechaInicio === undefined) {
                         this.contrato = new MdlContrato(null, null, null, null,
                             null, null, null, null, null, null, null, null, null, 
-                            null, null, null, null, null, null, null, null, null, null);
+                            null, null, null, null, null, null, null, null, null, null, null);
                         this.contrato.fechaInicio = moment().format();
                     }
                     console.log('contrato***********')
@@ -95,7 +95,7 @@ export class DetalleContratoPage implements OnInit {
                 } else {
                     this.contrato = new MdlContrato(null, null, null, null,
                         null, null, null, null, null, null, null, null, null, 
-                        null, null, null, null, null, null, null, null, null, null);
+                        null, null, null, null, null, null, null, null, null, null, null);
                     this.contrato.fechaInicio = moment().format();
                     console.log('ingresa contrato null')
                 }
