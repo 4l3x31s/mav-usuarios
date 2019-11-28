@@ -80,7 +80,7 @@ export class ClienteService {
   getColorPorCliente(idCliente: number): string {
     let color = localStorage.getItem('colorCliente-'+idCliente);
     if(!color){
-      color = "black";
+      color = "#3c1d67";
     }
     return color;
   }

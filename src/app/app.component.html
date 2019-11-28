@@ -13,7 +13,7 @@
                 <ion-buttons slot="end">
                   <ion-menu-toggle>
                     <ion-button (click)="irCerrarSesion()">
-                      <ion-icon slot="icon-only" name="log-out"></ion-icon>
+                      <ion-icon style="color:white;" slot="icon-only" name="log-out"></ion-icon>
                     </ion-button>
                   </ion-menu-toggle>
                 </ion-buttons>
@@ -23,7 +23,7 @@
             <br />
             <div>
               <div style="float: left;margin-top:0.5rem;width:80%">
-                <ion-label slot="start">
+                <ion-label style="color:white;"  slot="start">
                   {{cliente?.nombre}}
                 </ion-label>
               </div>
@@ -31,7 +31,7 @@
                 <ion-buttons slot="end">
                   <ion-menu-toggle>
                     <ion-button (click)="irDetalleCliente()">
-                      <ion-icon slot="icon-only" name="create"></ion-icon>
+                      <ion-icon style="color:white;"  slot="icon-only" name="create"></ion-icon>
                     </ion-button>
                   </ion-menu-toggle>
                 </ion-buttons>
@@ -44,7 +44,7 @@
           <ion-list *ngIf="cliente">
             <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages">
               <ion-item [routerDirection]="'root'" [routerLink]="[p.url]" (click)="irPagina(p)">
-                <ion-icon slot="start" [name]="p.icon"></ion-icon>
+                <ion-icon style="color:white;" slot="start" [name]="p.icon"></ion-icon>
                 <ion-label>
                   {{p.title}}
                 </ion-label>
@@ -53,7 +53,7 @@
             </ion-menu-toggle>
             <ion-menu-toggle auto-hide="false" *ngFor="let a of pageShare">
               <ion-item [routerDirection]="'root'" [routerLink]="[a.url]" (click)="compartirViaFacebook()">
-                <ion-icon slot="start" [name]="a.icon"></ion-icon>
+                <ion-icon style="color:white;" slot="start" [name]="a.icon"></ion-icon>
                 <ion-label>
                   {{a.title}}
                 </ion-label>

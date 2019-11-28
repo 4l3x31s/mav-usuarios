@@ -2,33 +2,36 @@
 
 <ion-content>
   
-  <ion-list-header color="medium">
+  <ion-list-header color="verdec">
     <ion-label>Solicitar Carrera</ion-label>
   </ion-list-header>
   
   <form [formGroup]="frmCarrera" novalidate>
-    <ion-list> 
+    <ion-list padding> 
       <ion-item>
           <ion-label position="stacked" >Cliente</ion-label>
           <ion-input >{{cliente?.nombre}}</ion-input>
+          <ion-icon style="color:white;" name="person" slot="start"></ion-icon>
       </ion-item>
 
       <ion-item (click)="irMapaOrigen()">
         <ion-label>
           <h2>Dirección Origen</h2>
-          <p >{{ direccionIni }}</p>
+          <p style="color:white;">{{ direccionIni }}</p>
           <!--<p >Long: {{ carrera.longInicio }}</p>-->
         </ion-label>
-        <ion-icon name="locate" slot="end"></ion-icon>
+        <ion-icon style="color:white;" name="compass" slot="start"></ion-icon>
+        <ion-icon style="color:white;" name="locate" slot="end"></ion-icon>
       </ion-item>
 
       <ion-item (click)="irMapaDestino()">
         <ion-label>
           <h2>Dirección Destino</h2>
-          <p >{{ direccionFin }}</p>
+          <p style="color:white;">{{ direccionFin }}</p>
           <!--<p >Long: {{ carrera.longFin }}</p>-->
         </ion-label>
-        <ion-icon name="locate" slot="end"></ion-icon>
+        <ion-icon style="color:white;" name="compass" slot="start"></ion-icon>
+        <ion-icon style="color:white;" name="locate" slot="end"></ion-icon>
       </ion-item>
       
      
@@ -36,6 +39,7 @@
         <ion-label position="stacked">Descripción del lugar (Origen)</ion-label>
         <ion-textarea  formControlName="vdescLugar" [(ngModel)]="carrera.descLugar">
         </ion-textarea>
+        <ion-icon style="color:white;" name="text" slot="start"></ion-icon>
       </ion-item>
       <print-error [control]="f.vdescLugar"></print-error>
 
@@ -45,18 +49,22 @@
             <ion-select-option value="Bolivianos">Bolivianos</ion-select-option>
             <ion-select-option value="Dolares">Dolares</ion-select-option>
         </ion-select>
+        <ion-icon style="color:white;" name="cash" slot="start"></ion-icon>
       </ion-item>
       <print-error [control]="f.vmoneda"></print-error>
 
       <ion-item>
         <ion-label position="stacked">Costo</ion-label>
-        <ion-input > {{carrera.costo}}</ion-input>
+        <ion-input readonly> {{carrera.costo}}</ion-input>
+        <ion-icon style="color:white;" name="cash" slot="start"></ion-icon>
       </ion-item>
       
       <ion-item>
         <ion-label position="stacked">Fecha y hora</ion-label>
-        <ion-datetime formControlName="vfechaInicio" [(ngModel)]="carrera.fechaInicio"
-                      display-format="DD/MM/YYYY HH:mm" cancelText="Cancelar" doneText="Aceptar" min="{{ fechaMin }}"></ion-datetime>
+        <ion-input type="datetime-local" formControlName="vfechaInicio" [(ngModel)]="carrera.fechaInicio" ></ion-input>
+        <!--<ion-datetime formControlName="vfechaInicio" [(ngModel)]="carrera.fechaInicio"
+                      display-format="DD/MM/YYYY HH:mm" cancelText="Cancelar" doneText="Aceptar" min="{{ fechaMin }}"></ion-datetime>-->
+      <ion-icon style="color:white;" name="calendar" slot="start"></ion-icon>
       </ion-item>
       <print-error [control]="f.vfechaInicio"></print-error>      
       
@@ -69,6 +77,7 @@
           <ion-select-option value="Total">Total</ion-select-option>
           <ion-select-option value="Deposito">Deposito</ion-select-option>
       </ion-select>
+      <ion-icon style="color:white;" name="paper" slot="start"></ion-icon>
       </ion-item>
       <print-error [control]="f.vtipoPago"></print-error>
      

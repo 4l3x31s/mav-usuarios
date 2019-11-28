@@ -1,5 +1,5 @@
 .fondo-login {
-  background-image: url("../../assets/image/login.png") !important;
+  background-color: #3c1d67;
   position: absolute;
   background-repeat: no-repeat;
   width: 100%;
@@ -16,8 +16,8 @@ h1 {
 }
 
 .fondo-transparente {
-  // background: inherit;
-  // background-color: transparent !important;
+  background: inherit;
+  background-color: transparent !important;
   border-radius: 10px !important;
 }
 .texto-inicio a {
@@ -32,4 +32,15 @@ h1 {
 .padding-login {
   padding-left: 10% !important;
   padding-right: 10% !important;
+}
+.item.item-input {
+  background-color: transparent;
+  --background: transparent !important;
+  --color:white !important;
+}
+
+input:-internal-autofill-selected {
+  background-color: transparent !important;
+  background-image: none !important;
+  color: white !important;
 }

@@ -1,38 +1,43 @@
 <ion-header>
-  <ion-toolbar color="rosado">
+  <ion-toolbar color="verdec">
     <ion-title>{{titulo}}</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="cerrar()"><ion-icon name="close"></ion-icon></ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
-<ion-content>
+<ion-content padding>
   <form [formGroup]="frmCliente" novalidate>
     <ion-list>
       <ion-item>
         <ion-label position="stacked">Nombre Completo</ion-label>
         <ion-input formControlName="vnombre" name="vnombre"  [(ngModel)]="cliente.nombre"></ion-input>
+        <ion-icon style="color:white;" name="contact" slot="start"></ion-icon>
       </ion-item>
       <print-error [control]="f.vnombre"></print-error>
        <ion-item>
         <ion-label position="stacked">Celular</ion-label>
         <ion-input formControlName="vcel" name="vcel"  [(ngModel)]="cliente.cel"></ion-input>
+        <ion-icon style="color:white;" name="phone-portrait" slot="start"></ion-icon>
       </ion-item>
       <print-error [control]="f.vcel"></print-error>    
       <ion-item *ngIf="cliente.id">
         <ion-label position="stacked">Carnet de Identidad</ion-label>
         <ion-input [ngModelOptions]="{standalone: true}" name="vci"  [(ngModel)]="cliente.ci" ></ion-input>
+        <ion-icon style="color:white;" name="finger-print" slot="start"></ion-icon>
       </ion-item>
 
       <ion-item *ngIf="cliente.id">
         <ion-label position="stacked">Dirección</ion-label>
         <ion-input [ngModelOptions]="{standalone: true}" name="vdireccion"  [(ngModel)]="cliente.direccion"></ion-input>
+        <ion-icon style="color:white;" name="compass" slot="start"></ion-icon>
       </ion-item>
       
       <div [ngClass]="myclass">
         <ion-item>
           <ion-label position="stacked">Correo</ion-label>
           <ion-input formControlName="vemail" name="vemail" (focusout)="outFocus()" [(ngModel)]="cliente.email" (ionChange)="generarUsuario()"></ion-input>
+          <ion-icon style="color:white;" name="mail" slot="start"></ion-icon>
         </ion-item>
         <print-error [control]="f.vemail"></print-error>  
       </div>
@@ -40,6 +45,7 @@
       <ion-item>
         <ion-label position="stacked">Usuario</ion-label>
         <ion-input formControlName="vuser" name="vuser"  [(ngModel)]="cliente.user" disabled></ion-input>
+        <ion-icon style="color:white;" name="person" slot="start"></ion-icon>
       </ion-item>
       <print-error [control]="f.vuser"></print-error>
 
@@ -47,13 +53,15 @@
         <ion-item >
           <ion-label position="stacked">Contraseña</ion-label>
           <ion-input  #pass [type]="tipoPass" formControlName="vpass" name="vpass"  [(ngModel)]="cliente.pass"></ion-input>
-          <ion-icon (click)="cambiarValor()" name="eye" color="medium" slot="end"></ion-icon>
+          <ion-icon style="color:white;" name="unlock" slot="start"></ion-icon>
+          <ion-icon style="color:white;" (click)="cambiarValor()" name="eye" color="medium" slot="end"></ion-icon>
         </ion-item>
         <print-error [control]="f.vpass"></print-error>
 
         <ion-item *ngIf="!cliente.id">
           <ion-label position="stacked">Confirmar Contraseña</ion-label>
           <ion-input type="password" formControlName="vconfirmPass" name="vconfirmPass" ></ion-input>
+          <ion-icon style="color:white;" name="unlock" slot="start"></ion-icon>
         </ion-item>
         <print-error  [control]="f.vconfirmPass"></print-error>     
       </div>
@@ -61,6 +69,7 @@
       <ion-item *ngIf="cliente.id">
         <ion-label position="stacked">Telefono</ion-label>
         <ion-input [ngModelOptions]="{standalone: true}" name="vtel"  [(ngModel)]="cliente.tel"></ion-input>
+        <ion-icon style="color:white;" name="call" slot="start"></ion-icon>
       </ion-item>
      
 
