@@ -32,7 +32,8 @@ const routes: Routes = [
   { path: 'registro-carrera', loadChildren: './registro-carrera/registro-carrera.module#RegistroCarreraPageModule' },
   { path: 'calificar-carrera', loadChildren: './comun/calificar-carrera/calificar-carrera.module#CalificarCarreraPageModule' },
   { path: 'registro-remisse', loadChildren: './registro-remisse/registro-remisse.module#RegistroRemissePageModule' },
-  { path: 'solicitar-contrato', loadChildren: './solicitar-contrato/solicitar-contrato.module#SolicitarContratoPageModule' },
+  { path: 'solicitar-contrato', loadChildren: './solicitar-contrato/solicitar-contrato.module#SolicitarContratoPageModule' },  { path: 'terminos-condiciones', loadChildren: './terminos-condiciones/terminos-condiciones.module#TerminosCondicionesPageModule' },
+
 ];
 
 @NgModule({

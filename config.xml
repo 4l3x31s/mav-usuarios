@@ -87,5 +87,6 @@
         <string>We use your location for full functionality of certain app features.</string>
     </edit-config>
     <plugin name="cordova-plugin-geolocation" spec="~4.0.1" />
+    <plugin name="cordova-sqlite-storage" spec="^3.4.1" />
     <engine name="browser" spec="5.0.4" />
 </widget>

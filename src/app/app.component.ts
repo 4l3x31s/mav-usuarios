@@ -45,6 +45,11 @@ export class AppComponent {
       url: '/solicitar-contrato',
       icon: 'clipboard'
     },
+    {
+      title: 'Términos y Condiciones',
+      url: '/terminos-condiciones',
+      icon: 'document'
+    },
     /*{
       title: 'Contratos Solicitados',
       url: '/lista-contratos-solicitados',
