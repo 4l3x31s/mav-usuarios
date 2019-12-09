@@ -250,7 +250,7 @@ export class DetalleCarreraPage implements OnInit {
       this.clienteService.getCliente(this.carrera.idUsuario).subscribe(cliente=>{
         
         this.cliente = cliente;
-        this.codigoColorCliente = this.colores.find(x => x.codigo == this.clienteService.getColorPorCliente(this.cliente.id)).codigo;
+        this.codigoColorCliente = this.colores[2].codigo;
         this.initAutocomplete();
         this.loadingService.dismiss();
         }, error=>{

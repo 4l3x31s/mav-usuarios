@@ -4,3 +4,7 @@
 ion-chip {
     --color: white !important;
 }
+
+.sc-ion-label-md-s > p {
+    color: var(--ion-color-verdec) !important;
+}
