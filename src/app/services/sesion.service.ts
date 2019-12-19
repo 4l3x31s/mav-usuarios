@@ -16,37 +16,37 @@ export class SesionService {
 
   clienteSesionPrueba: MdlCliente;
   constructor(
-    public sesionService: SesionService,
-    public sqlite: SqliteService,
-    public alertController: AlertController,
-    public loadingService: LoadingService,
-    public alertService: AlertService,
     public clienteService: ClienteService,
-    public navController: NavController,
-    public events: Events
+    public sqlite: SqliteService
   ) { }
-
-  public login(user: string) : Observable<MdlCliente> {
+  login(user: string) : Observable<MdlCliente> {
     return new Observable<MdlCliente>(observer => {
-      this.clienteService.getClientePorUser(user)
-        .subscribe(cliente=>{
-          if(cliente){
-            if(environment.isSesionPrueba){
-              this.clienteSesionPrueba = cliente[0];
-              observer.next(this.clienteSesionPrueba);
-              observer.complete();
-              //this.clienteSesionPrueba.nombre += '(PRUEBA)';
+      this.clienteService.getClientePorUserPass(user)
+        .subscribe(conductora=>{
+          console.log(conductora);
+          if(conductora){
+            if(conductora[0].estado){
+              if(environment.isSesionPrueba){
+                this.clienteSesionPrueba = conductora[0];
+                observer.next(this.clienteSesionPrueba);
+                observer.complete();
+              } else {
+                this.sqlite.setclienteSesion(conductora[0])
+                  .then(()=>{
+                    observer.next(conductora[0]);
+                    observer.complete();
+                  })
+                  .catch(e=>{
+                    observer.error(e);
+                    observer.complete();
+                  });
+              }
             } else {
-              this.sqlite.setclienteSesion(cliente[0])
-              .then(()=>{
-                observer.next(cliente[0]);
-                observer.complete();
-              })
-              .catch(e=>{
-                observer.error(e);
-                observer.complete();
-              });
+              //observer.error({message:'Usuario no habilitado por el administrador'});
+              observer.next(conductora[0]);
+              observer.complete();
             }
+            
           } else {
             observer.error({message:'Usuario y/o contraseña inválida'});
             observer.complete();
@@ -55,17 +55,17 @@ export class SesionService {
     });
   }
 
-  getSesion(): Observable<MdlCliente> {
+  getSesion() : Observable<MdlCliente>{
     return new Observable<MdlCliente>(observer => {
       if(environment.isSesionPrueba){
         observer.next(this.clienteSesionPrueba);
         observer.complete();
       } else {
         this.sqlite.getclienteSesion()
-          .then(idCliente=>{
-            this.clienteService.getCliente(idCliente)
-              .subscribe(cliente => {
-                observer.next(cliente);
+          .then(idConductora=>{
+            this.clienteService.getCliente(idConductora)
+              .subscribe(conductora => {
+                observer.next(conductora);
                 observer.complete();
               });
           });
@@ -88,41 +88,5 @@ export class SesionService {
     } else {
       return this.sqlite.removeClienteSesion();
     }
-  }
-
-  async irCerrarSesion(){
-    const alert = await this.alertController.create({
-      header: 'Confirmar',
-      message: '¿Esta segur@ de cerrar su sesión?',
-      buttons: [
-        {
-          text: 'No',
-          role: 'cancel',
-          cssClass: 'secondary',
-          handler: () => {
-          }
-        }, {
-          text: 'Si',
-          cssClass: 'primary',
-          handler: () => {
-            this.loadingService.present()
-              .then(() => {
-                this.sesionService.cerrarSesion()
-                  .then(()=>{
-                    this.events.publish('user:logout');
-                    this.loadingService.dismiss();
-                    this.navController.navigateRoot('/login');
-                  })
-                  .catch(e=>{
-                    this.alertService.present('Error','Error al cerrar la sesion');
-                    this.loadingService.dismiss();
-                  })
-              });
-          }
-        }
-      ]
-    });
-
-    await alert.present();
   }
 }

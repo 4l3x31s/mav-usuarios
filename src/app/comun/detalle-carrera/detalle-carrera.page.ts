@@ -267,7 +267,7 @@ export class DetalleCarreraPage implements OnInit {
   }
 
   irWhatsApp(){
-    this.iab.create('https://api.whatsapp.com/send?phone=591'+this.conductora.celular+'&text=', '_system', 'location=yes');
+    this.iab.create('https://api.whatsapp.com/send?phone='+this.conductora.celular+'&text=', '_system', 'location=yes');
   }
 
   async showOpcionesCarrera(){
@@ -296,26 +296,7 @@ export class DetalleCarreraPage implements OnInit {
           this.calificarCarrera();
         }
       });
-      opciones.push({
-        text: 'Realizar seguimiento',
-        icon: 'map',
-        handler: () =>{
-          let resp = 'http://www.google.com/maps/dir/'
-          + this.latFin
-          + ','
-          + this.lngFin
-          + '/'
-          + this.carrera.latInicio
-          + ','
-          + this.carrera.longInicio
-          + '/@'
-          + this.latFin
-          + ','
-          + this.lngFin
-          + ',12z/data=!4m2!4m1!3e0';
-          this.iab.create(resp, '_system', 'location=yes')
-        }
-      });
+      
       opciones.push({
         text: 'Regresar',
         icon: 'close',
@@ -323,6 +304,26 @@ export class DetalleCarreraPage implements OnInit {
       });
       
     }
+    opciones.push({
+      text: 'Realizar seguimiento',
+      icon: 'map',
+      handler: () =>{
+        let resp = 'http://www.google.com/maps/dir/'
+        + this.latFin
+        + ','
+        + this.lngFin
+        + '/'
+        + this.carrera.latInicio
+        + ','
+        + this.carrera.longInicio
+        + '/@'
+        + this.latFin
+        + ','
+        + this.lngFin
+        + ',12z/data=!4m2!4m1!3e0';
+        this.iab.create(resp, '_system', 'location=yes')
+      }
+    });
     const actionSheet = await this.actionSheetController.create({
       header: 'Opciones Carrera',
       buttons: opciones

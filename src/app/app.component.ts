@@ -1,3 +1,4 @@
+import { AuthService } from './services/firebase/auth.service';
 import { Component } from '@angular/core';
 
 import { Platform, Events, NavController, AlertController } from '@ionic/angular';
@@ -87,7 +88,8 @@ export class AppComponent {
     private fcm: FCM,
     private router: Router,
     private tokenService: TokenNotifService,
-    private socialSharing: SocialSharing
+    private socialSharing: SocialSharing,
+    private authService: AuthService
   ) {
     this.initializeApp();
     events.subscribe('user:login', () => {
@@ -108,7 +110,12 @@ export class AppComponent {
       });
   }
   public loggedOut() {
-    this.cliente = undefined;
+    this.authService.doLogout()
+    .then( () => {
+      this.cliente = undefined;
+    }, err => {
+      this.cliente = undefined;
+    });
   }
 
   initializeApp() {

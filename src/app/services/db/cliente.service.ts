@@ -87,4 +87,19 @@ export class ClienteService {
   setColorCliente(idCliente: number, color:string){
     localStorage.setItem('colorCliente-'+idCliente, color);
   }
+
+  getClientePorUserPass(user: string): Observable<MdlCliente[]> {
+    return new Observable<MdlCliente[]>(observer => {
+      this.afDB.list<MdlCliente>('cliente/',
+        ref => ref.orderByChild('user').equalTo(user)).valueChanges()
+        .subscribe(conductoras => {
+          if (conductoras.length > 0) {
+            observer.next(conductoras);
+          } else {
+            observer.next();
+          }
+          observer.complete();
+        });
+    });
+  }
 }

@@ -1,3 +1,4 @@
+import { ClienteService } from 'src/app/services/db/cliente.service';
 import { AuthService } from './../services/firebase/auth.service';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -7,6 +8,7 @@ import { NavController, Events, AlertController, ToastController } from '@ionic/
 import { AlertService } from '../services/util/alert.service';
 import { environment } from '../../environments/environment';
 import { UbicacionService } from '../services/ubicacion.service';
+import { TokenNotifService } from '../services/token-notif.service';
 declare var google;
 @Component({
   selector: 'app-login',
@@ -29,7 +31,9 @@ export class LoginPage implements OnInit {
     public authService: AuthService,
     public alertController: AlertController,
     public toastController: ToastController,
-    public ubicacionService: UbicacionService
+    public ubicacionService: UbicacionService,
+    public tokenService: TokenNotifService,
+    public clienteService: ClienteService
   ) { }
   processLocation(location) {    
     if (location[1]) {
@@ -69,8 +73,14 @@ export class LoginPage implements OnInit {
           this.sesionService.getSesion()
             .subscribe((conductora)=>{
               if(conductora){
-                this.navController.navigateRoot('/home');
+                if(!conductora.estado) {
+                  this.navController.navigateRoot('/login');
+                }else {
+                  this.navController.navigateRoot('/home');
+                }
+                
               }
+              
               this.loadingService.dismiss();
             },e => {
               this.loadingService.dismiss();
@@ -122,10 +132,17 @@ export class LoginPage implements OnInit {
       .then(() => {
         this.authService.doLogin(this.user, this.pass)
         .then( res => {
+          console.log("dologin");
+          console.log(res);
           this.sesionService.login(this.user)
           .subscribe((cliente) => {
             /*if (cliente.estado) {*/
               console.log(cliente);
+              cliente.ui = this.tokenService.get() ? this.tokenService.get() : null;
+              console.log(cliente);
+                if(cliente.ui!=null){
+                  this.clienteService.crearCliente(cliente);
+                }
               this.events.publish('user:login');
               this.navController.navigateRoot('/home');
             /*} else {

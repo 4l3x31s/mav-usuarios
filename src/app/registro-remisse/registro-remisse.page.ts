@@ -416,6 +416,11 @@ export class RegistroRemissePage implements OnInit {
                 };
                 this.pushNotifService.postGlobal(notificaciones, '')
                 .subscribe(response => {
+                  this.loadingServices.dismiss();
+                });
+                this.pushNotifService.postGlobal(notificaciones, '')
+                .subscribe(response => {
+                  this.loadingServices.dismiss();
                 });
               }
             }
@@ -436,10 +441,11 @@ export class RegistroRemissePage implements OnInit {
   }
   
   async abrirModal() {
+    this.loadingServices.dismiss();
     let carreraSeleccionada:MdlCarrera = this.carrera;
     const modal = await this.modalController.create({
       component: DetalleCarreraPage,
-      componentProps: { 
+      componentProps: {
         carrera: carreraSeleccionada
       }
     });

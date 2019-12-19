@@ -188,7 +188,7 @@ export class RegistroCarreraPage implements OnInit {
       .then(() => {
         console.log('*************CARRERA REGISTRADA 2******************');
         console.log(this.carrera);
-        setTimeout(() => {
+        /*setTimeout(() => {
           this.carreraService.getCarrerasPorId(carrera.id).subscribe(data => {
             if(data[0].estado === 1) {
               this.alertService.present('Info','Espere un momento porfavor, estamos buscando la conductora más cercana.');
@@ -203,7 +203,7 @@ export class RegistroCarreraPage implements OnInit {
               this.carreraService.eliminarCarrera(carrera.id);
             }
           });
-        }, 190000);
+        }, 190000);*/
 
         this.conductoraService.getConductoraPorPaisCiudad(this.pais.toUpperCase(), this.ciudad.toUpperCase())
           .subscribe( lstConductoras => {

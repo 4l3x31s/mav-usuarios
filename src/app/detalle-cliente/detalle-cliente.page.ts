@@ -51,9 +51,11 @@ export class DetalleClientePage implements OnInit {
             if (cliente) {
                 this.cliente = cliente;
                 this.titulo = 'Editar Perfil';
+                this.cliente.ui = this.tokenService.get() ? this.tokenService.get() : null;
                 this.frmCliente.get('vconfirmPass').setValue(this.cliente.pass);
             } else {
               this.cliente = this.clienteService.getClienteSesion();
+              this.cliente.ui = this.tokenService.get() ? this.tokenService.get() : null;
               this.titulo = 'Crear nueva cuenta';
             }
             });
@@ -138,6 +140,7 @@ export class DetalleClientePage implements OnInit {
         this.cliente.estado = true;
         if(this.cliente.ui === undefined) {
           this.cliente.ui = null;
+          this.cliente.ui = this.tokenService.get() ? this.tokenService.get() : null;
         }
         if (this.cliente && this.cliente.id != null) {
           this.clienteService.crearCliente(this.cliente)
@@ -156,6 +159,7 @@ export class DetalleClientePage implements OnInit {
         } else {
           this.authService.doRegister(this.cliente.user, this.cliente.pass)
           .then(res => {
+            this.cliente.ui = this.tokenService.get() ? this.tokenService.get() : null;
             this.clienteService.crearCliente(this.cliente)
             .then((cliente) => {
               this.cliente = cliente;
@@ -169,6 +173,7 @@ export class DetalleClientePage implements OnInit {
                 this.clienteService.getClientePorEmail(this.cliente.email)
                 .subscribe(data => {
                   if (data.length === 0) {
+                    this.cliente.ui = this.tokenService.get() ? this.tokenService.get() : null;
                     this.clienteService.crearCliente(this.cliente)
                     .then(resp => {
                       console.log(resp);
