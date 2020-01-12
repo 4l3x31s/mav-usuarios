@@ -9,6 +9,7 @@ import { AlertService } from '../services/util/alert.service';
 import { environment } from '../../environments/environment';
 import { UbicacionService } from '../services/ubicacion.service';
 import { TokenNotifService } from '../services/token-notif.service';
+import { Platform } from '@ionic/angular';
 declare var google;
 @Component({
   selector: 'app-login',
@@ -33,7 +34,8 @@ export class LoginPage implements OnInit {
     public toastController: ToastController,
     public ubicacionService: UbicacionService,
     public tokenService: TokenNotifService,
-    public clienteService: ClienteService
+    public clienteService: ClienteService,
+    public platform: Platform,
   ) { }
   processLocation(location) {    
     if (location[1]) {
@@ -48,72 +50,73 @@ export class LoginPage implements OnInit {
     }
   }
   ngOnInit() {
-    navigator.geolocation.getCurrentPosition((resp) => {
-      let myLatlng = { lat: resp.coords.latitude, lng: resp.coords.longitude};
-      let geocoder = new google.maps.Geocoder();
-      geocoder.geocode({'location': myLatlng}, (results, status) => {
-          if (status === 'OK') {
-
-            this.processLocation(results);
-          }
-        });
-    }, (error) => {
-    
-    }, { enableHighAccuracy: true });
-    this.iniciaValidaciones();
-    if(environment.isSesionPrueba){
-      //datos prueba
-      this.user = '';
-      this.pass = '';
-    }
-    this.loadingService.present()
-      .then(()=>{
-        this.sesionService.crearSesionBase()
-        .then(() => {
-          this.sesionService.getSesion()
-            .subscribe((conductora)=>{
-              if(conductora){
-                if(!conductora.estado) {
-                  this.navController.navigateRoot('/login');
-                }else {
-                  this.navController.navigateRoot('/home');
+    this.platform.ready().then(() => {
+      navigator.geolocation.getCurrentPosition((resp) => {
+        let myLatlng = { lat: resp.coords.latitude, lng: resp.coords.longitude};
+        let geocoder = new google.maps.Geocoder();
+        geocoder.geocode({'location': myLatlng}, (results, status) => {
+            if (status === 'OK') {
+  
+              this.processLocation(results);
+            }
+          });
+      }, (error) => {
+      
+      }, { enableHighAccuracy: true });
+      this.iniciaValidaciones();
+      if(environment.isSesionPrueba){
+        //datos prueba
+        this.user = '';
+        this.pass = '';
+      }
+      this.loadingService.present()
+        .then(()=>{
+          this.sesionService.crearSesionBase()
+          .then(() => {
+            this.sesionService.getSesion()
+              .subscribe((conductora)=>{
+                if(conductora){
+                  if(!conductora.estado) {
+                    this.navController.navigateRoot('/login');
+                  }else {
+                    this.navController.navigateRoot('/home');
+                  }
+                  
                 }
                 
-              }
-              
-              this.loadingService.dismiss();
-            },e => {
-              this.loadingService.dismiss();
-              this.alertService.present('Error', 'Error al obtener la sesion.');
-            });
+                this.loadingService.dismiss();
+              },e => {
+                this.loadingService.dismiss();
+                this.alertService.present('Error', 'Error al obtener la sesion.');
+              });
+          })
+          .catch(e=>{
+            this.loadingService.dismiss();
+            this.alertService.present('Error','Error al crear la BD de sesion')
+          });
         })
-        .catch(e=>{
-          this.loadingService.dismiss();
-          this.alertService.present('Error','Error al crear la BD de sesion')
+        .catch(err => {
+          console.log(err);
+          this.sesionService.crearSesionBase()
+          .then(() => {
+            this.sesionService.getSesion()
+              .subscribe((conductora)=>{
+                if(conductora){
+                  this.navController.navigateRoot('/home');
+                }
+                this.loadingService.dismiss();
+              },e => {
+                this.loadingService.dismiss();
+                this.alertService.present('Error', 'Error al obtener la sesion.');
+              });
+          })
+          .catch(e=>{
+            this.loadingService.dismiss();
+            this.alertService.present('Error','Error al crear la BD de sesion')
+          });
+          
         });
-      })
-      .catch(err => {
-        console.log(err);
-        this.sesionService.crearSesionBase()
-        .then(() => {
-          this.sesionService.getSesion()
-            .subscribe((conductora)=>{
-              if(conductora){
-                this.navController.navigateRoot('/home');
-              }
-              this.loadingService.dismiss();
-            },e => {
-              this.loadingService.dismiss();
-              this.alertService.present('Error', 'Error al obtener la sesion.');
-            });
-        })
-        .catch(e=>{
-          this.loadingService.dismiss();
-          this.alertService.present('Error','Error al crear la BD de sesion')
-        });
-        
-      });
-      
+    });
   }
   iniciaValidaciones() {
     this.form = this.fb.group({
