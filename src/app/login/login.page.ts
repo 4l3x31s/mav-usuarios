@@ -50,7 +50,9 @@ export class LoginPage implements OnInit {
     }
   }
   ngOnInit() {
+    this.iniciaValidaciones();
     this.platform.ready().then(() => {
+      
       navigator.geolocation.getCurrentPosition((resp) => {
         let myLatlng = { lat: resp.coords.latitude, lng: resp.coords.longitude};
         let geocoder = new google.maps.Geocoder();
@@ -63,7 +65,7 @@ export class LoginPage implements OnInit {
       }, (error) => {
       
       }, { enableHighAccuracy: true });
-      this.iniciaValidaciones();
+      
       if(environment.isSesionPrueba){
         //datos prueba
         this.user = '';
