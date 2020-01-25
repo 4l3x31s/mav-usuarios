@@ -20,7 +20,7 @@
          <p>{{vehiculo?.marca}} - {{vehiculo?.modelo}}</p>
          <h3>{{ carrera.costo }} Bs.</h3>
          <h3>{{tiempoLlegada}}</h3>
-         <!--<p>{{ carrera.fechaInicio }}</p>-->
+         <h3 *ngIf="carrera.obsConductora">{{carrera.obsConductora}}</h3>
       </ion-label>
       
     </ion-item>
@@ -30,29 +30,6 @@
         </ion-avatar>
         <ion-label>Chatear con la conductora.</ion-label>
       </ion-chip>
-    <!--<ion-item>
-      <ion-label position="stacked">Costo</ion-label>
-      <ion-input value="{{ carrera.costo }} {{ carrera.moneda }}" readonly></ion-input>
-    </ion-item>
--->
-    <!--<ion-item>
-      <ion-label position="stacked">Descripción Lugar</ion-label>
-      <ion-textarea value="{{ carrera.descLugar }}" readonly></ion-textarea>
-    </ion-item>
--->
-<!--
-    <ion-item>
-      <ion-label position="stacked">Fecha/Hora</ion-label>
-      <ion-datetime value="{{ carrera.fechaInicio }}" readonly displayFormat="DD/MM/YYYY HH:mm"></ion-datetime>
-    </ion-item>
-    --><!--
-    <ion-item *ngIf="codigoColorCliente">
-      <ion-label [ngStyle]="{'color': codigoColorCliente}">Color del contrato</ion-label>
-      <ion-select placeholder="Select One" (ionChange)="cambiarColor()" [(ngModel)]="codigoColorCliente">
-        <ion-select-option value="{{color.codigo}}" *ngFor="let color of colores">{{color.descripcion}}</ion-select-option>
-      </ion-select>
-    </ion-item>
--->
     <div *ngIf="carrera.estado == 3">
       <div *ngIf="mostrarCalificacion">
         <form [formGroup]="form" novalidate>
@@ -65,9 +42,13 @@
               size="default">
             </rating>
           </ion-item>
-          <ion-item>
+          <!--<ion-item>
             <ion-label position="stacked">Observación</ion-label>
             <ion-textarea readonly value="{{ carrera.obsConductora }}"></ion-textarea>
+          </ion-item>-->
+          <ion-item>
+            <ion-label position="stacked">Observación</ion-label>
+            <ion-textarea readonly value="{{  carrera.obsCliente  }}"></ion-textarea>
           </ion-item>
         </form>
       </div>
@@ -76,7 +57,11 @@
       <ion-label>Voy en camino</ion-label>
     </ion-item>
   </ion-list>
-
+  <ion-list>
+    <ion-item *ngIf="carrera.estado === 4">
+      <ion-label>Carrera cancelada por el cliente</ion-label>
+    </ion-item>
+  </ion-list>
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button color="verdec" (click)="showOpcionesCarrera()">
       <ion-icon name="star"></ion-icon>

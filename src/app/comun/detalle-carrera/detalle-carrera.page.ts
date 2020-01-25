@@ -3,7 +3,7 @@ import { AngularFireStorage } from '@angular/fire/storage';
 import { Observable } from 'rxjs';
 import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 import { MdlCarrera } from 'src/app/modelo/mdlCarrera';
-import { ModalController, NavController, ActionSheetController } from '@ionic/angular';
+import { ModalController, NavController, ActionSheetController, AlertController  } from '@ionic/angular';
 import { ClienteService } from 'src/app/services/db/cliente.service';
 import { AlertService } from 'src/app/services/util/alert.service';
 import { MdlCliente } from 'src/app/modelo/mdlCliente';
@@ -20,6 +20,8 @@ import { MdlVehiculo } from 'src/app/modelo/mdlVehiculo';
 import { VehiculoService } from 'src/app/services/db/vehiculo.service';
 import { MapStyleService } from 'src/app/services/util/map-style.service';
 import { GeolocalizacionService } from 'src/app/services/db/geolocalizacion.service';
+import * as moment from 'moment';
+
 
 @Component({
   selector: 'app-detalle-carrera',
@@ -85,7 +87,8 @@ export class DetalleCarreraPage implements OnInit {
     public vehiculoService: VehiculoService,
     public mapStyleService: MapStyleService,
     private storage: AngularFireStorage,
-    private geoLocalizacionService: GeolocalizacionService
+    private geoLocalizacionService: GeolocalizacionService,
+    private alertController: AlertController
 
   ) { }
 
@@ -288,7 +291,7 @@ export class DetalleCarreraPage implements OnInit {
         }
       });
     }
-    if(this.carrera.enCamino === true){
+    if(this.carrera.enCamino === true || this.carrera.estado === 3){
       opciones.push({
         text: 'Califica la carrera',
         icon: 'star',
@@ -296,33 +299,68 @@ export class DetalleCarreraPage implements OnInit {
           this.calificarCarrera();
         }
       });
-      
+    }
+    if (moment(this.carrera.fechaInicio) >=  moment().add(5, 'minutes') && this.carrera.estado !== 4) {
       opciones.push({
-        text: 'Regresar',
-        icon: 'close',
-        role: 'cancel'
+        text: 'Cancelar Carrera',
+        icon: 'close-circle-outline',
+        handler: async() => {
+          const alert = await this.alertController.create({
+            header: 'Alerta!',
+            message: 'Confirma que quiere cancelar la carrera?',
+            buttons: [
+              {
+                text: 'Cancelar',
+                role: 'cancel',
+                cssClass: 'secondary',
+                handler: (blah) => {
+                  console.log('Confirm Cancel: blah');
+                }
+              }, {
+                text: 'Aceptar',
+                handler: () => {
+                  console.log('Confirm Okay');
+                  this.carreraService.eliminarCarreraCliente(this.carrera);
+                  this.modalCtrl.dismiss();
+                  this.navController.navigateRoot('/home');
+                }
+              }
+            ]
+          });
+      
+          await alert.present();
+          
+        }
       });
       
     }
+    if(this.carrera.estado === 2){
+      opciones.push({
+        text: 'Realizar seguimiento',
+        icon: 'map',
+        handler: () =>{
+          let resp = 'http://www.google.com/maps/dir/'
+          + this.latFin
+          + ','
+          + this.lngFin
+          + '/'
+          + this.carrera.latInicio
+          + ','
+          + this.carrera.longInicio
+          + '/@'
+          + this.latFin
+          + ','
+          + this.lngFin
+          + ',12z/data=!4m2!4m1!3e0';
+          this.iab.create(resp, '_system', 'location=yes')
+        }
+      });
+    }
+    
     opciones.push({
-      text: 'Realizar seguimiento',
-      icon: 'map',
-      handler: () =>{
-        let resp = 'http://www.google.com/maps/dir/'
-        + this.latFin
-        + ','
-        + this.lngFin
-        + '/'
-        + this.carrera.latInicio
-        + ','
-        + this.carrera.longInicio
-        + '/@'
-        + this.latFin
-        + ','
-        + this.lngFin
-        + ',12z/data=!4m2!4m1!3e0';
-        this.iab.create(resp, '_system', 'location=yes')
-      }
+      text: 'Regresar',
+      icon: 'close',
+      role: 'cancel'
     });
     const actionSheet = await this.actionSheetController.create({
       header: 'Opciones Carrera',

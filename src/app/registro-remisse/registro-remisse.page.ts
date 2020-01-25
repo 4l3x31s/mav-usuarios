@@ -391,9 +391,11 @@ export class RegistroRemissePage implements OnInit {
               this.alertService.present('Info', 'Lo sentimos no hay conductoras disponibles.');
               this.carrera.estado = 1000;
               this.carreraService.eliminarCarrera(carrera.id);
+              this.modalController.dismiss();
+              this.navController.navigateRoot('/home');
             }
           });
-        }, 60000);
+        }, 120000);
 
         this.conductoraService.getConductoraPorPaisCiudad(this.pais.toUpperCase(), this.ciudad.toUpperCase())
           .subscribe( lstConductoras => {

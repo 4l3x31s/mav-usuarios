@@ -32,6 +32,13 @@ export class CarreraService {
    eliminarCarrera(idCarrera: number) {
     this.afDB.database.ref('carrera/' + idCarrera).remove();
   }
+  eliminarCarreraCliente(mdlCarrera: MdlCarrera) {
+    if(!mdlCarrera.id){
+      mdlCarrera.id = Date.now();
+    }
+    mdlCarrera.estado = 4;
+   return this.afDB.database.ref('carrera/' + mdlCarrera.id).set(mdlCarrera);
+  }
 
  getCarreraSesion(): MdlCarrera {
   return new MdlCarrera(

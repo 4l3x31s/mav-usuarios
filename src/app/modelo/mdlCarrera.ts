@@ -20,7 +20,7 @@ export class MdlCarrera {
         public fechaFin: string,
         public tipoPago: string, // El tipo pago, (empresa, efectivo, total, deposito)
         public cobro: string,
-        public estado: number, // 1: pendiente, 2: aceptado, 3 terminado
+        public estado: number, // 1: pendiente, 2: aceptado, 3 terminado, 4 cancelado cliente
         public nombreCliente: string,
         public nombreConductora: string,
         public enCamino: boolean,

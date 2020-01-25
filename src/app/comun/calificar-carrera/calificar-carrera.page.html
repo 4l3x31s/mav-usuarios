@@ -19,7 +19,7 @@
         <ion-label position="floating">Valoración Carrera</ion-label>
       </ion-item>
       <ion-item>
-        <rating [(ngModel)]="carrera.califConductora"
+        <rating [(ngModel)]="carrera.califCliente"
           formControlName="vcalifConductora"
           readonly="false"
           size="default">
@@ -29,7 +29,7 @@
 
       <ion-item>
         <ion-label position="stacked">Observación</ion-label>
-        <ion-textarea formControlName="vobservacion" [(ngModel)]="carrera.obsConductora"></ion-textarea>
+        <ion-textarea formControlName="vobservacion" [(ngModel)]="carrera.obsCliente"></ion-textarea>
       </ion-item>
       <print-error [control]="f.vobservacion"></print-error>
     </ion-list>
