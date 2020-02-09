@@ -16,6 +16,7 @@ import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 
 import { Router } from '@angular/router';
 import { TokenNotifService } from './services/token-notif.service';
+import undefined = require('firebase/empty-import');
 
 @Component({
   selector: 'app-root',
@@ -176,6 +177,7 @@ export class AppComponent {
               .then(() => {
                 this.sesionService.cerrarSesion()
                   .then(()=>{
+                    this.cliente = undefined;
                     this.events.publish('user:logout');
                     this.loadingService.dismiss();
                     this.navController.navigateRoot('/login');

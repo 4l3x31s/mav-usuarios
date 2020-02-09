@@ -83,7 +83,7 @@ export class SesionService {
 
   cerrarSesion(): Promise<any>{
     if(environment.isSesionPrueba){
-      this.clienteSesionPrueba=undefined;
+      this.clienteSesionPrueba = undefined;
       return Promise.resolve()
     } else {
       return this.sqlite.removeClienteSesion();
