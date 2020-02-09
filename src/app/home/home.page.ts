@@ -133,11 +133,11 @@ export class HomePage implements OnInit, OnDestroy {
               this.setMapOnAll(this.map);
           }
         }
-        let updatelocation = new google.maps.LatLng(data.coords.latitude,data.coords.longitude);
-        let image = 'assets/image/got-car.png';
+        //let updatelocation = new google.maps.LatLng(data.coords.latitude,data.coords.longitude);
+        //let image = 'assets/image/got-car.png';
         // let image = 'assets/image/car-pin.png';
-        this.addMarker(updatelocation,image);
-        this.setMapOnAll(this.map);
+        //this.addMarker(updatelocation,image);
+        //this.setMapOnAll(this.map);
         this.loadingService.dismiss();
       }, error => {
         this.loadingService.dismiss();
