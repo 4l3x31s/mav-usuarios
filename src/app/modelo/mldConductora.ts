@@ -23,7 +23,9 @@ export class MdlConductora {
         public ui: string,
         public foto,
         public admin: boolean,
-        public estado: boolean
+        public estado: boolean,
+        public numCuenta: string,
+        public banco: string
     ) {
 
     }
