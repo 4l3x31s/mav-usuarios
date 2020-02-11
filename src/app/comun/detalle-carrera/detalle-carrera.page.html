@@ -18,7 +18,7 @@
          <h3>{{ conductora?.nombre }} {{ conductora?.paterno }}</h3>
          <h1>{{vehiculo?.placa}}</h1>
          <p>{{vehiculo?.marca}} - {{vehiculo?.modelo}}</p>
-         <h3>{{ carrera.costo }} Bs.</h3>
+         <h1>{{ carrera.costo }} Bs.</h1>
          <h3>{{tiempoLlegada}}</h3>
          <h3 *ngIf="carrera.obsConductora">{{carrera.obsConductora}}</h3>
       </ion-label>
@@ -53,8 +53,11 @@
         </form>
       </div>
     </div>
-    <ion-item *ngIf="carrera.enCamino">
-      <ion-label>Voy en camino</ion-label>
+    <ion-item *ngIf="carrera.enCamino === 1">
+      <ion-label>Tu conductora está en camino</ion-label>
+    </ion-item>
+    <ion-item *ngIf="carrera.enCamino === 1">
+      <ion-label>Tu conductora acaba de llegar</ion-label>
     </ion-item>
   </ion-list>
   <ion-list>

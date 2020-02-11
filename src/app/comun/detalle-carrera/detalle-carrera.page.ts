@@ -1,8 +1,9 @@
+import { CarrerasAceptadasPage } from './../../carreras-aceptadas/carreras-aceptadas.page';
+import { MdlCarrera } from './../../modelo/mdlCarrera';
 import { AngularFireStorage } from '@angular/fire/storage';
 /// <reference types='@types/googlemaps' />
-import { Observable } from 'rxjs';
-import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
-import { MdlCarrera } from 'src/app/modelo/mdlCarrera';
+import { Observable, Subscription } from 'rxjs';
+import { Component, OnInit, Input, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { ModalController, NavController, ActionSheetController, AlertController  } from '@ionic/angular';
 import { ClienteService } from 'src/app/services/db/cliente.service';
 import { AlertService } from 'src/app/services/util/alert.service';
@@ -23,12 +24,14 @@ import { GeolocalizacionService } from 'src/app/services/db/geolocalizacion.serv
 import * as moment from 'moment';
 
 
+
 @Component({
   selector: 'app-detalle-carrera',
   templateUrl: './detalle-carrera.page.html',
   styleUrls: ['./detalle-carrera.page.scss'],
 })
-export class DetalleCarreraPage implements OnInit {
+export class DetalleCarreraPage implements OnInit, OnDestroy {
+  
 
   @Input()
   public carrera: MdlCarrera;
@@ -72,6 +75,7 @@ export class DetalleCarreraPage implements OnInit {
   latFin: any;
   lngFin: any;
   urlImagenFirebase: string;
+  detectaCambiosVar:Subscription;
   constructor(
     private modalCtrl:ModalController,
     public clienteService:ClienteService,
@@ -90,7 +94,9 @@ export class DetalleCarreraPage implements OnInit {
     private geoLocalizacionService: GeolocalizacionService,
     private alertController: AlertController
 
-  ) { }
+  ) {
+
+  }
 
   ngOnInit() {
     // this.mostrarBoton = false;
@@ -107,6 +113,18 @@ export class DetalleCarreraPage implements OnInit {
       // if(!this.carrera.enCamino){
       //   this.mostrarCalificacion=true;
       // }
+      this.detectaCambiosVar = this.detectaCambios(this.carrera)
+      .subscribe((carrera: MdlCarrera) => {
+          if(carrera.enCamino) {
+            if(carrera.enCamino === 1) {
+              this.alertService.present('Alerta', 'Tu conductora está en camino, llega en unos minutos.');
+            }else if(carrera.enCamino === 2) {
+              this.alertService.present('Alerta', 'Tu conductora llegó y te está esperando.');
+            }
+            
+          }
+        });
+
       this.conductoraService.getConductora(this.carrera.idConductora).subscribe(conductora=>{
         this.conductora = conductora;
         let valor = 'mav/conductora/' + conductora.id + '-foto';
@@ -132,7 +150,15 @@ export class DetalleCarreraPage implements OnInit {
               console.log('ubicacion')
               console.log(data);
               let ubicacion: any = data
-              this.determinarDistanciaTiempo(ubicacion[0].latitude, ubicacion[0].longitude);
+              if(!this.carrera.enCamino){
+                console.log("ingresa aca xxxxxxx")
+                this.determinarDistanciaTiempo(ubicacion[0].latitude, ubicacion[0].longitude);
+              }else if(this.carrera.enCamino) {
+                if(this.carrera.enCamino === 0) {
+                  console.log("ingresa aca yyyyyyyyyyy")
+                  this.determinarDistanciaTiempo(ubicacion[0].latitude, ubicacion[0].longitude);
+                }
+              }
             })
         }
         
@@ -142,6 +168,15 @@ export class DetalleCarreraPage implements OnInit {
     });
     
    
+  }
+  detectaCambios(alertController): Observable<any> {
+    return Observable.create((observer) => {
+          observer.next(this.carrera);
+          observer.complete();
+    })
+  }
+  ngOnDestroy(): void {
+    this.detectaCambiosVar.unsubscribe();
   }
 
   public async determinarDistanciaTiempo(lat: number, lng: number) {
@@ -291,7 +326,7 @@ export class DetalleCarreraPage implements OnInit {
         }
       });
     }
-    if(this.carrera.enCamino === true || this.carrera.estado === 3){
+    if(this.carrera.enCamino > 2 && this.carrera.estado === 3 && !this.carrera.califCliente){
       opciones.push({
         text: 'Califica la carrera',
         icon: 'star',
@@ -300,7 +335,8 @@ export class DetalleCarreraPage implements OnInit {
         }
       });
     }
-    if (moment(this.carrera.fechaInicio) >=  moment().add(5, 'minutes') && this.carrera.estado !== 4) {
+    if(this.carrera.enCamino <= 2 && this.carrera.estado < 3){
+    //if (moment(this.carrera.fechaInicio) >=  moment().add(3, 'minutes') && this.carrera.estado !== 4) {
       opciones.push({
         text: 'Cancelar Carrera',
         icon: 'close-circle-outline',
@@ -333,6 +369,7 @@ export class DetalleCarreraPage implements OnInit {
         }
       });
       
+    //}
     }
     if(this.carrera.estado === 2){
       opciones.push({
