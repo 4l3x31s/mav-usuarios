@@ -339,17 +339,17 @@ export class DetalleCarreraPage implements OnInit, OnDestroy {
       //rastreo-conductora
       opciones.push({
         text: 'Seguimiento Conductora',
-        icon: 'navigate-circle-outline',
+        icon: 'pin',
         handler: async() => {
           this.navParam.set(this.carrera);
           this.modalCtrl.dismiss();
-          this.navController.navigateRoot('/rastreo-conductora');
+          this.navController.navigateForward('/rastreo-conductora');
         }
       });
       if (moment(this.carrera.fechaInicio) <  moment().add(3, 'minutes') && this.carrera.estado !== 4) {
         opciones.push({
           text: 'Cancelar Carrera',
-          icon: 'close-circle-outline',
+          icon: 'close',
           handler: async() => {
             const alert = await this.alertController.create({
               header: 'Alerta!',

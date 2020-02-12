@@ -1,3 +1,4 @@
+import { MapStyleService } from './../services/util/map-style.service';
 import { NavParamService } from './../services/nav-param.service';
 import { GeolocalizacionService } from 'src/app/services/db/geolocalizacion.service';
 import { MdlCarrera } from 'src/app/modelo/mdlCarrera';
@@ -31,12 +32,14 @@ export class RastreoConductoraPage implements OnInit, OnDestroy {
     public navCtrl: NavController,
     public geolocation: Geolocation,
     public geolocalizacionService: GeolocalizacionService,
-    public paramController: NavParamService
+    public paramController: NavParamService,
+    public mapStyleService: MapStyleService
     ) {
   }
   ngOnInit() {
     this.initMap();
     this.carrera = this.paramController.get();
+    console.log(this.carrera);
     this.geolocalizacionService.ubicarConductora(this.carrera.idConductora).subscribe( data => {
       this.deleteMarkers();
       this.listaGeoPosicionamiento = Object.assign(data);
@@ -61,10 +64,15 @@ export class RastreoConductoraPage implements OnInit, OnDestroy {
         zoomControl: false,
         scaleControl: false,
         rotateControl: false,
-        fullscreenControl: false
+        fullscreenControl: false,
+        mapTypeControlOptions: {
+          mapTypeIds: ['styled_map']
+        }
       });
       let geoResults = [];
       let geoResults1 = [];
+      this.map.mapTypes.set('styled_map', this.mapStyleService.getStyledMap());
+      this.map.setMapTypeId('styled_map');
 
     }, (error) => {
     }, { enableHighAccuracy: true });
