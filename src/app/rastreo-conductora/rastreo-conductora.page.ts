@@ -44,7 +44,7 @@ export class RastreoConductoraPage implements OnInit, OnDestroy {
       this.deleteMarkers();
       this.listaGeoPosicionamiento = Object.assign(data);
       for (let geoObj of this.listaGeoPosicionamiento) {
-        let image = 'assets/image/pin-mav.png';
+        let image = 'assets/image/got-car.png';
           let updatelocation = new google.maps.LatLng(geoObj.latitude, geoObj.longitude);
           this.addMarker(updatelocation,image);
           this.setMapOnAll(this.map);
@@ -98,7 +98,7 @@ export class RastreoConductoraPage implements OnInit, OnDestroy {
       this.deleteMarkers();
       if(this.listaGeoPosicionamiento.length > 0) {
         for (let geoObj of this.listaGeoPosicionamiento) {
-          let image = 'assets/image/pin-mav.png';
+          let image = 'assets/image/got-car.png';
             let updatelocation = new google.maps.LatLng(geoObj.latitude, geoObj.longitude);
             this.addMarker(updatelocation,image);
             this.setMapOnAll(this.map);
