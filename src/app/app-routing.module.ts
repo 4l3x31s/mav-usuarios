@@ -33,6 +33,7 @@ const routes: Routes = [
   { path: 'calificar-carrera', loadChildren: './comun/calificar-carrera/calificar-carrera.module#CalificarCarreraPageModule' },
   { path: 'registro-remisse', loadChildren: './registro-remisse/registro-remisse.module#RegistroRemissePageModule' },
   { path: 'solicitar-contrato', loadChildren: './solicitar-contrato/solicitar-contrato.module#SolicitarContratoPageModule' },  { path: 'terminos-condiciones', loadChildren: './terminos-condiciones/terminos-condiciones.module#TerminosCondicionesPageModule' },
+  { path: 'rastreo-conductora', loadChildren: './rastreo-conductora/rastreo-conductora.module#RastreoConductoraPageModule' },
 
 ];
 

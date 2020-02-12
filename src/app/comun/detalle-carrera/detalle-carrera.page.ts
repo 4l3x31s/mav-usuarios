@@ -336,42 +336,110 @@ export class DetalleCarreraPage implements OnInit, OnDestroy {
       });
     }
     if(this.carrera.enCamino <= 2 && this.carrera.estado < 3){
-    //if (moment(this.carrera.fechaInicio) >=  moment().add(3, 'minutes') && this.carrera.estado !== 4) {
+      //rastreo-conductora
       opciones.push({
-        text: 'Cancelar Carrera',
-        icon: 'close-circle-outline',
+        text: 'Seguimiento Conductora',
+        icon: 'navigate-circle-outline',
         handler: async() => {
-          const alert = await this.alertController.create({
-            header: 'Alerta!',
-            message: 'Confirma que quiere cancelar la carrera?',
-            buttons: [
-              {
-                text: 'Cancelar',
-                role: 'cancel',
-                cssClass: 'secondary',
-                handler: (blah) => {
-                  console.log('Confirm Cancel: blah');
-                }
-              }, {
-                text: 'Aceptar',
-                handler: () => {
-                  console.log('Confirm Okay');
-                  this.carreraService.eliminarCarreraCliente(this.carrera);
-                  this.modalCtrl.dismiss();
-                  this.navController.navigateRoot('/home');
-                }
-              }
-            ]
-          });
-      
-          await alert.present();
-          
+          this.navParam.set(this.carrera);
+          this.modalCtrl.dismiss();
+          this.navController.navigateRoot('/rastreo-conductora');
         }
       });
-      
+      if (moment(this.carrera.fechaInicio) <  moment().add(3, 'minutes') && this.carrera.estado !== 4) {
+        opciones.push({
+          text: 'Cancelar Carrera',
+          icon: 'close-circle-outline',
+          handler: async() => {
+            const alert = await this.alertController.create({
+              header: 'Alerta!',
+              message: 'Confirma que quiere cancelar la carrera?',
+              buttons: [
+                {
+                  text: 'Cancelar',
+                  role: 'cancel',
+                  cssClass: 'secondary',
+                  handler: (blah) => {
+                    console.log('Confirm Cancel: blah');
+                  }
+                }, {
+                  text: 'Aceptar',
+                  handler: () => {
+                    console.log('Confirm Okay');
+                    this.carreraService.eliminarCarreraCliente(this.carrera);
+                    this.modalCtrl.dismiss();
+                    this.navController.navigateRoot('/home');
+                  }
+                }
+              ]
+            });
+        
+            await alert.present();
+            
+          }
+        });
+      }
+      if (moment(this.carrera.fechaInicio) >=  moment().add(3, 'minutes') && this.carrera.estado !== 4) {
+        opciones.push({
+          text: 'Cancelar Carrera',
+          icon: 'close-circle-outline',
+          handler: async() => {
+            const alert = await this.alertController.create({
+              header: 'Alerta!',
+              message: 'Confirma que quiere cancelar la carrera?, tome en cuenta que se le cobrará 3Bs. como penalidad.',
+              buttons: [
+                {
+                  text: 'Cancelar',
+                  role: 'cancel',
+                  cssClass: 'secondary',
+                  handler: (blah) => {
+                    console.log('Confirm Cancel: blah');
+                  }
+                }, {
+                  text: 'Aceptar',
+                  handler: () => {
+                    console.log('Confirm Okay');
+                    this.carrera.costo = 3;
+                    this.carrera.obsCarrera = 'Se canceló la carrea después de 3 minutos, se generó una penalidad.';
+                    this.carreraService.eliminarCarreraCliente(this.carrera);
+                    this.modalCtrl.dismiss();
+                    this.navController.navigateRoot('/home');
+                  }
+                }
+              ]
+            });
+        
+            await alert.present();
+            
+          }
+        });
+      }
     //}
     }
     if(this.carrera.estado === 2){
+
+      opciones.push({
+        text: 'Compartir carrera',
+        icon: 'share',
+        handler: () => {
+        let respuesta = 'http://www.google.com/maps/dir/'
+        + this.latFin
+        + ','
+        + this.lngFin
+        + '/'
+        + this.carrera.latInicio
+        + ','
+        + this.carrera.longInicio
+        + '/@'
+        + this.latFin
+        + ','
+        + this.lngFin
+        + ',12z/data=!4m2!4m1!3e0';
+        this.iab.create('https://api.whatsapp.com/send?&text=Hola:%0AEstoy tomando un movil con la siguiente ruta:%0A'
+              + respuesta, '_system', 'location=yes')
+        }
+      })
+
       opciones.push({
         text: 'Realizar seguimiento',
         icon: 'map',

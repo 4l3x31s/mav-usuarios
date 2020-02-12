@@ -25,7 +25,10 @@ export class MdlConductora {
         public admin: boolean,
         public estado: boolean,
         public numCuenta: string,
-        public banco: string
+        public banco: string,
+        public numReferencia: number,
+        public personReferencia: string
+        
     ) {
 
     }

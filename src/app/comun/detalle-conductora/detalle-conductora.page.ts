@@ -75,7 +75,7 @@ export class DetalleConductoraPage implements OnInit {
       this.conductora = new MdlConductora(
         null, null, null, null, null, null, null, null, null, null, null,
         null, null, null, null, null, null, null, null, null, null, null, 
-        false, false,null,null
+        false, false,null,null, null, null
       );
     }
     this.obtenerParametros();
