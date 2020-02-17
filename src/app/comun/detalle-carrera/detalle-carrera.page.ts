@@ -325,6 +325,37 @@ export class DetalleCarreraPage implements OnInit, OnDestroy {
           
         }
       });
+      opciones.push({
+        text: 'Cancelar Carrera',
+        icon: 'close',
+        handler: async() => {
+          const alert = await this.alertController.create({
+            header: 'Alerta!',
+            message: 'Confirma que quiere cancelar la carrera?',
+            buttons: [
+              {
+                text: 'Cancelar',
+                role: 'cancel',
+                cssClass: 'secondary',
+                handler: (blah) => {
+                  console.log('Confirm Cancel: blah');
+                }
+              }, {
+                text: 'Aceptar',
+                handler: () => {
+                  console.log('Confirm Okay');
+                  this.carreraService.eliminarCarreraCliente(this.carrera);
+                  this.modalCtrl.dismiss();
+                  this.navController.navigateRoot('/home');
+                }
+              }
+            ]
+          });
+      
+          await alert.present();
+          
+        }
+      });
     }
     if(this.carrera.enCamino > 2 && this.carrera.estado === 3 && !this.carrera.califCliente){
       opciones.push({
@@ -346,7 +377,7 @@ export class DetalleCarreraPage implements OnInit, OnDestroy {
           this.navController.navigateForward('/rastreo-conductora');
         }
       });
-      if (moment(this.carrera.fechaInicio) <  moment().add(3, 'minutes') && this.carrera.estado !== 4) {
+      if ((moment(this.carrera.fechaInicio) <  moment().add(3, 'minutes')) && this.carrera.estado !== 4) {
         opciones.push({
           text: 'Cancelar Carrera',
           icon: 'close',
