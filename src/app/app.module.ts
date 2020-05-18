@@ -23,13 +23,14 @@ import { CalificarCarreraPageModule } from './comun/calificar-carrera/calificar-
 import { HttpClientModule } from '@angular/common/http';
 
 export const firebaseConfig = {
-  apiKey: 'AIzaSyCC22o8Imks6DbAf4DXrxgtW_wPE6XYLHs',
-    authDomain: 'mav-db.firebaseapp.com',
-    databaseURL: 'https://mav-db.firebaseio.com',
-    projectId: 'mav-db',
-    storageBucket: 'mav-db.appspot.com',
-    messagingSenderId: '69193804419',
-    appId: '1:69193804419:web:6c522a0e26f79eb5'
+  apiKey: "AIzaSyAgV1vvR-sagn9yWEmSxs8yPa7TADU-i68",
+    authDomain: "mav-firebase.firebaseapp.com",
+    databaseURL: "https://mav-firebase.firebaseio.com",
+    projectId: "mav-firebase",
+    storageBucket: "mav-firebase.appspot.com",
+    messagingSenderId: "840758066173",
+    appId: "1:840758066173:web:f9ac4a33d8ddfe8242f794",
+    measurementId: "G-96T3Y91H9H"
 };
 
 @NgModule({
