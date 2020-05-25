@@ -8,6 +8,42 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:840758066173:android:37eb022aa4f5bd0d42f794",
+        "android_client_info": {
+          "package_name": "org.mav.conductora"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "840758066173-8d95rf0ik08pse1rq4n84frstb0pbkgc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBc_nWt_a8YnY5uCLQw-UlG6mqLwQA03Zs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "840758066173-8d95rf0ik08pse1rq4n84frstb0pbkgc.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "840758066173-uhu9r0mek8730nld20nqbeimlnagvq8c.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.mav.usuarios"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:840758066173:android:7f3990dceed2074342f794",
         "android_client_info": {
           "package_name": "org.mav.usuarios"
@@ -30,6 +66,85 @@
             {
               "client_id": "840758066173-8d95rf0ik08pse1rq4n84frstb0pbkgc.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "840758066173-uhu9r0mek8730nld20nqbeimlnagvq8c.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.mav.usuarios"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:840758066173:android:2f6b90581a5cd1ab42f794",
+        "android_client_info": {
+          "package_name": "org.mujeresalvolante.conductora"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "840758066173-8d95rf0ik08pse1rq4n84frstb0pbkgc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBc_nWt_a8YnY5uCLQw-UlG6mqLwQA03Zs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "840758066173-8d95rf0ik08pse1rq4n84frstb0pbkgc.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "840758066173-uhu9r0mek8730nld20nqbeimlnagvq8c.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.mav.usuarios"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:840758066173:android:3bf75732ef7441c442f794",
+        "android_client_info": {
+          "package_name": "org.mujeresalvolante.usuarios"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "840758066173-8d95rf0ik08pse1rq4n84frstb0pbkgc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBc_nWt_a8YnY5uCLQw-UlG6mqLwQA03Zs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "840758066173-8d95rf0ik08pse1rq4n84frstb0pbkgc.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "840758066173-uhu9r0mek8730nld20nqbeimlnagvq8c.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.mav.usuarios"
+              }
             }
           ]
         }
